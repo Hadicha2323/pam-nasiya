@@ -11,6 +11,7 @@
 <title>PAM Nasiya - POP AUTO MAKON</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; }
 
@@ -88,6 +89,25 @@
   .pam-logo-svg { height: 42px; width: auto; display: block; }
 
   .header-time { font-size: 10px; color: var(--text-muted); text-align: right; font-weight: 600; line-height: 1.35; flex-shrink: 0; }
+
+  .sync-badge {
+    display: flex; align-items: center; gap: 4px;
+    font-size: 9px; font-weight: 700;
+    padding: 3px 8px; border-radius: 10px;
+    background: rgba(16,185,129,0.15);
+    color: #6ee7b7;
+    border: 1px solid rgba(16,185,129,0.3);
+  }
+  .sync-badge.offline {
+    background: rgba(245,158,11,0.15);
+    color: #fcd34d;
+    border-color: rgba(245,158,11,0.3);
+  }
+  .sync-badge.error {
+    background: rgba(239,68,68,0.15);
+    color: #fca5a5;
+    border-color: rgba(239,68,68,0.3);
+  }
 
   .bell-btn {
     position: relative;
@@ -297,6 +317,7 @@
     color: var(--text-muted);
     margin-top: 6px;
     font-weight: 500;
+    min-height: 14px;
   }
   .input-hint b { color: var(--red); font-weight: 700; }
 
@@ -312,6 +333,7 @@
   .btn-primary { background: linear-gradient(135deg, #ef2d2d, #c41010); box-shadow: 0 8px 20px rgba(239,45,45,0.5); }
   .btn-success { background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 8px 20px rgba(16,185,129,0.4); }
   .btn-danger { background: linear-gradient(135deg, #ef4444, #dc2626); box-shadow: 0 8px 20px rgba(239,68,68,0.4); }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
   .qarzdor-card {
     background: var(--card);
@@ -414,6 +436,21 @@
   @keyframes floatIcon { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
   .empty-state h3 { font-size: 15px; margin-bottom: 6px; color: #b8c3e0; }
   .empty-state p { font-size: 12px; }
+
+  .loading-state {
+    text-align: center;
+    padding: 50px 20px;
+    color: var(--text-muted);
+  }
+  .spinner {
+    width: 40px; height: 40px;
+    border: 3px solid rgba(239,45,45,0.2);
+    border-top-color: var(--red);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto 14px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
 
   .modal-overlay {
     position: fixed; inset: 0;
@@ -643,6 +680,9 @@
     </div>
   </div>
   <div style="display:flex;align-items:center;gap:8px;">
+    <div class="sync-badge" id="syncBadge">
+      <span id="syncDot">●</span> <span id="syncText">Bulut</span>
+    </div>
     <button class="bell-btn" id="bellBtn" title="Eslatmalar">
       <svg class="ico" viewBox="0 0 24 24" style="stroke-width:2.2;"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
       <span class="bell-badge" id="bellBadge" style="display:none;">0</span>
@@ -786,7 +826,7 @@
         <div class="input-hint" id="summaHint"></div>
       </div>
       <div class="form-group"><label>Qaytarish muddati *</label><input type="date" class="form-control" id="muddat" required></div>
-      <button type="submit" class="btn btn-primary">
+      <button type="submit" class="btn btn-primary" id="saqlashBtn">
         <svg class="ico" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
         Qarzdorni saqlash
       </button>
@@ -853,7 +893,7 @@
     </div>
     <div class="modal-actions">
       <button class="btn btn-danger" onclick="closeModal('tolovModal')">Bekor qilish</button>
-      <button class="btn btn-success" onclick="confirmTolov()">
+      <button class="btn btn-success" onclick="confirmTolov()" id="tolovBtn">
         <svg class="ico" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
         Tasdiqlash
       </button>
@@ -899,150 +939,22 @@
 
 <script>
 /* ============================================================
-   SERVICE WORKER
+   SUPABASE ULANISH
    ============================================================ */
-var SW_CODE = [
-  "var CACHE = 'pam-nasiya-v8';",
-  "",
-  "self.addEventListener('install', function() { self.skipWaiting(); });",
-  "self.addEventListener('activate', function(e) { e.waitUntil(self.clients.claim()); });",
-  "",
-  "self.addEventListener('message', function(event) {",
-  "  var data = event.data || {};",
-  "  if (data.type === 'REMINDER') {",
-  "    var items = data.items || [];",
-  "    var count = items.length;",
-  "    if (count === 0) return;",
-  "    if (count === 1) {",
-  "      var q = items[0];",
-  "      self.registration.showNotification('PAM Nasiya - Muddat eslatmasi', {",
-  "        body: q.ismi + ' ' + q.familyasi + '\\n' + q.text + '\\nQoldiq: ' + q.qoldiq + '\\n\\nIltimos, qongiroq qiling yoki SMS yuboring!',",
-  "        icon: data.icon,",
-  "        badge: data.icon,",
-  "        tag: 'pam-reminder-' + q.id,",
-  "        requireInteraction: true,",
-  "        vibrate: [300, 100, 300, 100, 300]",
-  "      });",
-  "    } else {",
-  "      var names = items.slice(0, 3).map(function(q) { return '- ' + q.ismi + ' ' + q.familyasi + ' - ' + q.text; }).join('\\n');",
-  "      var extra = count > 3 ? '\\n... va yana ' + (count - 3) + ' ta' : '';",
-  "      self.registration.showNotification('PAM Nasiya - ' + count + ' ta eslatma', {",
-  "        body: names + extra + '\\n\\nIltimos, royxatni korib chiqing!',",
-  "        icon: data.icon,",
-  "        badge: data.icon,",
-  "        tag: 'pam-reminder-batch',",
-  "        requireInteraction: true,",
-  "        vibrate: [300, 100, 300, 100, 300, 100, 300]",
-  "      });",
-  "    }",
-  "  }",
-  "});",
-  "",
-  "self.addEventListener('notificationclick', function(event) {",
-  "  event.notification.close();",
-  "  var url = (event.notification.data && event.notification.data.url) || self.location.origin;",
-  "  event.waitUntil(",
-  "    clients.matchAll({ type: 'window', includeUncontrolled: true }).then(function(clientList) {",
-  "      for (var i = 0; i < clientList.length; i++) {",
-  "        var c = clientList[i];",
-  "        if (c.url.indexOf(self.location.origin) !== -1 && 'focus' in c) return c.focus();",
-  "      }",
-  "      if (clients.openWindow) return clients.openWindow(url);",
-  "    })",
-  "  );",
-  "});",
-  "",
-  "self.addEventListener('fetch', function(e) {",
-  "  e.respondWith(caches.match(e.request).then(function(r) { return r || fetch(e.request).catch(function() { return caches.match('/'); }); }));",
-  "});"
-].join("\n");
+var SUPABASE_URL = 'https://ozigkdzfelsmadzdhukz.supabase.co';
+var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im96aWdrZHpmZWxzbWFkemRodWt6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAxODczNDgsImV4cCI6MjEwNTc2MzM0OH0.SQw38xVrmm7FBcUCSLIGJTaAgVQAxg6n-xla_cGpSW0';
 
-var pamIconSVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 120">' +
-  '<rect width="300" height="120" fill="#ffffff"/>' +
-  '<g fill="none" stroke="#ef1c1c" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">' +
-  '<path d="M 55 42 Q 75 22 130 20 L 180 20 Q 225 22 245 42"/>' +
-  '<path d="M 48 46 L 252 46"/>' +
-  '<path d="M 245 42 Q 258 42 260 48 Q 262 55 250 56"/>' +
-  '<path d="M 55 42 Q 42 42 40 48 Q 38 55 50 56"/>' +
-  '</g>' +
-  '<circle cx="90" cy="58" r="7" fill="none" stroke="#ef1c1c" stroke-width="3"/>' +
-  '<circle cx="210" cy="58" r="7" fill="none" stroke="#ef1c1c" stroke-width="3"/>' +
-  '<text x="150" y="105" font-family="Arial Black" font-size="72" font-weight="900" text-anchor="middle" font-style="italic" letter-spacing="-3">' +
-  '<tspan fill="#1a1a1a">P</tspan><tspan fill="#ef1c1c">A</tspan><tspan fill="#1a1a1a">M</tspan>' +
-  '</text>' +
-  '<text x="150" y="118" font-family="Arial Black" font-size="11" font-weight="900" text-anchor="middle" font-style="italic" letter-spacing="1.5">' +
-  '<tspan fill="#1a1a1a">POP AUTO </tspan><tspan fill="#ef1c1c">MAKON</tspan>' +
-  '</text>' +
-  '</svg>';
-var pamIconDataURL = 'data:image/svg+xml,' + encodeURIComponent(pamIconSVG);
-
-var manifest = {
-  name: "PAM Nasiya - POP AUTO MAKON",
-  short_name: "PAM Nasiya",
-  description: "POP AUTO MAKON nasiya boshqaruv tizimi",
-  start_url: ".", display: "standalone",
-  background_color: "#06080f", theme_color: "#06080f",
-  orientation: "portrait",
-  icons: [{ src: pamIconDataURL, sizes: "512x512", type: "image/svg+xml", purpose: "any maskable" }]
-};
-
-var manifestBlob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
-var manifestLink = document.createElement('link');
-manifestLink.rel = 'manifest';
-manifestLink.href = URL.createObjectURL(manifestBlob);
-document.head.appendChild(manifestLink);
-
-var swRegistration = null;
-if ('serviceWorker' in navigator) {
-  try {
-    var swBlob = new Blob([SW_CODE], { type: 'application/javascript' });
-    navigator.serviceWorker.register(URL.createObjectURL(swBlob)).then(function(reg) {
-      swRegistration = reg;
-      setTimeout(function() {
-        if (Notification.permission === 'granted') checkReminders(true);
-      }, 2000);
-    }).catch(function() {});
-  } catch(e) {}
-}
-
-var deferredPrompt = null;
-window.addEventListener('beforeinstallprompt', function(e) {
-  e.preventDefault();
-  deferredPrompt = e;
-  document.getElementById('installBanner').style.display = 'flex';
-});
-
-function installApp() {
-  if (deferredPrompt) {
-    deferredPrompt.prompt();
-    deferredPrompt.userChoice.then(function(choice) {
-      if (choice.outcome === 'accepted') showToast('Ilova ornatildi!');
-      deferredPrompt = null;
-      document.getElementById('installBanner').style.display = 'none';
-    });
-  } else {
-    var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-    var isAndroid = /Android/.test(navigator.userAgent);
-    if (isIOS) alert("iPhone uchun ornatish:\n\n1. Pastdagi 'Ulashish' tugmasini bosing\n2. 'Bosh ekranga qo'shish' ni tanlang\n3. 'Qo'shish' ni bosing");
-    else if (isAndroid) alert("Android uchun ornatish:\n\nBrauzer menyusidan 'Bosh ekranga qo'shish' ni tanlang");
-    else alert("Kompyuter uchun ornatish:\n\nBrauzer manzil qatoridagi 'O'rnatish' belgisini bosing");
-  }
-}
+var supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 /* ============================================================
-   DATA
+   HOLAT (STATE)
    ============================================================ */
-var STORAGE_KEY = 'pam_nasiya_v8';
-var SENT_KEY = 'pam_sent_notifs_v8';
-var qarzdorlar = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-var sentNotifications = JSON.parse(localStorage.getItem(SENT_KEY)) || {};
+var qarzdorlar = [];
 var currentSmsId = null;
 var currentTolovId = null;
 var currentDeleteId = null;
 var currentFilter = 'all';
-
-function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(qarzdorlar)); }
-function saveSent() { localStorage.setItem(SENT_KEY, JSON.stringify(sentNotifications)); }
+var isOnline = true;
 
 /* ============================================================
    FORMATLASH
@@ -1072,12 +984,9 @@ function formatSummaShort(n) {
   var neg = n < 0;
   n = Math.abs(n);
   var out = '';
-
-  if (n >= 1000000000) {
-    out = (n / 1000000000).toFixed(1) + " mlrd";
-  } else if (n >= 10000000) {
-    out = (n / 1000000).toFixed(1) + " mln";
-  } else {
+  if (n >= 1000000000) out = (n / 1000000000).toFixed(1) + " mlrd";
+  else if (n >= 10000000) out = (n / 1000000).toFixed(1) + " mln";
+  else {
     var s = String(n);
     var result = '';
     var count = 0;
@@ -1091,7 +1000,9 @@ function formatSummaShort(n) {
   return (neg ? '-' : '') + out;
 }
 
-function initials(ismi, familyasi) { return (ismi && ismi[0] ? ismi[0].toUpperCase() : '') + (familyasi && familyasi[0] ? familyasi[0].toUpperCase() : ''); }
+function initials(ismi, familyasi) {
+  return (ismi && ismi[0] ? ismi[0].toUpperCase() : '') + (familyasi && familyasi[0] ? familyasi[0].toUpperCase() : '');
+}
 
 function daysDiff(muddat) {
   var bugun = new Date(); bugun.setHours(0,0,0,0);
@@ -1116,9 +1027,127 @@ function showToast(msg, type) {
   t.textContent = msg;
   t.className = 'toast show ' + type;
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(function() { t.className = 'toast ' + type; }, 3500);
+  toastTimer = setTimeout(function() { t.className = 'toast ' + type; }, 3000);
 }
 
+function setSyncStatus(status, text) {
+  var badge = document.getElementById('syncBadge');
+  var dot = document.getElementById('syncDot');
+  var txt = document.getElementById('syncText');
+  badge.className = 'sync-badge ' + (status === 'error' ? 'error' : status === 'offline' ? 'offline' : '');
+  txt.textContent = text;
+}
+
+/* ============================================================
+   SUPABASE AMALLARI
+   ============================================================ */
+async function supabaseGetAll() {
+  try {
+    setSyncStatus('loading', 'Yuklanmoqda...');
+    var res = await supabaseClient
+      .from('qarzdorlar')
+      .select('*')
+      .order('id', { ascending: false });
+    
+    if (res.error) {
+      console.error('Xatolik:', res.error);
+      setSyncStatus('error', 'Xatolik');
+      return null;
+    }
+    
+    setSyncStatus('ok', 'Bulut');
+    isOnline = true;
+    return (res.data || []).map(function(d) {
+      return {
+        id: d.id,
+        ismi: d.ismi,
+        familyasi: d.familyasi,
+        yashashJoyi: d.yashash_joyi,
+        telRaqami: d.tel_raqami,
+        maxsulot: d.maxsulot,
+        summa: Number(d.summa),
+        tolangan: Number(d.tolangan),
+        qoldiq: Number(d.qoldiq),
+        muddat: d.muddat,
+        yaratilgan: d.yaratilgan
+      };
+    });
+  } catch (e) {
+    console.error('Tarmoq xatosi:', e);
+    setSyncStatus('offline', 'Oflayn');
+    isOnline = false;
+    return null;
+  }
+}
+
+async function supabaseInsert(q) {
+  try {
+    var res = await supabaseClient
+      .from('qarzdorlar')
+      .insert([{
+        id: q.id,
+        ismi: q.ismi,
+        familyasi: q.familyasi,
+        yashash_joyi: q.yashashJoyi,
+        tel_raqami: q.telRaqami,
+        maxsulot: q.maxsulot,
+        summa: q.summa,
+        tolangan: q.tolangan || 0,
+        qoldiq: q.qoldiq,
+        muddat: q.muddat,
+        yaratilgan: q.yaratilgan || new Date().toISOString()
+      }]);
+    
+    if (res.error) {
+      console.error('Insert xatolik:', res.error);
+      return false;
+    }
+    return true;
+  } catch (e) {
+    console.error('Insert tarmoq xatosi:', e);
+    return false;
+  }
+}
+
+async function supabaseUpdateTolov(id, tolangan, qoldiq) {
+  try {
+    var res = await supabaseClient
+      .from('qarzdorlar')
+      .update({ tolangan: tolangan, qoldiq: qoldiq })
+      .eq('id', id);
+    
+    if (res.error) {
+      console.error('Update xatolik:', res.error);
+      return false;
+    }
+    return true;
+  } catch (e) {
+    console.error('Update tarmoq xatosi:', e);
+    return false;
+  }
+}
+
+async function supabaseDelete(id) {
+  try {
+    var res = await supabaseClient
+      .from('qarzdorlar')
+      .delete()
+      .eq('id', id);
+    
+    if (res.error) {
+      console.error('Delete xatolik:', res.error);
+      return false;
+    }
+    return true;
+  } catch (e) {
+    console.error('Delete tarmoq xatosi:', e);
+    return false;
+  }
+}
+
+/* ============================================================
+   NAVIGATSIYA
+   ============================================================ */
 function goToPage(page) {
   document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
   document.querySelectorAll('.nav-item').forEach(function(n) { n.classList.remove('active'); });
@@ -1135,6 +1164,9 @@ document.querySelectorAll('.nav-item').forEach(function(btn) {
   btn.addEventListener('click', function() { goToPage(btn.dataset.page); });
 });
 
+/* ============================================================
+   DASHBOARD
+   ============================================================ */
 function renderDashboard() {
   var total = qarzdorlar.length;
   var overdue = qarzdorlar.filter(function(q) { return q.qoldiq > 0 && getHolat(q).type === 'overdue'; }).length;
@@ -1152,8 +1184,8 @@ function renderDashboard() {
   var alertBox = document.getElementById('alertBanner');
   if (overdue > 0 || today > 0) {
     var msg = '';
-    if (overdue > 0 && today > 0) msg = '<b>' + today + ' ta</b> bugun to\'lash + <b>' + overdue + ' ta</b> muddati o\'tgan!';
-    else if (today > 0) msg = '<b>' + today + ' ta</b> qarzdorning muddati <b>BUGUN</b> tugaydi!';
+    if (overdue > 0 && today > 0) msg = '<b>' + today + ' ta</b> bugun + <b>' + overdue + ' ta</b> muddati o\'tgan!';
+    else if (today > 0) msg = '<b>' + today + ' ta</b> qarzdorning muddati <b>BUGUN</b>!';
     else msg = '<b>' + overdue + ' ta</b> qarzdorning muddati o\'tgan!';
     alertBox.innerHTML = '<div class="alert-banner ' + (today > 0 ? 'today' : 'danger') + '">' +
       '<svg class="ico ico-lg" viewBox="0 0 24 24" style="color:#ef4444;flex-shrink:0"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>' +
@@ -1185,6 +1217,9 @@ function renderDashboard() {
     '<div>' + formatDate(now) + '</div>';
 }
 
+/* ============================================================
+   QARZDORLAR RO'YXATI
+   ============================================================ */
 function renderQarzdorlar() {
   var search = document.getElementById('searchInput').value.toLowerCase().trim();
   var list = document.getElementById('qarzdorlarList');
@@ -1273,6 +1308,9 @@ function setFilter(f) {
   renderQarzdorlar();
 }
 
+/* ============================================================
+   TO'LOV RO'YXATI
+   ============================================================ */
 function renderTolovList() {
   var search = (document.getElementById('tolovSearch').value || '').toLowerCase().trim();
   var list = document.getElementById('tolovList');
@@ -1310,6 +1348,9 @@ function renderTolovList() {
 }
 document.getElementById('tolovSearch').addEventListener('input', renderTolovList);
 
+/* ============================================================
+   SUMMA INPUT
+   ============================================================ */
 document.getElementById('summa').addEventListener('input', function() {
   var val = this.value.replace(/[^\d]/g, '');
   if (val) {
@@ -1325,7 +1366,10 @@ document.getElementById('tolovSumma').addEventListener('input', function() {
   this.value = val;
 });
 
-document.getElementById('qarzdorForm').addEventListener('submit', function(e) {
+/* ============================================================
+   YANGI QARZDOR QO'SHISH
+   ============================================================ */
+document.getElementById('qarzdorForm').addEventListener('submit', async function(e) {
   e.preventDefault();
   var inputs = ['ismi','familyasi','yashashJoyi','telRaqami','maxsulot','summa','muddat'];
   var valid = true;
@@ -1338,26 +1382,49 @@ document.getElementById('qarzdorForm').addEventListener('submit', function(e) {
   var summa = Math.round(Number(document.getElementById('summa').value));
   if (!summa || summa <= 0) { showToast('Summa 0 dan katta bo\'lishi kerak!', 'error'); return; }
 
-  qarzdorlar.push({
+  var btn = document.getElementById('saqlashBtn');
+  btn.disabled = true;
+  btn.textContent = 'Saqlanmoqda...';
+
+  var yangi = {
     id: Date.now(),
     ismi: document.getElementById('ismi').value.trim(),
     familyasi: document.getElementById('familyasi').value.trim(),
     yashashJoyi: document.getElementById('yashashJoyi').value.trim(),
     telRaqami: document.getElementById('telRaqami').value.trim(),
     maxsulot: document.getElementById('maxsulot').value.trim(),
-    summa: summa, tolangan: 0, qoldiq: summa,
+    summa: summa,
+    tolangan: 0,
+    qoldiq: summa,
     muddat: document.getElementById('muddat').value,
     yaratilgan: new Date().toISOString()
-  });
-  save();
+  };
+
+  var ok = await supabaseInsert(yangi);
+  
+  btn.disabled = false;
+  btn.innerHTML = '<svg class="ico" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Qarzdorni saqlash';
+
+  if (!ok) {
+    showToast('Saqlashda xatolik! Internetni tekshiring.', 'error');
+    return;
+  }
+
+  qarzdorlar.unshift(yangi);
   this.reset();
   document.getElementById('summaHint').innerHTML = '';
-  showToast('Qarzdor muvaffaqiyatli qo\'shildi!');
-  setTimeout(function() { goToPage('qarzdorlar'); }, 700);
+  showToast('✅ Qarzdor muvaffaqiyatli qo\'shildi!');
+  setTimeout(function() { goToPage('qarzdorlar'); }, 500);
 });
 
+/* ============================================================
+   QO'NG'IROQ
+   ============================================================ */
 function callClient(tel) { window.location.href = 'tel:' + tel.replace(/\s/g, ''); }
 
+/* ============================================================
+   MODAL
+   ============================================================ */
 function openModal(id) { document.getElementById(id).classList.add('active'); }
 function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 document.querySelectorAll('.modal-overlay').forEach(function(m) {
@@ -1402,9 +1469,12 @@ function sendSms() {
   var tel = q.telRaqami.replace(/\s+/g, '').replace(/[^\d+]/g, '');
   window.location.href = 'sms:' + tel + '?body=' + encodeURIComponent(text);
   closeModal('smsModal');
-  showToast('SMS ilovasi ochilmoqda...');
+  showToast('📲 SMS ilovasi ochilmoqda...');
 }
 
+/* ============================================================
+   TO'LOV
+   ============================================================ */
 function openTolovModal(id) {
   currentTolovId = id;
   var q = qarzdorlar.find(function(x) { return x.id === id; });
@@ -1428,30 +1498,41 @@ function setPayPercent(p) {
   document.getElementById('tolovSumma').value = Math.round(q.qoldiq * (p / 100));
 }
 
-function confirmTolov() {
+async function confirmTolov() {
   var q = qarzdorlar.find(function(x) { return x.id === currentTolovId; });
   if (!q) return;
   var summa = Math.round(Number(document.getElementById('tolovSumma').value));
   if (!summa || summa <= 0) { showToast('To\'g\'ri summa kiriting!', 'error'); return; }
   if (summa > q.qoldiq) { showToast('Summa qoldiqdan katta!', 'error'); return; }
 
-  q.tolangan = (q.tolangan || 0) + summa;
-  q.qoldiq = q.summa - q.tolangan;
-  save();
+  var btn = document.getElementById('tolovBtn');
+  btn.disabled = true;
 
-  if (q.qoldiq <= 0) {
-    delete sentNotifications['notif_' + q.id + '_' + todayKey()];
-    saveSent();
+  var yangiTolangan = (q.tolangan || 0) + summa;
+  var yangiQoldiq = q.summa - yangiTolangan;
+
+  var ok = await supabaseUpdateTolov(q.id, yangiTolangan, yangiQoldiq);
+  
+  btn.disabled = false;
+
+  if (!ok) {
+    showToast('Saqlashda xatolik! Internetni tekshiring.', 'error');
+    return;
   }
 
+  q.tolangan = yangiTolangan;
+  q.qoldiq = yangiQoldiq;
+
   closeModal('tolovModal');
-  showToast(q.qoldiq <= 0 ? q.ismi + ' qarzini to\'liq to\'ladi!' : formatSumma(summa) + ' qabul qilindi!');
+  showToast(q.qoldiq <= 0 ? '🎉 ' + q.ismi + ' qarzini to\'liq to\'ladi!' : '✅ ' + formatSumma(summa) + ' qabul qilindi!');
   renderQarzdorlar();
   renderTolovList();
   renderDashboard();
-  updateBellBadge();
 }
 
+/* ============================================================
+   O'CHIRISH
+   ============================================================ */
 function openDeleteModal(id) {
   currentDeleteId = id;
   var q = qarzdorlar.find(function(x) { return x.id === id; });
@@ -1460,40 +1541,26 @@ function openDeleteModal(id) {
     '<b>' + q.ismi + ' ' + q.familyasi + '</b> ni ro\'yxatdan o\'chirmoqchimisiz?<br><small style="color:#8b95b8;">Bu amalni qaytarish mumkin emas.</small>';
   openModal('delModal');
 }
-function confirmDelete() {
+
+async function confirmDelete() {
   if (!currentDeleteId) return;
+  
+  var ok = await supabaseDelete(currentDeleteId);
+  if (!ok) {
+    showToast('O\'chirishda xatolik! Internetni tekshiring.', 'error');
+    return;
+  }
+
   qarzdorlar = qarzdorlar.filter(function(x) { return x.id !== currentDeleteId; });
-  save();
   closeModal('delModal');
-  showToast('O\'chirildi');
+  showToast('🗑 O\'chirildi');
   renderQarzdorlar();
   renderDashboard();
-  updateBellBadge();
 }
 
-function updateBellBadge() {
-  var overdue = qarzdorlar.filter(function(q) { return q.qoldiq > 0 && getHolat(q).type === 'overdue'; }).length;
-  var today = qarzdorlar.filter(function(q) { return q.qoldiq > 0 && getHolat(q).type === 'today'; }).length;
-  var total = overdue + today;
-  var bellBadge = document.getElementById('bellBadge');
-  var bellBtn = document.getElementById('bellBtn');
-  var navBadge = document.getElementById('navBadge');
-  if (total > 0) {
-    bellBadge.textContent = total; bellBadge.style.display = 'flex';
-    bellBtn.classList.add('has-alert');
-    navBadge.textContent = total; navBadge.style.display = 'flex';
-  } else {
-    bellBadge.style.display = 'none';
-    bellBtn.classList.remove('has-alert');
-    navBadge.style.display = 'none';
-  }
-}
-
-function todayKey() {
-  var d = new Date();
-  return d.getFullYear() + '-' + (d.getMonth()+1) + '-' + d.getDate();
-}
-
+/* ============================================================
+   ESLATMA TIZIMI
+   ============================================================ */
 function getReminderList() {
   return qarzdorlar.filter(function(q) {
     if (q.qoldiq <= 0) return false;
@@ -1516,114 +1583,6 @@ function getReminderList() {
       maxsulot: q.maxsulot
     };
   });
-}
-
-function sendNotifications(items) {
-  if (items.length === 0) return;
-  if (swRegistration && Notification.permission === 'granted') {
-    try {
-      if (swRegistration.active) {
-        swRegistration.active.postMessage({
-          type: 'REMINDER',
-          items: items,
-          icon: pamIconDataURL
-        });
-      } else {
-        sendFallbackNotifications(items);
-      }
-    } catch(e) {
-      sendFallbackNotifications(items);
-    }
-  } else if (Notification.permission === 'granted') {
-    sendFallbackNotifications(items);
-  }
-}
-
-function sendFallbackNotifications(items) {
-  if (items.length === 1) {
-    var q = items[0];
-    new Notification('PAM Nasiya - Muddat eslatmasi', {
-      body: q.ismi + ' ' + q.familyasi + '\n' + q.text + '\nQoldiq: ' + q.qoldiq + '\n\nIltimos, qo\'ng\'iroq qiling yoki SMS yuboring!',
-      icon: pamIconDataURL,
-      badge: pamIconDataURL,
-      tag: 'pam-reminder-' + q.id,
-      requireInteraction: true,
-      vibrate: [300, 100, 300, 100, 300]
-    });
-  } else {
-    var names = items.slice(0, 3).map(function(q) { return '- ' + q.ismi + ' ' + q.familyasi + ' - ' + q.text; }).join('\n');
-    var extra = items.length > 3 ? '\n... va yana ' + (items.length - 3) + ' ta' : '';
-    new Notification('PAM Nasiya - ' + items.length + ' ta eslatma', {
-      body: names + extra + '\n\nIltimos, ro\'yxatni ko\'rib chiqing!',
-      icon: pamIconDataURL,
-      badge: pamIconDataURL,
-      tag: 'pam-reminder-batch',
-      requireInteraction: true,
-      vibrate: [300, 100, 300, 100, 300, 100, 300]
-    });
-  }
-}
-
-function playAlertSound() {
-  try {
-    var ctx = new (window.AudioContext || window.webkitAudioContext)();
-    var now = ctx.currentTime;
-    [0, 0.2, 0.4].forEach(function(offset, i) {
-      var osc = ctx.createOscillator();
-      var gain = ctx.createGain();
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.type = 'sine';
-      osc.frequency.value = i === 1 ? 1000 : 800;
-      gain.gain.setValueAtTime(0, now + offset);
-      gain.gain.linearRampToValueAtTime(0.3, now + offset + 0.02);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + offset + 0.18);
-      osc.start(now + offset);
-      osc.stop(now + offset + 0.2);
-    });
-  } catch(e) {}
-}
-
-function checkReminders(force) {
-  force = !!force;
-  var items = getReminderList();
-  if (items.length === 0) return;
-
-  var tk = todayKey();
-  var newItems = items.filter(function(item) {
-    var key = 'notif_' + item.id + '_' + tk;
-    return !sentNotifications[key];
-  });
-
-  if (!force && newItems.length === 0) return;
-
-  var toSend = force ? items : newItems;
-  sendNotifications(toSend);
-
-  if (toSend.length > 0) playAlertSound();
-
-  if (toSend.length > 0) {
-    var todayCount = toSend.filter(function(i) { return i.kun === 0; }).length;
-    var overCount = toSend.filter(function(i) { return i.kun < 0; }).length;
-    var msg = '';
-    if (todayCount > 0 && overCount > 0) msg = todayCount + ' ta bugun + ' + overCount + ' ta o\'tgan!';
-    else if (todayCount > 0) msg = todayCount + ' ta qarzdorning muddati BUGUN!';
-    else msg = overCount + ' ta qarzdorning muddati o\'tgan!';
-    setTimeout(function() { showToast(msg, 'error'); }, 800);
-  }
-
-  if (!force) {
-    newItems.forEach(function(item) {
-      sentNotifications['notif_' + item.id + '_' + tk] = Date.now();
-    });
-    var cutoff = Date.now() - 30 * 86400000;
-    Object.keys(sentNotifications).forEach(function(k) {
-      if (sentNotifications[k] < cutoff) delete sentNotifications[k];
-    });
-    saveSent();
-  }
-
-  updateBellBadge();
 }
 
 function showReminderModal() {
@@ -1656,6 +1615,9 @@ function reminderGoList() {
   setTimeout(function() { setFilter('today'); }, 300);
 }
 
+/* ============================================================
+   NOTIFICATION PERMISSION
+   ============================================================ */
 function requestNotifPermission() {
   if (!('Notification' in window)) {
     showToast('Brauzer notification qo\'llab-quvvatlamaydi', 'error');
@@ -1667,9 +1629,8 @@ function requestNotifPermission() {
   }
   Notification.requestPermission().then(function(perm) {
     if (perm === 'granted') {
-      showToast('Notification yoqildi!');
+      showToast('✅ Notification yoqildi!');
       renderNotifBanner();
-      setTimeout(function() { checkReminders(true); }, 500);
     } else {
       showToast('Notification rad etildi', 'error');
     }
@@ -1687,11 +1648,56 @@ function renderNotifBanner() {
     '</div>';
 }
 
-function init() {
+/* ============================================================
+   INSTALL PWA
+   ============================================================ */
+var deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', function(e) {
+  e.preventDefault();
+  deferredPrompt = e;
+  document.getElementById('installBanner').style.display = 'flex';
+});
+
+function installApp() {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(function(choice) {
+      if (choice.outcome === 'accepted') showToast('✅ Ilova o\'rnatildi!');
+      deferredPrompt = null;
+      document.getElementById('installBanner').style.display = 'none';
+    });
+  } else {
+    var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    var isAndroid = /Android/.test(navigator.userAgent);
+    if (isIOS) alert("iPhone uchun:\n\n1. Pastdagi 'Ulashish' tugmasini bosing\n2. 'Bosh ekranga qo'shish' ni tanlang\n3. 'Qo'shish' ni bosing");
+    else if (isAndroid) alert("Android uchun:\n\nBrauzer menyusidan 'Bosh ekranga qo'shish' ni tanlang");
+    else alert("Kompyuter uchun:\n\nBrauzer manzil qatoridagi 'O'rnatish' belgisini bosing");
+  }
+}
+
+/* ============================================================
+   YUKLASH
+   ============================================================ */
+async function init() {
   renderNotifBanner();
   renderDashboard();
   renderQarzdorlar();
   renderTolovList();
+
+  setSyncStatus('loading', 'Yuklanmoqda...');
+  var data = await supabaseGetAll();
+  
+  if (data === null) {
+    showToast('Internet aloqasi yo\'q! Oflayn rejim.', 'warning');
+  } else {
+    qarzdorlar = data;
+    renderDashboard();
+    renderQarzdorlar();
+    renderTolovList();
+    if (qarzdorlar.length > 0) {
+      showToast('✅ ' + qarzdorlar.length + ' ta qarzdor yuklandi');
+    }
+  }
 
   var isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
   var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
@@ -1703,27 +1709,16 @@ function init() {
   document.getElementById('bellBtn').onclick = showReminderModal;
 
   if ('Notification' in window && Notification.permission === 'granted') {
-    setTimeout(function() { checkReminders(true); }, 1500);
+    setTimeout(function() {
+      var items = getReminderList();
+      if (items.length > 0) {
+        new Notification('PAM Nasiya - Eslatma', {
+          body: items.length + ' ta qarzdorning muddati o\'tgan yoki bugun!',
+          icon: 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#0a0e1a"/><text x="50" y="70" font-family="Arial Black" font-size="50" font-weight="900" fill="#ef2d2d" text-anchor="middle">PAM</text></svg>')
+        });
+      }
+    }, 2000);
   }
-
-  setInterval(function() { checkReminders(false); }, 60000);
-
-  document.addEventListener('visibilitychange', function() {
-    if (!document.hidden) {
-      setTimeout(function() { checkReminders(false); }, 500);
-      renderDashboard();
-      updateBellBadge();
-    }
-  });
-
-  var now = new Date();
-  var midnight = new Date(now);
-  midnight.setHours(24, 0, 5, 0);
-  var msUntilMidnight = midnight - now;
-  setTimeout(function() {
-    checkReminders(true);
-    setInterval(function() { checkReminders(true); }, 86400000);
-  }, msUntilMidnight);
 }
 
 window.addEventListener('load', init);
