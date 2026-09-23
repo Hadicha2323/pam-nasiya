@@ -1,0 +1,1745 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#0a0e1a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="PAM Nasiya">
+<meta name="mobile-web-app-capable" content="yes">
+<title>PAM Nasiya - POP AUTO MAKON</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; }
+
+  :root {
+    --red: #ef2d2d;
+    --red-dark: #c41010;
+    --red-glow: rgba(239,45,45,0.5);
+    --success: #10b981;
+    --danger: #ef4444;
+    --warning: #f59e0b;
+    --bg: #06080f;
+    --card: rgba(15, 20, 35, 0.78);
+    --text: #ffffff;
+    --text-muted: #8b95b8;
+    --border: rgba(255,255,255,0.08);
+    --border-red: rgba(239,45,45,0.35);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+    --safe-top: env(safe-area-inset-top, 0px);
+  }
+
+  html, body { min-height: 100vh; overscroll-behavior-y: none; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+    padding-bottom: calc(85px + var(--safe-bottom));
+    position: relative;
+  }
+
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url('https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=1600&q=80');
+    background-size: cover; background-position: center 30%;
+    background-attachment: fixed; z-index: -3;
+    filter: brightness(0.35) saturate(1.2);
+  }
+  body::after {
+    content: '';
+    position: fixed; inset: 0;
+    background:
+      radial-gradient(circle at 20% 10%, rgba(239,45,45,0.18) 0%, transparent 45%),
+      radial-gradient(circle at 80% 90%, rgba(0,80,255,0.15) 0%, transparent 50%),
+      linear-gradient(180deg, rgba(6,8,15,0.72) 0%, rgba(6,8,15,0.92) 60%, rgba(6,8,15,0.98) 100%);
+    z-index: -2;
+  }
+
+  .app-header {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(6,8,15,0.85);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border-bottom: 1px solid var(--border-red);
+    padding: 10px 14px;
+    padding-top: calc(10px + var(--safe-top));
+    display: flex; align-items: center; justify-content: space-between;
+    animation: slideDown 0.5s cubic-bezier(0.16,1,0.3,1);
+    gap: 10px;
+  }
+  @keyframes slideDown { from { transform: translateY(-100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+  .pam-logo { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+  .pam-logo-box {
+    background: #ffffff; border-radius: 10px; padding: 6px 8px;
+    box-shadow: 0 4px 15px rgba(239,45,45,0.4), 0 0 0 1px rgba(255,255,255,0.1);
+    animation: logoPulse 3s ease-in-out infinite;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  @keyframes logoPulse {
+    0%,100% { box-shadow: 0 4px 15px rgba(239,45,45,0.4), 0 0 0 1px rgba(255,255,255,0.1); }
+    50% { box-shadow: 0 4px 25px rgba(239,45,45,0.8), 0 0 0 1px rgba(255,255,255,0.15); }
+  }
+  .pam-logo-svg { height: 42px; width: auto; display: block; }
+
+  .header-time { font-size: 10px; color: var(--text-muted); text-align: right; font-weight: 600; line-height: 1.35; flex-shrink: 0; }
+
+  .bell-btn {
+    position: relative;
+    background: rgba(239,45,45,0.15);
+    border: 1px solid var(--border-red);
+    width: 38px; height: 38px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--red);
+    cursor: pointer; flex-shrink: 0;
+    transition: all 0.2s;
+  }
+  .bell-btn:active { transform: scale(0.9); }
+  .bell-btn.has-alert {
+    animation: bellShake 1s ease-in-out infinite;
+    background: rgba(239,45,45,0.3);
+  }
+  @keyframes bellShake {
+    0%,100% { transform: rotate(0); }
+    20% { transform: rotate(-15deg); }
+    40% { transform: rotate(15deg); }
+    60% { transform: rotate(-10deg); }
+    80% { transform: rotate(10deg); }
+  }
+  .bell-badge {
+    position: absolute; top: -6px; right: -6px;
+    background: var(--red); color: white;
+    font-size: 10px; font-weight: 800;
+    min-width: 18px; height: 18px; border-radius: 9px;
+    display: flex; align-items: center; justify-content: center;
+    padding: 0 5px;
+    box-shadow: 0 0 10px var(--red-glow);
+    animation: badgePulse 1.5s infinite;
+  }
+  @keyframes badgePulse {
+    0%,100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+  }
+
+  .page { display: none; padding: 16px; animation: pageEnter 0.4s cubic-bezier(0.16,1,0.3,1); }
+  .page.active { display: block; }
+  @keyframes pageEnter { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+  .ico { width: 18px; height: 18px; stroke: currentColor; stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; display: inline-block; vertical-align: middle; }
+  .ico-sm { width: 14px; height: 14px; }
+  .ico-lg { width: 22px; height: 22px; }
+
+  .bottom-nav {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: rgba(6,8,15,0.94);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border-top: 1px solid var(--border-red);
+    display: flex; justify-content: space-around;
+    padding: 10px 4px calc(10px + var(--safe-bottom));
+    z-index: 1000;
+    box-shadow: 0 -8px 30px rgba(0,0,0,0.7);
+  }
+  .nav-item {
+    flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px;
+    padding: 6px 4px; border-radius: 12px; cursor: pointer;
+    transition: all 0.3s; color: var(--text-muted); position: relative;
+    background: transparent; border: none; font-size: 10px; font-weight: 700;
+    -webkit-user-select: none; user-select: none; font-family: inherit;
+  }
+  .nav-item .nav-icon { transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1); display: flex; align-items: center; justify-content: center; }
+  .nav-item .nav-icon .ico { width: 22px; height: 22px; stroke-width: 1.8; }
+  .nav-item.active { color: var(--red); }
+  .nav-item.active .nav-icon { transform: translateY(-3px) scale(1.15); filter: drop-shadow(0 0 8px var(--red-glow)); }
+  .nav-item.active::before {
+    content: ''; position: absolute; top: -1px; left: 50%; transform: translateX(-50%);
+    width: 32px; height: 3px; border-radius: 0 0 4px 4px;
+    background: var(--red); box-shadow: 0 0 12px var(--red);
+    animation: navBar 0.4s cubic-bezier(0.16,1,0.3,1);
+  }
+  @keyframes navBar { from { width: 0; opacity: 0; } to { width: 32px; opacity: 1; } }
+  .nav-item:active .nav-icon { transform: scale(0.85); }
+
+  .nav-badge {
+    position: absolute; top: 0; right: calc(50% - 22px);
+    background: var(--red); color: white;
+    font-size: 9px; font-weight: 800;
+    min-width: 17px; height: 17px; border-radius: 9px;
+    display: flex; align-items: center; justify-content: center;
+    padding: 0 5px; box-shadow: 0 0 10px var(--red-glow);
+    animation: badgePulse 2s infinite;
+  }
+
+  .card {
+    background: var(--card);
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    border: 1px solid var(--border);
+    border-radius: 18px; padding: 18px; margin-bottom: 14px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    animation: cardEnter 0.5s cubic-bezier(0.16,1,0.3,1) backwards;
+  }
+  @keyframes cardEnter { from { opacity: 0; transform: translateY(20px) scale(0.97); } to { opacity: 1; transform: translateY(0) scale(1); } }
+
+  .section-title {
+    font-size: 12px; font-weight: 800; text-transform: uppercase;
+    letter-spacing: 1.2px; color: var(--red);
+    margin-bottom: 14px; display: flex; align-items: center; gap: 8px;
+  }
+  .section-title::before {
+    content: ''; width: 4px; height: 16px; border-radius: 2px;
+    background: linear-gradient(180deg, var(--red), var(--red-dark));
+    box-shadow: 0 0 8px var(--red-glow);
+  }
+
+  .welcome-box {
+    background: linear-gradient(135deg, rgba(239,45,45,0.18) 0%, rgba(15,20,35,0.9) 60%), linear-gradient(135deg, #1a1a1a 0%, #0f1423 100%);
+    border-radius: 20px; padding: 20px;
+    border: 1px solid var(--border-red);
+    position: relative; overflow: hidden;
+    margin-bottom: 16px;
+    animation: cardEnter 0.5s cubic-bezier(0.16,1,0.3,1);
+  }
+  .welcome-box::before {
+    content: ''; position: absolute; top: -50%; right: -20%;
+    width: 220px; height: 220px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(239,45,45,0.35), transparent 70%);
+    animation: floatGlow 4s ease-in-out infinite;
+  }
+  @keyframes floatGlow { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(-15px,15px) scale(1.15); } }
+  .welcome-box h2 { font-size: 19px; font-weight: 800; margin-bottom: 4px; position: relative; }
+  .welcome-box h2 .red { color: var(--red); }
+  .welcome-box p { font-size: 12px; color: var(--text-muted); position: relative; font-weight: 500; }
+
+  .welcome-logo {
+    background: #ffffff; border-radius: 14px; padding: 14px; margin-bottom: 14px;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 8px 25px rgba(239,45,45,0.3);
+    animation: cardEnter 0.5s cubic-bezier(0.16,1,0.3,1);
+  }
+  .welcome-logo svg { width: 100%; max-width: 260px; height: auto; display: block; }
+
+  .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; }
+  .stat-card {
+    background: var(--card);
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    border-radius: 16px; padding: 16px;
+    border: 1px solid var(--border);
+    position: relative; overflow: hidden;
+    animation: cardEnter 0.5s cubic-bezier(0.16,1,0.3,1) backwards;
+    transition: transform 0.2s;
+  }
+  .stat-card:active { transform: scale(0.97); }
+  .stat-card::after { content: ''; position: absolute; top: 0; right: 0; width: 70px; height: 70px; border-radius: 50%; opacity: 0.2; filter: blur(22px); }
+  .stat-card.total::after { background: var(--red); }
+  .stat-card.overdue::after { background: var(--danger); }
+  .stat-card.soon::after { background: var(--warning); }
+  .stat-card.money::after { background: var(--success); }
+  .stat-card .stat-icon { margin-bottom: 8px; display: flex; width: 30px; height: 30px; align-items: center; justify-content: center; border-radius: 8px; }
+  .stat-card.total .stat-icon { background: rgba(239,45,45,0.15); color: var(--red); }
+  .stat-card.overdue .stat-icon { background: rgba(239,68,68,0.15); color: var(--danger); }
+  .stat-card.soon .stat-icon { background: rgba(245,158,11,0.15); color: var(--warning); }
+  .stat-card.money .stat-icon { background: rgba(16,185,129,0.15); color: var(--success); }
+  .stat-card .stat-num { font-size: 26px; font-weight: 800; letter-spacing: -1px; line-height: 1; margin-bottom: 4px; }
+  .stat-card .stat-label { font-size: 10px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+  .stat-card.total .stat-num { color: var(--red); }
+  .stat-card.overdue .stat-num { color: var(--danger); }
+  .stat-card.soon .stat-num { color: var(--warning); }
+  .stat-card.money .stat-num { color: var(--success); font-size: 18px; }
+
+  .money-total-box {
+    background: linear-gradient(135deg, rgba(16,185,129,0.15), rgba(239,45,45,0.08));
+    border: 1px solid rgba(16,185,129,0.3);
+    border-radius: 16px; padding: 18px;
+    text-align: center; margin-bottom: 14px;
+    animation: cardEnter 0.5s cubic-bezier(0.16,1,0.3,1) 0.25s backwards;
+  }
+  .money-total-box .label { font-size: 11px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; display: flex; align-items: center; justify-content: center; gap: 6px; }
+  .money-total-box .amount { font-size: 26px; font-weight: 800; letter-spacing: -0.5px; background: linear-gradient(135deg, #10b981, #00d4ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+
+  .quick-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+  .quick-btn {
+    padding: 14px; border-radius: 14px; border: none;
+    font-size: 13px; font-weight: 800;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    cursor: pointer; transition: all 0.25s; color: white; font-family: inherit;
+  }
+  .quick-btn:active { transform: scale(0.94); }
+  .quick-btn.add { background: linear-gradient(135deg, #ef2d2d, #c41010); box-shadow: 0 8px 20px rgba(239,45,45,0.4); }
+  .quick-btn.pay { background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 8px 20px rgba(16,185,129,0.4); }
+
+  .form-group { margin-bottom: 14px; }
+  .form-group label { display: block; font-size: 11px; font-weight: 700; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .form-control {
+    width: 100%; padding: 14px 16px;
+    background: rgba(0,0,0,0.4);
+    border: 1.5px solid var(--border);
+    border-radius: 12px; color: white;
+    font-size: 15px; font-weight: 500;
+    transition: all 0.25s; outline: none;
+    font-family: inherit; -webkit-appearance: none; appearance: none;
+  }
+  .form-control::placeholder { color: #4a5479; font-weight: 400; }
+  .form-control:focus { border-color: var(--red); background: rgba(239,45,45,0.05); box-shadow: 0 0 0 4px rgba(239,45,45,0.1); }
+  .form-control.error { border-color: var(--danger); box-shadow: 0 0 0 4px rgba(239,68,68,0.15); animation: shake 0.4s; }
+  @keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+  input[type="date"].form-control { color-scheme: dark; }
+
+  .input-hint {
+    font-size: 10px;
+    color: var(--text-muted);
+    margin-top: 6px;
+    font-weight: 500;
+  }
+  .input-hint b { color: var(--red); font-weight: 700; }
+
+  .btn {
+    width: 100%; padding: 15px; border: none; border-radius: 14px;
+    font-size: 15px; font-weight: 800;
+    cursor: pointer; transition: all 0.25s;
+    color: white; font-family: inherit;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    -webkit-user-select: none; user-select: none;
+  }
+  .btn:active { transform: scale(0.97); }
+  .btn-primary { background: linear-gradient(135deg, #ef2d2d, #c41010); box-shadow: 0 8px 20px rgba(239,45,45,0.5); }
+  .btn-success { background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 8px 20px rgba(16,185,129,0.4); }
+  .btn-danger { background: linear-gradient(135deg, #ef4444, #dc2626); box-shadow: 0 8px 20px rgba(239,68,68,0.4); }
+
+  .qarzdor-card {
+    background: var(--card);
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    border-radius: 16px; padding: 16px; margin-bottom: 12px;
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--red);
+    position: relative;
+    animation: cardEnter 0.4s cubic-bezier(0.16,1,0.3,1) backwards;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .qarzdor-card:active { transform: scale(0.98); }
+  .qarzdor-card.overdue {
+    border-left-color: var(--danger);
+    background: linear-gradient(145deg, rgba(239,68,68,0.15), var(--card));
+    animation: cardEnter 0.4s cubic-bezier(0.16,1,0.3,1) backwards, urgentPulse 2s ease-in-out infinite;
+  }
+  @keyframes urgentPulse {
+    0%,100% { box-shadow: 0 8px 32px rgba(0,0,0,0.5); }
+    50% { box-shadow: 0 8px 32px rgba(239,68,68,0.5); }
+  }
+  .qarzdor-card.today {
+    border-left-color: #ef2d2d;
+    background: linear-gradient(145deg, rgba(239,45,45,0.18), var(--card));
+    animation: cardEnter 0.4s cubic-bezier(0.16,1,0.3,1) backwards, todayPulse 1.5s ease-in-out infinite;
+  }
+  @keyframes todayPulse {
+    0%,100% { box-shadow: 0 8px 32px rgba(0,0,0,0.5); }
+    50% { box-shadow: 0 8px 35px rgba(239,45,45,0.7); }
+  }
+  .qarzdor-card.soon { border-left-color: var(--warning); }
+  .qarzdor-card.paid { border-left-color: var(--success); opacity: 0.7; }
+  .qarzdor-card.ok { border-left-color: var(--red); }
+
+  .q-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; gap: 10px; }
+  .q-name { font-size: 15px; font-weight: 800; margin-bottom: 3px; letter-spacing: -0.2px; }
+  .q-phone { font-size: 11px; color: var(--text-muted); display: flex; align-items: center; gap: 4px; }
+  .q-phone a { color: var(--red); text-decoration: none; font-weight: 700; }
+  .q-info { font-size: 12px; color: var(--text-muted); margin-bottom: 6px; display: flex; align-items: center; gap: 5px; }
+  .q-info b { color: #b8c3e0; }
+
+  .q-badge {
+    padding: 5px 10px; border-radius: 20px;
+    font-size: 10px; font-weight: 800;
+    white-space: nowrap; text-transform: uppercase;
+    letter-spacing: 0.4px;
+    display: inline-flex; align-items: center; gap: 4px;
+  }
+  .q-badge.danger { background: rgba(239,68,68,0.3); color: #fca5a5; border: 1px solid rgba(239,68,68,0.6); animation: badgePulse 1.5s infinite; }
+  .q-badge.today { background: rgba(239,45,45,0.3); color: #fff; border: 1px solid rgba(239,45,45,0.7); animation: badgePulse 1s infinite; }
+  .q-badge.warning { background: rgba(245,158,11,0.2); color: #fcd34d; border: 1px solid rgba(245,158,11,0.4); }
+  .q-badge.success { background: rgba(16,185,129,0.2); color: #6ee7b7; border: 1px solid rgba(16,185,129,0.4); }
+  .q-badge.info { background: rgba(239,45,45,0.15); color: #ff8a8a; border: 1px solid var(--border-red); }
+
+  .q-money { display: flex; justify-content: space-between; padding: 10px 0; margin: 8px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); font-size: 12px; }
+  .q-money > div { text-align: center; flex: 1; }
+  .q-money .m-label { color: var(--text-muted); font-size: 10px; margin-bottom: 3px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700; }
+  .q-money .m-value { font-weight: 800; font-size: 12px; }
+  .q-money .m-value.green { color: var(--success); }
+  .q-money .m-value.red { color: var(--danger); }
+
+  .q-actions { display: grid; grid-template-columns: 1fr 1fr 1fr 44px; gap: 8px; margin-top: 10px; }
+  .qa-btn {
+    padding: 10px 6px; border-radius: 10px;
+    border: none; font-size: 11px; font-weight: 800;
+    cursor: pointer; transition: all 0.2s;
+    display: flex; align-items: center; justify-content: center; gap: 4px;
+    color: white; font-family: inherit;
+    -webkit-user-select: none; user-select: none;
+  }
+  .qa-btn:active { transform: scale(0.92); }
+  .qa-btn.call { background: rgba(239,45,45,0.2); color: #ff8a8a; border: 1px solid var(--border-red); }
+  .qa-btn.sms { background: rgba(245,158,11,0.2); color: #fcd34d; border: 1px solid rgba(245,158,11,0.3); }
+  .qa-btn.pay { background: linear-gradient(135deg, #10b981, #059669); }
+  .qa-btn.del { background: rgba(239,68,68,0.15); color: #fca5a5; border: 1px solid rgba(239,68,68,0.3); padding: 10px; }
+
+  .search-box { position: relative; margin-bottom: 14px; }
+  .search-box input { padding-left: 44px; }
+  .search-box .search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted); pointer-events: none; }
+
+  .filter-chips { display: flex; gap: 8px; margin-bottom: 14px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
+  .filter-chips::-webkit-scrollbar { display: none; }
+  .chip {
+    padding: 8px 14px; border-radius: 20px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    font-size: 12px; font-weight: 700;
+    color: var(--text-muted);
+    cursor: pointer; white-space: nowrap;
+    transition: all 0.2s; font-family: inherit;
+    -webkit-user-select: none; user-select: none;
+  }
+  .chip.active { background: linear-gradient(135deg, var(--red), var(--red-dark)); color: white; border-color: transparent; box-shadow: 0 4px 12px var(--red-glow); }
+  .chip:active { transform: scale(0.95); }
+
+  .empty-state { text-align: center; padding: 50px 20px; color: var(--text-muted); animation: cardEnter 0.5s; }
+  .empty-state .empty-icon { margin-bottom: 14px; opacity: 0.4; animation: floatIcon 3s ease-in-out infinite; display: flex; justify-content: center; }
+  .empty-state .empty-icon svg { width: 64px; height: 64px; }
+  @keyframes floatIcon { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+  .empty-state h3 { font-size: 15px; margin-bottom: 6px; color: #b8c3e0; }
+  .empty-state p { font-size: 12px; }
+
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.8);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    z-index: 2000;
+    display: none; align-items: flex-end; justify-content: center;
+    animation: fadeIn 0.25s;
+  }
+  .modal-overlay.active { display: flex; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  .modal-sheet {
+    background: linear-gradient(180deg, #1a1f30, #0f1423);
+    border-radius: 24px 24px 0 0;
+    padding: 20px;
+    padding-bottom: calc(20px + var(--safe-bottom));
+    width: 100%; max-width: 500px;
+    max-height: 92vh; overflow-y: auto;
+    border-top: 1px solid var(--border-red);
+    animation: slideUp 0.4s cubic-bezier(0.16,1,0.3,1);
+    box-shadow: 0 -20px 60px rgba(0,0,0,0.8);
+  }
+  @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+  .modal-handle { width: 40px; height: 4px; border-radius: 2px; background: rgba(255,255,255,0.2); margin: 0 auto 16px; }
+  .modal-title { font-size: 17px; font-weight: 800; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; color: white; }
+  .modal-desc { font-size: 12px; color: var(--text-muted); margin-bottom: 12px; line-height: 1.6; }
+
+  .info-box { padding: 14px; border-radius: 12px; background: rgba(0,0,0,0.35); border: 1px solid var(--border); margin-bottom: 14px; }
+  .info-box .info-row { display: flex; justify-content: space-between; font-size: 12px; padding: 7px 0; border-bottom: 1px dashed var(--border); gap: 10px; }
+  .info-box .info-row:last-child { border-bottom: none; }
+  .info-box .info-row .lbl { color: var(--text-muted); }
+  .info-box .info-row .val { font-weight: 700; text-align: right; }
+
+  .quick-pay { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+  .modal-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px; }
+
+  .toast {
+    position: fixed; top: calc(80px + var(--safe-top)); left: 50%;
+    transform: translateX(-50%) translateY(-20px);
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white; padding: 13px 20px;
+    border-radius: 14px; font-size: 13px; font-weight: 700;
+    box-shadow: 0 12px 30px rgba(16,185,129,0.5);
+    z-index: 3000; opacity: 0;
+    transition: all 0.35s cubic-bezier(0.16,1,0.3,1);
+    pointer-events: none;
+    max-width: 90vw; text-align: center;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  .toast.error { background: linear-gradient(135deg, #ef4444, #dc2626); box-shadow: 0 12px 30px rgba(239,68,68,0.5); }
+  .toast.warning { background: linear-gradient(135deg, #f59e0b, #d97706); box-shadow: 0 12px 30px rgba(245,158,11,0.5); }
+
+  .tolov-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px; border-radius: 14px;
+    background: var(--card);
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    border: 1px solid var(--border);
+    margin-bottom: 10px;
+    animation: cardEnter 0.4s cubic-bezier(0.16,1,0.3,1) backwards;
+  }
+  .tolov-item .avatar {
+    width: 44px; height: 44px; border-radius: 12px;
+    background: linear-gradient(135deg, var(--red), var(--red-dark));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; font-weight: 800; flex-shrink: 0;
+    color: white; box-shadow: 0 4px 12px var(--red-glow);
+  }
+  .tolov-item .info { flex: 1; min-width: 0; }
+  .tolov-item .info h4 { font-size: 14px; font-weight: 800; margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .tolov-item .info p { font-size: 11px; color: var(--text-muted); margin-bottom: 2px; }
+  .tolov-item .info p b { color: #ef4444; }
+  .tolov-item .pay-btn {
+    padding: 9px 14px; border-radius: 10px;
+    background: linear-gradient(135deg, #10b981, #059669);
+    border: none; color: white;
+    font-size: 12px; font-weight: 800;
+    cursor: pointer; transition: all 0.2s;
+    font-family: inherit; white-space: nowrap;
+    display: flex; align-items: center; gap: 5px;
+  }
+  .tolov-item .pay-btn:active { transform: scale(0.92); }
+
+  .progress-bar { height: 5px; background: rgba(0,0,0,0.4); border-radius: 3px; overflow: hidden; margin: 8px 0; }
+  .progress-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, #10b981, #00d4ff); transition: width 0.6s cubic-bezier(0.16,1,0.3,1); box-shadow: 0 0 8px rgba(16,185,129,0.6); }
+
+  .alert-banner {
+    border-radius: 14px; padding: 12px 14px;
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 14px; animation: cardEnter 0.5s;
+  }
+  .alert-banner.danger { background: linear-gradient(135deg, rgba(239,68,68,0.25), rgba(239,68,68,0.05)); border: 1px solid rgba(239,68,68,0.5); }
+  .alert-banner.today { background: linear-gradient(135deg, rgba(239,45,45,0.3), rgba(239,45,45,0.08)); border: 1px solid rgba(239,45,45,0.6); animation: cardEnter 0.5s, urgentPulse 2s infinite; }
+  .alert-banner .text { font-size: 12px; font-weight: 600; color: #fca5a5; flex: 1; }
+  .alert-banner .text b { color: #fff; }
+
+  .install-banner {
+    background: linear-gradient(135deg, rgba(239,45,45,0.2), rgba(15,20,35,0.9));
+    border: 1px solid var(--border-red);
+    border-radius: 14px; padding: 14px; margin-bottom: 14px;
+    display: flex; align-items: center; gap: 12px;
+    animation: cardEnter 0.5s;
+  }
+  .install-banner .ib-icon {
+    width: 40px; height: 40px; border-radius: 10px;
+    background: linear-gradient(135deg, var(--red), var(--red-dark));
+    display: flex; align-items: center; justify-content: center;
+    color: white; flex-shrink: 0;
+    box-shadow: 0 4px 12px var(--red-glow);
+  }
+  .install-banner .ib-text { flex: 1; }
+  .install-banner .ib-text h4 { font-size: 13px; font-weight: 800; margin-bottom: 3px; }
+  .install-banner .ib-text p { font-size: 11px; color: var(--text-muted); }
+  .install-banner .ib-btn {
+    padding: 8px 14px; border-radius: 10px;
+    background: var(--red); color: white;
+    border: none; font-size: 12px; font-weight: 800;
+    cursor: pointer; white-space: nowrap; font-family: inherit;
+  }
+
+  .notif-banner {
+    background: linear-gradient(135deg, rgba(245,158,11,0.2), rgba(15,20,35,0.9));
+    border: 1px solid rgba(245,158,11,0.4);
+    border-radius: 14px; padding: 14px; margin-bottom: 14px;
+    display: flex; align-items: center; gap: 12px;
+    animation: cardEnter 0.5s;
+  }
+  .notif-banner .nb-icon {
+    width: 40px; height: 40px; border-radius: 10px;
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    display: flex; align-items: center; justify-content: center;
+    color: white; flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(245,158,11,0.5);
+  }
+  .notif-banner .nb-text { flex: 1; }
+  .notif-banner .nb-text h4 { font-size: 13px; font-weight: 800; margin-bottom: 3px; }
+  .notif-banner .nb-text p { font-size: 11px; color: var(--text-muted); }
+  .notif-banner .nb-btn {
+    padding: 8px 14px; border-radius: 10px;
+    background: #f59e0b; color: white;
+    border: none; font-size: 12px; font-weight: 800;
+    cursor: pointer; white-space: nowrap; font-family: inherit;
+  }
+
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(239,45,45,0.4); border-radius: 3px; }
+
+  .fab {
+    position: fixed;
+    bottom: calc(95px + var(--safe-bottom));
+    right: 16px;
+    width: 58px; height: 58px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--red), var(--red-dark));
+    border: none; color: white;
+    cursor: pointer;
+    box-shadow: 0 10px 25px var(--red-glow);
+    z-index: 500;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
+    animation: fabEnter 0.5s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  @keyframes fabEnter { from { transform: scale(0) rotate(-180deg); } to { transform: scale(1) rotate(0); } }
+  .fab:active { transform: scale(0.88) rotate(90deg); }
+  .fab svg { width: 26px; height: 26px; stroke: white; stroke-width: 2.5; }
+
+  @media (min-width: 900px) {
+    .app-header { padding: 14px 30px; }
+    .pam-logo-svg { height: 48px; }
+    .page { max-width: 1200px; margin: 0 auto; padding: 24px 30px; }
+    .stats-grid { grid-template-columns: repeat(4, 1fr); }
+    .money-total-box { padding: 24px; }
+    .money-total-box .amount { font-size: 34px; }
+    .bottom-nav {
+      position: fixed; top: 0; bottom: auto;
+      left: 50%; transform: translateX(-50%);
+      margin-top: 82px;
+      border-radius: 0 0 16px 16px;
+      border: 1px solid var(--border-red);
+      border-top: none;
+      padding: 8px 20px;
+      max-width: 600px; width: auto;
+      gap: 20px;
+    }
+    .nav-item { padding: 8px 16px; min-width: 90px; }
+    .nav-item .nav-icon .ico { width: 20px; height: 20px; }
+    body { padding-bottom: 40px; padding-top: 70px; }
+    .fab { bottom: 30px; right: 30px; width: 64px; height: 64px; }
+    #qarzdorlarList, #tolovList { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 14px; }
+    .qarzdor-card, .tolov-item { margin-bottom: 0; }
+    .modal-overlay { align-items: center; }
+    .modal-sheet { border-radius: 20px; max-width: 500px; padding: 26px; border: 1px solid var(--border-red); }
+  }
+
+  @media (hover: hover) {
+    .qarzdor-card:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(0,0,0,0.6); border-color: var(--border-red); }
+    .tolov-item:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(0,0,0,0.6); }
+  }
+</style>
+</head>
+<body>
+
+<header class="app-header">
+  <div class="pam-logo">
+    <div class="pam-logo-box">
+      <svg class="pam-logo-svg" viewBox="0 0 300 120" xmlns="http://www.w3.org/2000/svg">
+        <g fill="none" stroke="#ef1c1c" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M 55 42 Q 75 22 130 20 L 180 20 Q 225 22 245 42"/>
+          <path d="M 48 46 L 252 46"/>
+          <path d="M 245 42 Q 258 42 260 48 Q 262 55 250 56" />
+          <path d="M 55 42 Q 42 42 40 48 Q 38 55 50 56" />
+        </g>
+        <circle cx="90" cy="58" r="7" fill="none" stroke="#ef1c1c" stroke-width="3"/>
+        <circle cx="210" cy="58" r="7" fill="none" stroke="#ef1c1c" stroke-width="3"/>
+        <text x="150" y="105" font-family="Arial Black, Arial, Helvetica, sans-serif" font-size="72" font-weight="900" text-anchor="middle" font-style="italic" letter-spacing="-3">
+          <tspan fill="#1a1a1a">P</tspan><tspan fill="#ef1c1c">A</tspan><tspan fill="#1a1a1a">M</tspan>
+        </text>
+        <text x="150" y="118" font-family="Arial Black, Arial, sans-serif" font-size="11" font-weight="900" text-anchor="middle" font-style="italic" letter-spacing="1.5">
+          <tspan fill="#1a1a1a">POP AUTO </tspan><tspan fill="#ef1c1c">MAKON</tspan>
+        </text>
+      </svg>
+    </div>
+  </div>
+  <div style="display:flex;align-items:center;gap:8px;">
+    <button class="bell-btn" id="bellBtn" title="Eslatmalar">
+      <svg class="ico" viewBox="0 0 24 24" style="stroke-width:2.2;"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+      <span class="bell-badge" id="bellBadge" style="display:none;">0</span>
+    </button>
+    <div class="header-time" id="headerTime"></div>
+  </div>
+</header>
+
+<section class="page active" id="page-dashboard">
+  <div id="notifBanner"></div>
+
+  <div class="install-banner" id="installBanner" style="display:none;">
+    <div class="ib-icon">
+      <svg class="ico ico-lg" viewBox="0 0 24 24"><path d="M12 3v13m0 0l-5-5m5 5l5-5M5 21h14"/></svg>
+    </div>
+    <div class="ib-text">
+      <h4>Ilovani o'rnating</h4>
+      <p>Telefon yoki kompyuterga o'rnatib, oflayn foydalaning</p>
+    </div>
+    <button class="ib-btn" onclick="installApp()">O'rnatish</button>
+  </div>
+
+  <div class="welcome-logo">
+    <svg viewBox="0 0 300 120" xmlns="http://www.w3.org/2000/svg">
+      <g fill="none" stroke="#ef1c1c" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M 55 42 Q 75 22 130 20 L 180 20 Q 225 22 245 42"/>
+        <path d="M 48 46 L 252 46"/>
+        <path d="M 245 42 Q 258 42 260 48 Q 262 55 250 56" />
+        <path d="M 55 42 Q 42 42 40 48 Q 38 55 50 56" />
+      </g>
+      <circle cx="90" cy="58" r="7" fill="none" stroke="#ef1c1c" stroke-width="3"/>
+      <circle cx="210" cy="58" r="7" fill="none" stroke="#ef1c1c" stroke-width="3"/>
+      <text x="150" y="105" font-family="Arial Black, Arial, Helvetica, sans-serif" font-size="72" font-weight="900" text-anchor="middle" font-style="italic" letter-spacing="-3">
+        <tspan fill="#1a1a1a">P</tspan><tspan fill="#ef1c1c">A</tspan><tspan fill="#1a1a1a">M</tspan>
+      </text>
+      <text x="150" y="118" font-family="Arial Black, Arial, sans-serif" font-size="11" font-weight="900" text-anchor="middle" font-style="italic" letter-spacing="1.5">
+        <tspan fill="#1a1a1a">POP AUTO </tspan><tspan fill="#ef1c1c">MAKON</tspan>
+      </text>
+    </svg>
+  </div>
+
+  <div class="welcome-box">
+    <h2>Xush kelibsiz, <span class="red">POP AUTO MAKON</span>da!</h2>
+    <p>Nasiya va qarzdorlarni boshqarish tizimi</p>
+  </div>
+
+  <div id="alertBanner"></div>
+
+  <div class="stats-grid">
+    <div class="stat-card total">
+      <div class="stat-icon"><svg class="ico" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></div>
+      <div class="stat-num" id="statTotal">0</div>
+      <div class="stat-label">Jami qarzdorlar</div>
+    </div>
+    <div class="stat-card overdue">
+      <div class="stat-icon"><svg class="ico" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+      <div class="stat-num" id="statOverdue">0</div>
+      <div class="stat-label">Muddati o'tgan</div>
+    </div>
+    <div class="stat-card soon">
+      <div class="stat-icon"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+      <div class="stat-num" id="statSoon">0</div>
+      <div class="stat-label">Muddati yaqin</div>
+    </div>
+    <div class="stat-card money">
+      <div class="stat-icon"><svg class="ico" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
+      <div class="stat-num" id="statPaidNum">0</div>
+      <div class="stat-label">To'langan</div>
+    </div>
+  </div>
+
+  <div class="money-total-box">
+    <div class="label">
+      <svg class="ico ico-sm" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
+      Umumiy qoldiq qarz
+    </div>
+    <div class="amount" id="statQarzSumma">0 so'm</div>
+  </div>
+
+  <div class="card">
+    <div class="section-title">Tezkor amallar</div>
+    <div class="quick-actions">
+      <button class="quick-btn add" onclick="goToPage('add')">
+        <svg class="ico" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Qarzdor qo'shish
+      </button>
+      <button class="quick-btn pay" onclick="goToPage('tolov')">
+        <svg class="ico" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+        Qarz to'lash
+      </button>
+    </div>
+  </div>
+</section>
+
+<section class="page" id="page-qarzdorlar">
+  <div class="search-box">
+    <svg class="ico search-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input type="text" class="form-control" id="searchInput">
+  </div>
+
+  <div class="filter-chips">
+    <button class="chip active" data-filter="all">Barchasi</button>
+    <button class="chip" data-filter="today">🔥 Bugun</button>
+    <button class="chip" data-filter="overdue">Muddati o'tgan</button>
+    <button class="chip" data-filter="soon">Yaqin</button>
+    <button class="chip" data-filter="ok">Yaxshi</button>
+    <button class="chip" data-filter="paid">To'langan</button>
+  </div>
+
+  <div id="qarzdorlarList"></div>
+</section>
+
+<section class="page" id="page-tolov">
+  <div class="card">
+    <div class="section-title">Qarzni to'lash</div>
+    <p style="font-size:12px;color:var(--text-muted);line-height:1.6;">
+      To'lov qilish uchun qarzdorni tanlang. Qismli to'lov ham mumkin.
+    </p>
+  </div>
+
+  <div class="search-box">
+    <svg class="ico search-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input type="text" class="form-control" id="tolovSearch">
+  </div>
+
+  <div id="tolovList"></div>
+</section>
+
+<section class="page" id="page-add">
+  <div class="card">
+    <div class="section-title">Yangi qarzdor qo'shish</div>
+    <form id="qarzdorForm" autocomplete="off">
+      <div class="form-group"><label>Ismi *</label><input type="text" class="form-control" id="ismi" required></div>
+      <div class="form-group"><label>Familyasi *</label><input type="text" class="form-control" id="familyasi" required></div>
+      <div class="form-group"><label>Yashash joyi *</label><input type="text" class="form-control" id="yashashJoyi" required></div>
+      <div class="form-group"><label>Telefon raqami *</label><input type="tel" class="form-control" id="telRaqami" required></div>
+      <div class="form-group"><label>Olingan maxsulot *</label><input type="text" class="form-control" id="maxsulot" required></div>
+      <div class="form-group">
+        <label>Qarz summasi (so'm) *</label>
+        <input type="number" class="form-control" id="summa" min="0" step="1" required>
+        <div class="input-hint" id="summaHint"></div>
+      </div>
+      <div class="form-group"><label>Qaytarish muddati *</label><input type="date" class="form-control" id="muddat" required></div>
+      <button type="submit" class="btn btn-primary">
+        <svg class="ico" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+        Qarzdorni saqlash
+      </button>
+    </form>
+  </div>
+</section>
+
+<nav class="bottom-nav">
+  <button class="nav-item active" data-page="dashboard">
+    <span class="nav-icon"><svg class="ico" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span>
+    <span>Asosiy</span>
+  </button>
+  <button class="nav-item" data-page="qarzdorlar">
+    <span class="nav-icon"><svg class="ico" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></span>
+    <span>Qarzdorlar</span>
+    <span class="nav-badge" id="navBadge" style="display:none;">0</span>
+  </button>
+  <button class="nav-item" data-page="tolov">
+    <span class="nav-icon"><svg class="ico" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></span>
+    <span>To'lash</span>
+  </button>
+  <button class="nav-item" data-page="add">
+    <span class="nav-icon"><svg class="ico" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+    <span>Qo'shish</span>
+  </button>
+</nav>
+
+<div class="modal-overlay" id="smsModal">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title">
+      <svg class="ico" viewBox="0 0 24 24" style="color:#ef2d2d"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+      SMS yuborish
+    </div>
+    <p class="modal-desc">SMS matni avtomatik yaratildi. Tahrirlashingiz mumkin:</p>
+    <textarea id="smsText" class="form-control" rows="10" style="font-size:13px;line-height:1.5;font-family:inherit;"></textarea>
+    <div class="modal-actions">
+      <button class="btn btn-danger" onclick="closeModal('smsModal')">Bekor qilish</button>
+      <button class="btn btn-success" onclick="sendSms()">
+        <svg class="ico" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        Yuborish
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="tolovModal">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title">
+      <svg class="ico" viewBox="0 0 24 24" style="color:#10b981"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+      To'lovni qabul qilish
+    </div>
+    <div class="info-box" id="tolovInfoBox"></div>
+    <div class="form-group">
+      <label>To'lanayotgan summa (so'm)</label>
+      <input type="number" class="form-control" id="tolovSumma" min="0" step="1">
+    </div>
+    <div class="quick-pay">
+      <button type="button" class="chip" onclick="setPayPercent(25)">25%</button>
+      <button type="button" class="chip" onclick="setPayPercent(50)">50%</button>
+      <button type="button" class="chip" onclick="setPayPercent(75)">75%</button>
+      <button type="button" class="chip" onclick="setPayPercent(100)">To'liq</button>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-danger" onclick="closeModal('tolovModal')">Bekor qilish</button>
+      <button class="btn btn-success" onclick="confirmTolov()">
+        <svg class="ico" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+        Tasdiqlash
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="delModal">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title">
+      <svg class="ico" viewBox="0 0 24 24" style="color:#ef4444"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+      O'chirishni tasdiqlash
+    </div>
+    <p class="modal-desc" id="delText"></p>
+    <div class="modal-actions">
+      <button class="btn btn-primary" onclick="closeModal('delModal')">Yo'q</button>
+      <button class="btn btn-danger" onclick="confirmDelete()">Ha, o'chirish</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="reminderModal">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title" style="color:#ef2d2d;">
+      <svg class="ico ico-lg" viewBox="0 0 24 24" style="color:#ef2d2d"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+      Muddat eslatmasi
+    </div>
+    <div id="reminderContent"></div>
+    <div class="modal-actions">
+      <button class="btn btn-primary" onclick="closeModal('reminderModal')">Yopish</button>
+      <button class="btn btn-success" onclick="reminderGoList()">Ro'yxatga o'tish</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<button class="fab" id="fab" onclick="goToPage('add')" aria-label="Qo'shish">
+  <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+</button>
+
+<script>
+/* ============================================================
+   SERVICE WORKER
+   ============================================================ */
+var SW_CODE = [
+  "var CACHE = 'pam-nasiya-v8';",
+  "",
+  "self.addEventListener('install', function() { self.skipWaiting(); });",
+  "self.addEventListener('activate', function(e) { e.waitUntil(self.clients.claim()); });",
+  "",
+  "self.addEventListener('message', function(event) {",
+  "  var data = event.data || {};",
+  "  if (data.type === 'REMINDER') {",
+  "    var items = data.items || [];",
+  "    var count = items.length;",
+  "    if (count === 0) return;",
+  "    if (count === 1) {",
+  "      var q = items[0];",
+  "      self.registration.showNotification('PAM Nasiya - Muddat eslatmasi', {",
+  "        body: q.ismi + ' ' + q.familyasi + '\\n' + q.text + '\\nQoldiq: ' + q.qoldiq + '\\n\\nIltimos, qongiroq qiling yoki SMS yuboring!',",
+  "        icon: data.icon,",
+  "        badge: data.icon,",
+  "        tag: 'pam-reminder-' + q.id,",
+  "        requireInteraction: true,",
+  "        vibrate: [300, 100, 300, 100, 300]",
+  "      });",
+  "    } else {",
+  "      var names = items.slice(0, 3).map(function(q) { return '- ' + q.ismi + ' ' + q.familyasi + ' - ' + q.text; }).join('\\n');",
+  "      var extra = count > 3 ? '\\n... va yana ' + (count - 3) + ' ta' : '';",
+  "      self.registration.showNotification('PAM Nasiya - ' + count + ' ta eslatma', {",
+  "        body: names + extra + '\\n\\nIltimos, royxatni korib chiqing!',",
+  "        icon: data.icon,",
+  "        badge: data.icon,",
+  "        tag: 'pam-reminder-batch',",
+  "        requireInteraction: true,",
+  "        vibrate: [300, 100, 300, 100, 300, 100, 300]",
+  "      });",
+  "    }",
+  "  }",
+  "});",
+  "",
+  "self.addEventListener('notificationclick', function(event) {",
+  "  event.notification.close();",
+  "  var url = (event.notification.data && event.notification.data.url) || self.location.origin;",
+  "  event.waitUntil(",
+  "    clients.matchAll({ type: 'window', includeUncontrolled: true }).then(function(clientList) {",
+  "      for (var i = 0; i < clientList.length; i++) {",
+  "        var c = clientList[i];",
+  "        if (c.url.indexOf(self.location.origin) !== -1 && 'focus' in c) return c.focus();",
+  "      }",
+  "      if (clients.openWindow) return clients.openWindow(url);",
+  "    })",
+  "  );",
+  "});",
+  "",
+  "self.addEventListener('fetch', function(e) {",
+  "  e.respondWith(caches.match(e.request).then(function(r) { return r || fetch(e.request).catch(function() { return caches.match('/'); }); }));",
+  "});"
+].join("\n");
+
+var pamIconSVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 120">' +
+  '<rect width="300" height="120" fill="#ffffff"/>' +
+  '<g fill="none" stroke="#ef1c1c" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">' +
+  '<path d="M 55 42 Q 75 22 130 20 L 180 20 Q 225 22 245 42"/>' +
+  '<path d="M 48 46 L 252 46"/>' +
+  '<path d="M 245 42 Q 258 42 260 48 Q 262 55 250 56"/>' +
+  '<path d="M 55 42 Q 42 42 40 48 Q 38 55 50 56"/>' +
+  '</g>' +
+  '<circle cx="90" cy="58" r="7" fill="none" stroke="#ef1c1c" stroke-width="3"/>' +
+  '<circle cx="210" cy="58" r="7" fill="none" stroke="#ef1c1c" stroke-width="3"/>' +
+  '<text x="150" y="105" font-family="Arial Black" font-size="72" font-weight="900" text-anchor="middle" font-style="italic" letter-spacing="-3">' +
+  '<tspan fill="#1a1a1a">P</tspan><tspan fill="#ef1c1c">A</tspan><tspan fill="#1a1a1a">M</tspan>' +
+  '</text>' +
+  '<text x="150" y="118" font-family="Arial Black" font-size="11" font-weight="900" text-anchor="middle" font-style="italic" letter-spacing="1.5">' +
+  '<tspan fill="#1a1a1a">POP AUTO </tspan><tspan fill="#ef1c1c">MAKON</tspan>' +
+  '</text>' +
+  '</svg>';
+var pamIconDataURL = 'data:image/svg+xml,' + encodeURIComponent(pamIconSVG);
+
+var manifest = {
+  name: "PAM Nasiya - POP AUTO MAKON",
+  short_name: "PAM Nasiya",
+  description: "POP AUTO MAKON nasiya boshqaruv tizimi",
+  start_url: ".", display: "standalone",
+  background_color: "#06080f", theme_color: "#06080f",
+  orientation: "portrait",
+  icons: [{ src: pamIconDataURL, sizes: "512x512", type: "image/svg+xml", purpose: "any maskable" }]
+};
+
+var manifestBlob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
+var manifestLink = document.createElement('link');
+manifestLink.rel = 'manifest';
+manifestLink.href = URL.createObjectURL(manifestBlob);
+document.head.appendChild(manifestLink);
+
+var swRegistration = null;
+if ('serviceWorker' in navigator) {
+  try {
+    var swBlob = new Blob([SW_CODE], { type: 'application/javascript' });
+    navigator.serviceWorker.register(URL.createObjectURL(swBlob)).then(function(reg) {
+      swRegistration = reg;
+      setTimeout(function() {
+        if (Notification.permission === 'granted') checkReminders(true);
+      }, 2000);
+    }).catch(function() {});
+  } catch(e) {}
+}
+
+var deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', function(e) {
+  e.preventDefault();
+  deferredPrompt = e;
+  document.getElementById('installBanner').style.display = 'flex';
+});
+
+function installApp() {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(function(choice) {
+      if (choice.outcome === 'accepted') showToast('Ilova ornatildi!');
+      deferredPrompt = null;
+      document.getElementById('installBanner').style.display = 'none';
+    });
+  } else {
+    var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    var isAndroid = /Android/.test(navigator.userAgent);
+    if (isIOS) alert("iPhone uchun ornatish:\n\n1. Pastdagi 'Ulashish' tugmasini bosing\n2. 'Bosh ekranga qo'shish' ni tanlang\n3. 'Qo'shish' ni bosing");
+    else if (isAndroid) alert("Android uchun ornatish:\n\nBrauzer menyusidan 'Bosh ekranga qo'shish' ni tanlang");
+    else alert("Kompyuter uchun ornatish:\n\nBrauzer manzil qatoridagi 'O'rnatish' belgisini bosing");
+  }
+}
+
+/* ============================================================
+   DATA
+   ============================================================ */
+var STORAGE_KEY = 'pam_nasiya_v8';
+var SENT_KEY = 'pam_sent_notifs_v8';
+var qarzdorlar = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+var sentNotifications = JSON.parse(localStorage.getItem(SENT_KEY)) || {};
+var currentSmsId = null;
+var currentTolovId = null;
+var currentDeleteId = null;
+var currentFilter = 'all';
+
+function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(qarzdorlar)); }
+function saveSent() { localStorage.setItem(SENT_KEY, JSON.stringify(sentNotifications)); }
+
+/* ============================================================
+   FORMATLASH
+   ============================================================ */
+function formatDate(d) {
+  if (!d) return '-';
+  var dt = new Date(d);
+  return String(dt.getDate()).padStart(2, '0') + '.' + String(dt.getMonth()+1).padStart(2, '0') + '.' + dt.getFullYear();
+}
+
+function formatSumma(n) {
+  n = Math.round(Number(n) || 0);
+  var neg = n < 0;
+  var s = String(Math.abs(n));
+  var result = '';
+  var count = 0;
+  for (var i = s.length - 1; i >= 0; i--) {
+    result = s[i] + result;
+    count++;
+    if (count % 3 === 0 && i > 0) result = ' ' + result;
+  }
+  return (neg ? '-' : '') + result + " so'm";
+}
+
+function formatSummaShort(n) {
+  n = Math.round(Number(n) || 0);
+  var neg = n < 0;
+  n = Math.abs(n);
+  var out = '';
+
+  if (n >= 1000000000) {
+    out = (n / 1000000000).toFixed(1) + " mlrd";
+  } else if (n >= 10000000) {
+    out = (n / 1000000).toFixed(1) + " mln";
+  } else {
+    var s = String(n);
+    var result = '';
+    var count = 0;
+    for (var i = s.length - 1; i >= 0; i--) {
+      result = s[i] + result;
+      count++;
+      if (count % 3 === 0 && i > 0) result = ' ' + result;
+    }
+    out = result;
+  }
+  return (neg ? '-' : '') + out;
+}
+
+function initials(ismi, familyasi) { return (ismi && ismi[0] ? ismi[0].toUpperCase() : '') + (familyasi && familyasi[0] ? familyasi[0].toUpperCase() : ''); }
+
+function daysDiff(muddat) {
+  var bugun = new Date(); bugun.setHours(0,0,0,0);
+  var m = new Date(muddat); m.setHours(0,0,0,0);
+  return Math.round((m - bugun) / 86400000);
+}
+
+function getHolat(q) {
+  if (q.qoldiq <= 0) return { type: 'paid', text: "To'langan", badge: 'success' };
+  var kun = daysDiff(q.muddat);
+  if (kun < 0) return { type: 'overdue', text: "Muddati o'tgan", badge: 'danger', kun: kun };
+  if (kun === 0) return { type: 'today', text: "BUGUN TO'LASH", badge: 'today', kun: 0 };
+  if (kun <= 3) return { type: 'soon', text: kun + " kun qoldi", badge: 'warning', kun: kun };
+  if (kun <= 7) return { type: 'info', text: kun + " kun qoldi", badge: 'info', kun: kun };
+  return { type: 'ok', text: kun + " kun qoldi", badge: 'info', kun: kun };
+}
+
+var toastTimer;
+function showToast(msg, type) {
+  type = type || '';
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + type;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function() { t.className = 'toast ' + type; }, 3500);
+}
+
+function goToPage(page) {
+  document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
+  document.querySelectorAll('.nav-item').forEach(function(n) { n.classList.remove('active'); });
+  document.getElementById('page-' + page).classList.add('active');
+  var navBtn = document.querySelector('.nav-item[data-page="' + page + '"]');
+  if (navBtn) navBtn.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  document.getElementById('fab').style.display = (page === 'add') ? 'none' : 'flex';
+  if (page === 'qarzdorlar') renderQarzdorlar();
+  if (page === 'tolov') renderTolovList();
+  if (page === 'dashboard') renderDashboard();
+}
+document.querySelectorAll('.nav-item').forEach(function(btn) {
+  btn.addEventListener('click', function() { goToPage(btn.dataset.page); });
+});
+
+function renderDashboard() {
+  var total = qarzdorlar.length;
+  var overdue = qarzdorlar.filter(function(q) { return q.qoldiq > 0 && getHolat(q).type === 'overdue'; }).length;
+  var today = qarzdorlar.filter(function(q) { return q.qoldiq > 0 && getHolat(q).type === 'today'; }).length;
+  var soon = qarzdorlar.filter(function(q) { return q.qoldiq > 0 && getHolat(q).type === 'soon'; }).length;
+  var jamiTolangan = qarzdorlar.reduce(function(s, q) { return s + (q.tolangan || 0); }, 0);
+  var qarzSumma = qarzdorlar.reduce(function(s, q) { return s + q.qoldiq; }, 0);
+
+  document.getElementById('statTotal').textContent = total;
+  document.getElementById('statOverdue').textContent = overdue + today;
+  document.getElementById('statSoon').textContent = soon;
+  document.getElementById('statPaidNum').textContent = formatSummaShort(jamiTolangan);
+  document.getElementById('statQarzSumma').textContent = formatSumma(qarzSumma);
+
+  var alertBox = document.getElementById('alertBanner');
+  if (overdue > 0 || today > 0) {
+    var msg = '';
+    if (overdue > 0 && today > 0) msg = '<b>' + today + ' ta</b> bugun to\'lash + <b>' + overdue + ' ta</b> muddati o\'tgan!';
+    else if (today > 0) msg = '<b>' + today + ' ta</b> qarzdorning muddati <b>BUGUN</b> tugaydi!';
+    else msg = '<b>' + overdue + ' ta</b> qarzdorning muddati o\'tgan!';
+    alertBox.innerHTML = '<div class="alert-banner ' + (today > 0 ? 'today' : 'danger') + '">' +
+      '<svg class="ico ico-lg" viewBox="0 0 24 24" style="color:#ef4444;flex-shrink:0"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>' +
+      '<div class="text">' + msg + '<br>Iltimos, qo\'ng\'iroq qiling yoki SMS yuboring.</div></div>';
+  } else {
+    alertBox.innerHTML = '';
+  }
+
+  var bellBadge = document.getElementById('bellBadge');
+  var bellBtn = document.getElementById('bellBtn');
+  var totalAlerts = overdue + today;
+  if (totalAlerts > 0) {
+    bellBadge.textContent = totalAlerts;
+    bellBadge.style.display = 'flex';
+    bellBtn.classList.add('has-alert');
+  } else {
+    bellBadge.style.display = 'none';
+    bellBtn.classList.remove('has-alert');
+  }
+
+  var badge = document.getElementById('navBadge');
+  if (totalAlerts > 0) { badge.textContent = totalAlerts; badge.style.display = 'flex'; }
+  else { badge.style.display = 'none'; }
+
+  var now = new Date();
+  var days = ['Yakshanba','Dushanba','Seshanba','Chorshanba','Payshanba','Juma','Shanba'];
+  document.getElementById('headerTime').innerHTML =
+    '<div style="font-weight:700;color:#fff;font-size:12px;">' + days[now.getDay()] + '</div>' +
+    '<div>' + formatDate(now) + '</div>';
+}
+
+function renderQarzdorlar() {
+  var search = document.getElementById('searchInput').value.toLowerCase().trim();
+  var list = document.getElementById('qarzdorlarList');
+  var filtered = qarzdorlar.slice();
+
+  if (search) {
+    filtered = filtered.filter(function(q) {
+      return q.ismi.toLowerCase().indexOf(search) !== -1 ||
+        q.familyasi.toLowerCase().indexOf(search) !== -1 ||
+        q.telRaqami.indexOf(search) !== -1 ||
+        (q.maxsulot || '').toLowerCase().indexOf(search) !== -1;
+    });
+  }
+  if (currentFilter !== 'all') {
+    filtered = filtered.filter(function(q) { return getHolat(q).type === currentFilter; });
+  }
+
+  var priority = { today: 0, overdue: 1, soon: 2, info: 3, ok: 4, paid: 5 };
+  filtered.sort(function(a, b) { return priority[getHolat(a).type] - priority[getHolat(b).type]; });
+
+  if (filtered.length === 0) {
+    list.innerHTML = '<div class="empty-state">' +
+      '<div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>' +
+      '<h3>Qarzdorlar topilmadi</h3>' +
+      '<p>' + (search || currentFilter !== 'all' ? 'Boshqa filtr bilan urinib ko\'ring' : 'Yangi qarzdor qo\'shing') + '</p></div>';
+    return;
+  }
+
+  list.innerHTML = filtered.map(function(q, i) {
+    var holat = getHolat(q);
+    var tolangan = q.tolangan || 0;
+    var percent = q.summa > 0 ? Math.min(100, (tolangan / q.summa) * 100) : 0;
+
+    return '<div class="qarzdor-card ' + holat.type + '" style="animation-delay:' + (i * 0.04) + 's">' +
+      '<div class="q-header">' +
+        '<div style="flex:1;min-width:0;">' +
+          '<div class="q-name">' + q.ismi + ' ' + q.familyasi + '</div>' +
+          '<div class="q-phone">' +
+            '<svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>' +
+            '<a href="tel:' + q.telRaqami + '">' + q.telRaqami + '</a>' +
+          '</div>' +
+        '</div>' +
+        '<div class="q-badge ' + holat.badge + '">' + holat.text + '</div>' +
+      '</div>' +
+      '<div class="q-info"><svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>' + q.yashashJoyi + '</div>' +
+      '<div class="q-info"><svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg><b>' + q.maxsulot + '</b></div>' +
+      '<div class="progress-bar"><div class="progress-fill" style="width:' + percent + '%"></div></div>' +
+      '<div class="q-money">' +
+        '<div><div class="m-label">Jami</div><div class="m-value">' + formatSumma(q.summa) + '</div></div>' +
+        '<div><div class="m-label">To\'landi</div><div class="m-value green">' + formatSumma(tolangan) + '</div></div>' +
+        '<div><div class="m-label">Qoldiq</div><div class="m-value red">' + formatSumma(q.qoldiq) + '</div></div>' +
+      '</div>' +
+      '<div class="q-info" style="margin-top:8px;">' +
+        '<svg class="ico ico-sm" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>' +
+        'Muddat: <b style="color:#fff;">' + formatDate(q.muddat) + '</b>' +
+      '</div>' +
+      '<div class="q-actions">' +
+        '<button class="qa-btn call" onclick="callClient(\'' + q.telRaqami + '\')">' +
+          '<svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>Qo\'ng\'iroq</button>' +
+        '<button class="qa-btn sms" onclick="openSmsModal(' + q.id + ')">' +
+          '<svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>SMS</button>' +
+        '<button class="qa-btn pay" onclick="openTolovModal(' + q.id + ')">' +
+          '<svg class="ico ico-sm" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>To\'lash</button>' +
+        '<button class="qa-btn del" onclick="openDeleteModal(' + q.id + ')">' +
+          '<svg class="ico ico-sm" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg></button>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+document.getElementById('searchInput').addEventListener('input', renderQarzdorlar);
+document.querySelectorAll('.chip[data-filter]').forEach(function(chip) {
+  chip.addEventListener('click', function() {
+    document.querySelectorAll('.chip[data-filter]').forEach(function(c) { c.classList.remove('active'); });
+    chip.classList.add('active');
+    currentFilter = chip.dataset.filter;
+    renderQarzdorlar();
+  });
+});
+
+function setFilter(f) {
+  document.querySelectorAll('.chip[data-filter]').forEach(function(c) { c.classList.remove('active'); });
+  var chip = document.querySelector('.chip[data-filter="' + f + '"]');
+  if (chip) chip.classList.add('active');
+  currentFilter = f;
+  renderQarzdorlar();
+}
+
+function renderTolovList() {
+  var search = (document.getElementById('tolovSearch').value || '').toLowerCase().trim();
+  var list = document.getElementById('tolovList');
+  var filtered = qarzdorlar.filter(function(q) { return q.qoldiq > 0; });
+  if (search) {
+    filtered = filtered.filter(function(q) {
+      return q.ismi.toLowerCase().indexOf(search) !== -1 ||
+        q.familyasi.toLowerCase().indexOf(search) !== -1 ||
+        q.telRaqami.indexOf(search) !== -1;
+    });
+  }
+  var priority = { today: 0, overdue: 1, soon: 2, info: 3, ok: 4 };
+  filtered.sort(function(a, b) { return priority[getHolat(a).type] - priority[getHolat(b).type]; });
+
+  if (filtered.length === 0) {
+    list.innerHTML = '<div class="empty-state">' +
+      '<div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>' +
+      '<h3>Qarz yo\'q</h3>' +
+      '<p>' + (search ? 'Natija topilmadi' : 'Barcha qarzlar to\'langan!') + '</p></div>';
+    return;
+  }
+
+  list.innerHTML = filtered.map(function(q, i) {
+    return '<div class="tolov-item" style="animation-delay:' + (i * 0.04) + 's">' +
+      '<div class="avatar">' + initials(q.ismi, q.familyasi) + '</div>' +
+      '<div class="info">' +
+        '<h4>' + q.ismi + ' ' + q.familyasi + '</h4>' +
+        '<p>Qoldiq: <b>' + formatSumma(q.qoldiq) + '</b></p>' +
+        '<p>Muddat: ' + formatDate(q.muddat) + '</p>' +
+      '</div>' +
+      '<button class="pay-btn" onclick="openTolovModal(' + q.id + ')">' +
+        '<svg class="ico ico-sm" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>To\'lash</button>' +
+    '</div>';
+  }).join('');
+}
+document.getElementById('tolovSearch').addEventListener('input', renderTolovList);
+
+document.getElementById('summa').addEventListener('input', function() {
+  var val = this.value.replace(/[^\d]/g, '');
+  if (val) {
+    this.value = val;
+    document.getElementById('summaHint').innerHTML = formatSumma(val);
+  } else {
+    document.getElementById('summaHint').innerHTML = '';
+  }
+});
+
+document.getElementById('tolovSumma').addEventListener('input', function() {
+  var val = this.value.replace(/[^\d]/g, '');
+  this.value = val;
+});
+
+document.getElementById('qarzdorForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  var inputs = ['ismi','familyasi','yashashJoyi','telRaqami','maxsulot','summa','muddat'];
+  var valid = true;
+  inputs.forEach(function(id) {
+    var el = document.getElementById(id);
+    if (!el.value.trim()) { el.classList.add('error'); valid = false; setTimeout(function() { el.classList.remove('error'); }, 1500); }
+  });
+  if (!valid) { showToast('Barcha maydonlarni to\'ldiring!', 'error'); return; }
+
+  var summa = Math.round(Number(document.getElementById('summa').value));
+  if (!summa || summa <= 0) { showToast('Summa 0 dan katta bo\'lishi kerak!', 'error'); return; }
+
+  qarzdorlar.push({
+    id: Date.now(),
+    ismi: document.getElementById('ismi').value.trim(),
+    familyasi: document.getElementById('familyasi').value.trim(),
+    yashashJoyi: document.getElementById('yashashJoyi').value.trim(),
+    telRaqami: document.getElementById('telRaqami').value.trim(),
+    maxsulot: document.getElementById('maxsulot').value.trim(),
+    summa: summa, tolangan: 0, qoldiq: summa,
+    muddat: document.getElementById('muddat').value,
+    yaratilgan: new Date().toISOString()
+  });
+  save();
+  this.reset();
+  document.getElementById('summaHint').innerHTML = '';
+  showToast('Qarzdor muvaffaqiyatli qo\'shildi!');
+  setTimeout(function() { goToPage('qarzdorlar'); }, 700);
+});
+
+function callClient(tel) { window.location.href = 'tel:' + tel.replace(/\s/g, ''); }
+
+function openModal(id) { document.getElementById(id).classList.add('active'); }
+function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+document.querySelectorAll('.modal-overlay').forEach(function(m) {
+  m.addEventListener('click', function(e) { if (e.target === m) m.classList.remove('active'); });
+});
+
+/* ============================================================
+   SMS
+   ============================================================ */
+function openSmsModal(id) {
+  currentSmsId = id;
+  var q = qarzdorlar.find(function(x) { return x.id === id; });
+  if (!q) return;
+
+  var muddat = formatDate(q.muddat);
+  var kun = daysDiff(q.muddat);
+  var urg = '';
+  if (kun === 0) urg = 'BUGUN to\'lash kuni!\n\n';
+  else if (kun < 0) urg = 'Muddat ' + Math.abs(kun) + ' kun o\'tib ketdi!\n\n';
+  else if (kun <= 3) urg = kun + ' kun qoldi!\n\n';
+
+  var smsMatn =
+'Xurmatli ' + q.familyasi + ' ' + q.ismi + '!\n\n' +
+urg +
+'"POP AUTO MAKON" do\'konidan ' + formatDate(q.yaratilgan) + ' kuni quyidagi maxsulotni nasiyaga olgansiz:\n\n' +
+'Maxsulot: ' + q.maxsulot + '\n' +
+'Umumiy summa: ' + formatSumma(q.summa) + '\n' +
+'To\'langan: ' + formatSumma(q.tolangan || 0) + '\n' +
+'Qoldiq qarz: ' + formatSumma(q.qoldiq) + '\n\n' +
+'Siz bilan ' + muddat + ' sanasiga kelishgan edik. Iltimos, kerakli summani to\'lab qo\'ying.\n\n' +
+'Hurmat bilan,\n"POP AUTO MAKON" jamoasi\n' +
+'Aloqa uchun: +998 XX XXX XX XX';
+
+  document.getElementById('smsText').value = smsMatn;
+  openModal('smsModal');
+}
+
+function sendSms() {
+  var q = qarzdorlar.find(function(x) { return x.id === currentSmsId; });
+  if (!q) return;
+  var text = document.getElementById('smsText').value;
+  var tel = q.telRaqami.replace(/\s+/g, '').replace(/[^\d+]/g, '');
+  window.location.href = 'sms:' + tel + '?body=' + encodeURIComponent(text);
+  closeModal('smsModal');
+  showToast('SMS ilovasi ochilmoqda...');
+}
+
+function openTolovModal(id) {
+  currentTolovId = id;
+  var q = qarzdorlar.find(function(x) { return x.id === id; });
+  if (!q) return;
+
+  document.getElementById('tolovInfoBox').innerHTML =
+    '<div class="info-row"><span class="lbl">Qarzdor</span><span class="val">' + q.ismi + ' ' + q.familyasi + '</span></div>' +
+    '<div class="info-row"><span class="lbl">Maxsulot</span><span class="val">' + q.maxsulot + '</span></div>' +
+    '<div class="info-row"><span class="lbl">Jami qarz</span><span class="val">' + formatSumma(q.summa) + '</span></div>' +
+    '<div class="info-row"><span class="lbl">To\'langan</span><span class="val" style="color:#10b981;">' + formatSumma(q.tolangan || 0) + '</span></div>' +
+    '<div class="info-row"><span class="lbl">Qoldiq</span><span class="val" style="color:#ef4444;">' + formatSumma(q.qoldiq) + '</span></div>' +
+    '<div class="info-row"><span class="lbl">Muddat</span><span class="val">' + formatDate(q.muddat) + '</span></div>';
+  document.getElementById('tolovSumma').value = '';
+  document.getElementById('tolovSumma').max = q.qoldiq;
+  openModal('tolovModal');
+}
+
+function setPayPercent(p) {
+  var q = qarzdorlar.find(function(x) { return x.id === currentTolovId; });
+  if (!q) return;
+  document.getElementById('tolovSumma').value = Math.round(q.qoldiq * (p / 100));
+}
+
+function confirmTolov() {
+  var q = qarzdorlar.find(function(x) { return x.id === currentTolovId; });
+  if (!q) return;
+  var summa = Math.round(Number(document.getElementById('tolovSumma').value));
+  if (!summa || summa <= 0) { showToast('To\'g\'ri summa kiriting!', 'error'); return; }
+  if (summa > q.qoldiq) { showToast('Summa qoldiqdan katta!', 'error'); return; }
+
+  q.tolangan = (q.tolangan || 0) + summa;
+  q.qoldiq = q.summa - q.tolangan;
+  save();
+
+  if (q.qoldiq <= 0) {
+    delete sentNotifications['notif_' + q.id + '_' + todayKey()];
+    saveSent();
+  }
+
+  closeModal('tolovModal');
+  showToast(q.qoldiq <= 0 ? q.ismi + ' qarzini to\'liq to\'ladi!' : formatSumma(summa) + ' qabul qilindi!');
+  renderQarzdorlar();
+  renderTolovList();
+  renderDashboard();
+  updateBellBadge();
+}
+
+function openDeleteModal(id) {
+  currentDeleteId = id;
+  var q = qarzdorlar.find(function(x) { return x.id === id; });
+  if (!q) return;
+  document.getElementById('delText').innerHTML =
+    '<b>' + q.ismi + ' ' + q.familyasi + '</b> ni ro\'yxatdan o\'chirmoqchimisiz?<br><small style="color:#8b95b8;">Bu amalni qaytarish mumkin emas.</small>';
+  openModal('delModal');
+}
+function confirmDelete() {
+  if (!currentDeleteId) return;
+  qarzdorlar = qarzdorlar.filter(function(x) { return x.id !== currentDeleteId; });
+  save();
+  closeModal('delModal');
+  showToast('O\'chirildi');
+  renderQarzdorlar();
+  renderDashboard();
+  updateBellBadge();
+}
+
+function updateBellBadge() {
+  var overdue = qarzdorlar.filter(function(q) { return q.qoldiq > 0 && getHolat(q).type === 'overdue'; }).length;
+  var today = qarzdorlar.filter(function(q) { return q.qoldiq > 0 && getHolat(q).type === 'today'; }).length;
+  var total = overdue + today;
+  var bellBadge = document.getElementById('bellBadge');
+  var bellBtn = document.getElementById('bellBtn');
+  var navBadge = document.getElementById('navBadge');
+  if (total > 0) {
+    bellBadge.textContent = total; bellBadge.style.display = 'flex';
+    bellBtn.classList.add('has-alert');
+    navBadge.textContent = total; navBadge.style.display = 'flex';
+  } else {
+    bellBadge.style.display = 'none';
+    bellBtn.classList.remove('has-alert');
+    navBadge.style.display = 'none';
+  }
+}
+
+function todayKey() {
+  var d = new Date();
+  return d.getFullYear() + '-' + (d.getMonth()+1) + '-' + d.getDate();
+}
+
+function getReminderList() {
+  return qarzdorlar.filter(function(q) {
+    if (q.qoldiq <= 0) return false;
+    var kun = daysDiff(q.muddat);
+    return kun <= 0;
+  }).map(function(q) {
+    var kun = daysDiff(q.muddat);
+    var text = '';
+    if (kun === 0) text = 'BUGUN to\'lash kuni!';
+    else if (kun === -1) text = 'Kechagi muddat o\'tdi!';
+    else text = 'Muddat ' + Math.abs(kun) + ' kun o\'tgan!';
+    return {
+      id: q.id,
+      ismi: q.ismi,
+      familyasi: q.familyasi,
+      tel: q.telRaqami,
+      qoldiq: formatSumma(q.qoldiq),
+      text: text,
+      kun: kun,
+      maxsulot: q.maxsulot
+    };
+  });
+}
+
+function sendNotifications(items) {
+  if (items.length === 0) return;
+  if (swRegistration && Notification.permission === 'granted') {
+    try {
+      if (swRegistration.active) {
+        swRegistration.active.postMessage({
+          type: 'REMINDER',
+          items: items,
+          icon: pamIconDataURL
+        });
+      } else {
+        sendFallbackNotifications(items);
+      }
+    } catch(e) {
+      sendFallbackNotifications(items);
+    }
+  } else if (Notification.permission === 'granted') {
+    sendFallbackNotifications(items);
+  }
+}
+
+function sendFallbackNotifications(items) {
+  if (items.length === 1) {
+    var q = items[0];
+    new Notification('PAM Nasiya - Muddat eslatmasi', {
+      body: q.ismi + ' ' + q.familyasi + '\n' + q.text + '\nQoldiq: ' + q.qoldiq + '\n\nIltimos, qo\'ng\'iroq qiling yoki SMS yuboring!',
+      icon: pamIconDataURL,
+      badge: pamIconDataURL,
+      tag: 'pam-reminder-' + q.id,
+      requireInteraction: true,
+      vibrate: [300, 100, 300, 100, 300]
+    });
+  } else {
+    var names = items.slice(0, 3).map(function(q) { return '- ' + q.ismi + ' ' + q.familyasi + ' - ' + q.text; }).join('\n');
+    var extra = items.length > 3 ? '\n... va yana ' + (items.length - 3) + ' ta' : '';
+    new Notification('PAM Nasiya - ' + items.length + ' ta eslatma', {
+      body: names + extra + '\n\nIltimos, ro\'yxatni ko\'rib chiqing!',
+      icon: pamIconDataURL,
+      badge: pamIconDataURL,
+      tag: 'pam-reminder-batch',
+      requireInteraction: true,
+      vibrate: [300, 100, 300, 100, 300, 100, 300]
+    });
+  }
+}
+
+function playAlertSound() {
+  try {
+    var ctx = new (window.AudioContext || window.webkitAudioContext)();
+    var now = ctx.currentTime;
+    [0, 0.2, 0.4].forEach(function(offset, i) {
+      var osc = ctx.createOscillator();
+      var gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.type = 'sine';
+      osc.frequency.value = i === 1 ? 1000 : 800;
+      gain.gain.setValueAtTime(0, now + offset);
+      gain.gain.linearRampToValueAtTime(0.3, now + offset + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + offset + 0.18);
+      osc.start(now + offset);
+      osc.stop(now + offset + 0.2);
+    });
+  } catch(e) {}
+}
+
+function checkReminders(force) {
+  force = !!force;
+  var items = getReminderList();
+  if (items.length === 0) return;
+
+  var tk = todayKey();
+  var newItems = items.filter(function(item) {
+    var key = 'notif_' + item.id + '_' + tk;
+    return !sentNotifications[key];
+  });
+
+  if (!force && newItems.length === 0) return;
+
+  var toSend = force ? items : newItems;
+  sendNotifications(toSend);
+
+  if (toSend.length > 0) playAlertSound();
+
+  if (toSend.length > 0) {
+    var todayCount = toSend.filter(function(i) { return i.kun === 0; }).length;
+    var overCount = toSend.filter(function(i) { return i.kun < 0; }).length;
+    var msg = '';
+    if (todayCount > 0 && overCount > 0) msg = todayCount + ' ta bugun + ' + overCount + ' ta o\'tgan!';
+    else if (todayCount > 0) msg = todayCount + ' ta qarzdorning muddati BUGUN!';
+    else msg = overCount + ' ta qarzdorning muddati o\'tgan!';
+    setTimeout(function() { showToast(msg, 'error'); }, 800);
+  }
+
+  if (!force) {
+    newItems.forEach(function(item) {
+      sentNotifications['notif_' + item.id + '_' + tk] = Date.now();
+    });
+    var cutoff = Date.now() - 30 * 86400000;
+    Object.keys(sentNotifications).forEach(function(k) {
+      if (sentNotifications[k] < cutoff) delete sentNotifications[k];
+    });
+    saveSent();
+  }
+
+  updateBellBadge();
+}
+
+function showReminderModal() {
+  var items = getReminderList();
+  if (items.length === 0) {
+    showToast('Hozirda eslatma yo\'q!');
+    return;
+  }
+  var html = '<div style="max-height:50vh;overflow-y:auto;">';
+  items.forEach(function(q) {
+    var color = q.kun === 0 ? '#ef2d2d' : '#ef4444';
+    html += '<div style="padding:12px;margin-bottom:10px;background:rgba(0,0,0,0.3);border-radius:10px;border-left:3px solid ' + color + ';">' +
+      '<div style="font-weight:800;font-size:14px;margin-bottom:4px;">' + q.ismi + ' ' + q.familyasi + '</div>' +
+      '<div style="font-size:11px;color:' + color + ';font-weight:700;margin-bottom:6px;">' + q.text + '</div>' +
+      '<div style="font-size:11px;color:#8b95b8;margin-bottom:8px;">' + q.maxsulot + '<br>Qoldiq: <b style="color:#ef4444;">' + q.qoldiq + '</b></div>' +
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">' +
+        '<a href="tel:' + q.tel + '" style="padding:8px;text-align:center;background:rgba(239,45,45,0.2);border:1px solid rgba(239,45,45,0.4);border-radius:8px;color:#ff8a8a;font-size:11px;font-weight:800;text-decoration:none;">Qo\'ng\'iroq</a>' +
+        '<button onclick="closeModal(\'reminderModal\');openSmsModal(' + q.id + ')" style="padding:8px;background:rgba(245,158,11,0.2);border:1px solid rgba(245,158,11,0.4);border-radius:8px;color:#fcd34d;font-size:11px;font-weight:800;cursor:pointer;font-family:inherit;">SMS</button>' +
+      '</div>' +
+    '</div>';
+  });
+  html += '</div>';
+  document.getElementById('reminderContent').innerHTML = html;
+  openModal('reminderModal');
+}
+
+function reminderGoList() {
+  closeModal('reminderModal');
+  goToPage('qarzdorlar');
+  setTimeout(function() { setFilter('today'); }, 300);
+}
+
+function requestNotifPermission() {
+  if (!('Notification' in window)) {
+    showToast('Brauzer notification qo\'llab-quvvatlamaydi', 'error');
+    return;
+  }
+  if (Notification.permission === 'granted') {
+    showToast('Notification allaqachon yoqilgan!');
+    return;
+  }
+  Notification.requestPermission().then(function(perm) {
+    if (perm === 'granted') {
+      showToast('Notification yoqildi!');
+      renderNotifBanner();
+      setTimeout(function() { checkReminders(true); }, 500);
+    } else {
+      showToast('Notification rad etildi', 'error');
+    }
+  });
+}
+
+function renderNotifBanner() {
+  var banner = document.getElementById('notifBanner');
+  if (!('Notification' in window)) { banner.innerHTML = ''; return; }
+  if (Notification.permission === 'granted') { banner.innerHTML = ''; return; }
+  banner.innerHTML = '<div class="notif-banner">' +
+    '<div class="nb-icon"><svg class="ico ico-lg" viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg></div>' +
+    '<div class="nb-text"><h4>Eslatmalarni yoqing</h4><p>Muddat kelganda tepadan notification keladi</p></div>' +
+    '<button class="nb-btn" onclick="requestNotifPermission()">Yoqish</button>' +
+    '</div>';
+}
+
+function init() {
+  renderNotifBanner();
+  renderDashboard();
+  renderQarzdorlar();
+  renderTolovList();
+
+  var isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+  var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+  var isAndroid = /Android/.test(navigator.userAgent);
+  if (!isStandalone && (isIOS || isAndroid)) {
+    document.getElementById('installBanner').style.display = 'flex';
+  }
+
+  document.getElementById('bellBtn').onclick = showReminderModal;
+
+  if ('Notification' in window && Notification.permission === 'granted') {
+    setTimeout(function() { checkReminders(true); }, 1500);
+  }
+
+  setInterval(function() { checkReminders(false); }, 60000);
+
+  document.addEventListener('visibilitychange', function() {
+    if (!document.hidden) {
+      setTimeout(function() { checkReminders(false); }, 500);
+      renderDashboard();
+      updateBellBadge();
+    }
+  });
+
+  var now = new Date();
+  var midnight = new Date(now);
+  midnight.setHours(24, 0, 5, 0);
+  var msUntilMidnight = midnight - now;
+  setTimeout(function() {
+    checkReminders(true);
+    setInterval(function() { checkReminders(true); }, 86400000);
+  }, msUntilMidnight);
+}
+
+window.addEventListener('load', init);
+
+document.querySelectorAll('.form-control').forEach(function(el) {
+  el.addEventListener('focus', function() {
+    if (el.parentElement) el.parentElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  });
+});
+
+var lastTouch = 0;
+document.addEventListener('touchend', function(e) {
+  var now = Date.now();
+  if (now - lastTouch <= 300) e.preventDefault();
+  lastTouch = now;
+}, { passive: false });
+</script>
+</body>
+</html>
