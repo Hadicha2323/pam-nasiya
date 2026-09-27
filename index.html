@@ -362,7 +362,7 @@
     50% { box-shadow: 0 8px 35px rgba(239,45,45,0.7); }
   }
   .qarzdor-card.soon { border-left-color: var(--warning); }
-  .qarzdor-card.paid { border-left-color: var(--success); opacity: 0.7; }
+  .qarzdor-card.paid { border-left-color: var(--success); opacity: 0.75; }
   .qarzdor-card.ok { border-left-color: var(--red); }
 
   .q-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; gap: 10px; }
@@ -427,6 +427,7 @@
   .chip.active.blue { background: linear-gradient(135deg, #3b82f6, #1d4ed8); box-shadow: 0 4px 12px rgba(59,130,246,0.5); }
   .chip.active.orange { background: linear-gradient(135deg, #f59e0b, #d97706); box-shadow: 0 4px 12px rgba(245,158,11,0.5); }
   .chip.active.purple { background: linear-gradient(135deg, #8b5cf6, #6d28d9); box-shadow: 0 4px 12px rgba(139,92,246,0.5); }
+  .chip.active.green { background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 4px 12px rgba(16,185,129,0.5); }
   .chip:active { transform: scale(0.95); }
 
   .empty-state { text-align: center; padding: 50px 20px; color: var(--text-muted); animation: cardEnter 0.5s; }
@@ -1008,12 +1009,13 @@
   </div>
 
   <div class="filter-chips">
-    <button class="chip active" data-filter="all">Barchasi</button>
+    <button class="chip active" data-filter="active">Faol qarzlar</button>
+    <button class="chip" data-filter="all">Barchasi</button>
     <button class="chip" data-filter="today">🔥 Bugun</button>
     <button class="chip" data-filter="overdue">Muddati o'tgan</button>
     <button class="chip" data-filter="soon">Yaqin</button>
     <button class="chip" data-filter="ok">Yaxshi</button>
-    <button class="chip" data-filter="paid">To'langan</button>
+    <button class="chip" data-filter="paid">✅ To'langan</button>
   </div>
 
   <div id="qarzdorlarList"></div>
@@ -1252,7 +1254,7 @@
   <div class="card">
     <div class="section-title">Ilova haqida</div>
     <div style="font-size:12px;color:var(--text-muted);line-height:1.8;">
-      <div>📱 <b style="color:#fff;">PAM Nasiya</b> — v8.1</div>
+      <div>📱 <b style="color:#fff;">PAM Nasiya</b> — v8.2</div>
       <div>🏢 POP AUTO MAKON</div>
       <div>💰 Kassa + Rasxodlar + Ta'minotchi qarz</div>
       <div>💾 Ma'lumotlar: Supabase bulutda</div>
@@ -1434,7 +1436,7 @@ if ('serviceWorker' in navigator) {
 }
 
 /* ============================================================ */
-/* SUPABASE — YANGILANGAN KALIT */
+/* SUPABASE */
 /* ============================================================ */
 var SUPABASE_URL = 'https://ozigkdzfelsmadzdhukz.supabase.co';
 var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im96aWdrZHpmZWxzbWFkemRodWt6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAxODczNDgsImV4cCI6MjEwNTc2MzM0OH0.SQw38xVrmm7FBcUCSLIGJTaAgVQAxg6n-xla_cGpSW0';
@@ -1451,7 +1453,7 @@ var currentSmsId = null;
 var currentTolovId = null;
 var currentDeleteId = null;
 var currentDeleteType = 'qarzdor';
-var currentFilter = 'all';
+var currentFilter = 'active'; // default: faol qarzlar
 var currentTaminotchiId = null;
 var selectedKassaCurr = 'UZS';
 var selectedTashqiCurr = 'UZS';
@@ -1648,7 +1650,7 @@ function updatePingUI() {
 function testPing() { playPingLong(); showToast('🔔 Ping sinov'); }
 
 /* ============================================================ */
-/* SUPABASE FUNCTIONS — XATO USHLASH YAXSHILANDI */
+/* SUPABASE FUNCTIONS */
 /* ============================================================ */
 async function supabaseGetAll() {
   try {
@@ -1960,12 +1962,26 @@ function updateKassaBalanceUI() {
 }
 
 /* ============================================================ */
-/* QARZDORLAR */
+/* QARZDORLAR — YANGILANGAN MANTIQ */
 /* ============================================================ */
 function renderQarzdorlar() {
   var search = (document.getElementById('searchInput').value || '').toLowerCase().trim();
   var list = document.getElementById('qarzdorlarList');
   var filtered = qarzdorlar.slice();
+
+  // ✅ YANGI MANTIQ: "active" = faqat qoldiq > 0
+  if (currentFilter === 'active') {
+    filtered = filtered.filter(function(q) { return q.qoldiq > 0.01; });
+  } else if (currentFilter === 'paid') {
+    // ✅ "paid" = faqat qoldiq = 0 (to'langan)
+    filtered = filtered.filter(function(q) { return q.qoldiq <= 0.01; });
+  } else if (currentFilter !== 'all') {
+    // Boshqa filtrlar (today, overdue, soon, ok) — faqat qoldiq > 0
+    filtered = filtered.filter(function(q) {
+      return q.qoldiq > 0.01 && getHolat(q).type === currentFilter;
+    });
+  }
+  // currentFilter === 'all' — hamma (to'langan + faol)
 
   if (search) {
     filtered = filtered.filter(function(q) {
@@ -1975,15 +1991,17 @@ function renderQarzdorlar() {
         (q.maxsulot || '').toLowerCase().indexOf(search) !== -1;
     });
   }
-  if (currentFilter !== 'all') {
-    filtered = filtered.filter(function(q) { return getHolat(q).type === currentFilter; });
-  }
 
+  // Tartiblash: today → overdue → soon → info → ok → paid
   var priority = { today: 0, overdue: 1, soon: 2, info: 3, ok: 4, paid: 5 };
   filtered.sort(function(a, b) { return priority[getHolat(a).type] - priority[getHolat(b).type]; });
 
   if (filtered.length === 0) {
-    list.innerHTML = '<div class="empty-state"><h3>Qarzdorlar topilmadi</h3><p>Yangi qarzdor qo\'shing</p></div>';
+    var emptyMsg = '';
+    if (currentFilter === 'paid') emptyMsg = 'Hali to\'langan qarzlar yo\'q';
+    else if (currentFilter === 'active') emptyMsg = 'Faol qarzlar yo\'q — hammasi to\'langan! ✅';
+    else emptyMsg = 'Qarzdorlar topilmadi';
+    list.innerHTML = '<div class="empty-state"><h3>' + emptyMsg + '</h3><p>Filtrni o\'zgartirib ko\'ring</p></div>';
     return;
   }
 
@@ -1991,6 +2009,7 @@ function renderQarzdorlar() {
     var holat = getHolat(q);
     var tolangan = q.tolangan || 0;
     var percent = q.summa > 0 ? Math.min(100, (tolangan / q.summa) * 100) : 0;
+    var isPaid = q.qoldiq <= 0.01;
 
     return '<div class="qarzdor-card ' + holat.type + '" style="animation-delay:' + (i * 0.04) + 's">' +
       '<div class="q-header">' +
@@ -2006,13 +2025,16 @@ function renderQarzdorlar() {
       '<div class="q-money">' +
         '<div><div class="m-label">Jami</div><div class="m-value">' + formatSumma(q.summa) + '</div></div>' +
         '<div><div class="m-label">To\'landi</div><div class="m-value green">' + formatSumma(tolangan) + '</div></div>' +
-        '<div><div class="m-label">Qoldiq</div><div class="m-value red">' + formatSumma(q.qoldiq) + '</div></div>' +
+        '<div><div class="m-label">Qoldiq</div><div class="m-value ' + (isPaid ? 'green' : 'red') + '">' + formatSumma(q.qoldiq) + '</div></div>' +
       '</div>' +
       '<div class="q-info" style="margin-top:8px;">📅 Muddat: <b style="color:#fff;">' + formatDate(q.muddat) + '</b></div>' +
       '<div class="q-actions">' +
         '<button class="qa-btn call" onclick="callClient(\'' + q.telRaqami + '\')">📞</button>' +
         '<button class="qa-btn sms" onclick="openSmsModal(' + q.id + ')">💬 SMS</button>' +
-        '<button class="qa-btn pay" onclick="openTolovModal(' + q.id + ')">💰 To\'lash</button>' +
+        (isPaid 
+          ? '<button class="qa-btn pay" style="background:rgba(16,185,129,0.3); cursor:default;" disabled>✅ To\'langan</button>'
+          : '<button class="qa-btn pay" onclick="openTolovModal(' + q.id + ')">💰 To\'lash</button>'
+        ) +
         '<button class="qa-btn del" onclick="openDeleteModal(' + q.id + ', \'qarzdor\')">🗑</button>' +
       '</div>' +
     '</div>';
@@ -2022,28 +2044,41 @@ function renderQarzdorlar() {
 document.getElementById('searchInput').addEventListener('input', renderQarzdorlar);
 document.querySelectorAll('.chip[data-filter]').forEach(function(chip) {
   chip.addEventListener('click', function() {
-    document.querySelectorAll('.chip[data-filter]').forEach(function(c) { c.classList.remove('active'); });
+    document.querySelectorAll('.chip[data-filter]').forEach(function(c) { 
+      c.classList.remove('active', 'blue', 'orange', 'purple', 'green'); 
+    });
     chip.classList.add('active');
+    // To'langan chipga yashil rang
+    if (chip.dataset.filter === 'paid') chip.classList.add('green');
+    if (chip.dataset.filter === 'today') chip.classList.add('orange');
+    if (chip.dataset.filter === 'overdue') chip.classList.add('purple');
     currentFilter = chip.dataset.filter;
     renderQarzdorlar();
   });
 });
 
 function setFilter(f) {
-  document.querySelectorAll('.chip[data-filter]').forEach(function(c) { c.classList.remove('active'); });
+  document.querySelectorAll('.chip[data-filter]').forEach(function(c) { 
+    c.classList.remove('active', 'blue', 'orange', 'purple', 'green'); 
+  });
   var chip = document.querySelector('.chip[data-filter="' + f + '"]');
-  if (chip) chip.classList.add('active');
+  if (chip) {
+    chip.classList.add('active');
+    if (f === 'paid') chip.classList.add('green');
+    if (f === 'today') chip.classList.add('orange');
+    if (f === 'overdue') chip.classList.add('purple');
+  }
   currentFilter = f;
   renderQarzdorlar();
 }
 
 /* ============================================================ */
-/* TO'LOV LIST */
+/* TO'LOV LIST — faqat qoldiq > 0 */
 /* ============================================================ */
 function renderTolovList() {
   var search = (document.getElementById('tolovSearch').value || '').toLowerCase().trim();
   var list = document.getElementById('tolovList');
-  var filtered = qarzdorlar.filter(function(q) { return q.qoldiq > 0; });
+  var filtered = qarzdorlar.filter(function(q) { return q.qoldiq > 0.01; });
   if (search) {
     filtered = filtered.filter(function(q) {
       return q.ismi.toLowerCase().indexOf(search) !== -1 ||
@@ -2055,7 +2090,7 @@ function renderTolovList() {
   filtered.sort(function(a, b) { return priority[getHolat(a).type] - priority[getHolat(b).type]; });
 
   if (filtered.length === 0) {
-    list.innerHTML = '<div class="empty-state"><h3>Qarz yo\'q</h3><p>Barcha qarzlar to\'langan!</p></div>';
+    list.innerHTML = '<div class="empty-state"><h3>Qarz yo\'q</h3><p>Barcha qarzlar to\'langan! ✅</p></div>';
     return;
   }
 
@@ -2629,7 +2664,14 @@ async function confirmTolov() {
   kassaTarix.push(kassaYozuv);
 
   closeModal('tolovModal');
-  showToast(q.qoldiq <= 0 ? '🎉 To\'liq to\'landi!' : '✅ ' + formatSumma(summa) + ' qabul qilindi!');
+  
+  // ✅ To'liq to'langan bo'lsa, maxsus xabar
+  if (yangiQoldiq <= 0.01) {
+    showToast('🎉 ' + q.ismi + ' qarzini to\'liq to\'ladi! "To\'langan" bo\'limida');
+  } else {
+    showToast('✅ ' + formatSumma(summa) + ' qabul qilindi!');
+  }
+  
   renderQarzdorlar();
   renderTolovList();
   renderKassa();
