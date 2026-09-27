@@ -1,17 +1,17 @@
-var CACHE_NAME = 'pam-nasiya-v8';
-var urlsToCache = [
-  './', './index.html', './manifest.json',
-  './icon-192.png', './icon-512.png',
-  'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2',
-  'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap'
-];
+var CACHE_NAME = 'pam-nasiya-v9';
+var urlsToCache = ['./', './index.html', './manifest.json'];
+var iconUrls = ['./icon-192.png', './icon-512.png'];
 
 self.addEventListener('install', function(event) {
   event.waitUntil(
     caches.open(CACHE_NAME).then(function(cache) {
-      return cache.addAll(urlsToCache.map(function(url) {
-        return new Request(url, { mode: 'no-cors' });
-      })).catch(function(e) { console.log('Kesh xato:', e); });
+      return cache.addAll(urlsToCache).then(function() {
+        return Promise.all(iconUrls.map(function(url) {
+          return fetch(url).then(function(res) {
+            if (res.ok) return cache.put(url, res);
+          }).catch(function() { console.log('Ikon topilmadi:', url); });
+        }));
+      }).catch(function(e) { console.log('Kesh xato:', e); });
     })
   );
   self.skipWaiting();

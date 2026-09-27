@@ -523,7 +523,6 @@
   }
   .tolov-item .pay-btn:active { transform: scale(0.92); }
 
-  /* TA'MINOTCHI CARD */
   .taminotchi-card {
     background: var(--card);
     backdrop-filter: blur(20px) saturate(160%);
@@ -578,7 +577,6 @@
   .tc-btn.detail { background: rgba(59,130,246,0.2); color: #93c5fd; border: 1px solid rgba(59,130,246,0.4); }
   .tc-btn.del { background: rgba(239,68,68,0.15); color: #fca5a5; border: 1px solid rgba(239,68,68,0.3); padding: 10px; }
 
-  /* ICHKI RASXOD */
   .ichki-item {
     display: flex; align-items: center; gap: 12px;
     padding: 14px; border-radius: 14px;
@@ -611,7 +609,6 @@
   }
   .ichki-item .i-del:active { transform: scale(0.9); }
 
-  /* KASSA ITEM */
   .kassa-item {
     display: flex; align-items: center; gap: 12px;
     padding: 12px 14px; border-radius: 12px;
@@ -810,7 +807,6 @@
   }
   .curr-toggle button.active { background: #3b82f6; color: white; }
 
-  /* PWA INSTALL BUTTON */
   #pwaInstallBtn {
     position: fixed;
     bottom: 20px;
@@ -1256,7 +1252,7 @@
   <div class="card">
     <div class="section-title">Ilova haqida</div>
     <div style="font-size:12px;color:var(--text-muted);line-height:1.8;">
-      <div>📱 <b style="color:#fff;">PAM Nasiya</b> — v8.0</div>
+      <div>📱 <b style="color:#fff;">PAM Nasiya</b> — v8.1</div>
       <div>🏢 POP AUTO MAKON</div>
       <div>💰 Kassa + Rasxodlar + Ta'minotchi qarz</div>
       <div>💾 Ma'lumotlar: Supabase bulutda</div>
@@ -1422,7 +1418,6 @@
   <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
 </button>
 
-<!-- PWA O'RNATISH TUGMASI -->
 <button id="pwaInstallBtn" onclick="installPWA()">
   <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
   <span>Ilovani o'rnatish</span>
@@ -1439,10 +1434,10 @@ if ('serviceWorker' in navigator) {
 }
 
 /* ============================================================ */
-/* SUPABASE */
+/* SUPABASE — YANGILANGAN KALIT */
 /* ============================================================ */
 var SUPABASE_URL = 'https://ozigkdzfelsmadzdhukz.supabase.co';
-var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im96aWdrZHpmZWxzbWFkemRodWt6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA1NzYzNDgsImV4cCI6MjEwNTc2MzM0OH0.SQw38xVrmm7FBcUCSLIGJTaAgVQAxg6n-xla_cGpSW0';
+var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im96aWdrZHpmZWxzbWFkemRodWt6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAxODczNDgsImV4cCI6MjEwNTc2MzM0OH0.SQw38xVrmm7FBcUCSLIGJTaAgVQAxg6n-xla_cGpSW0';
 var supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 /* ============================================================ */
@@ -1466,6 +1461,7 @@ var pingAnnouncedToday = JSON.parse(localStorage.getItem('pam_ping_announced') |
 var deferredPrompt = null;
 var kassaBalanceUZS = 0;
 var kassaBalanceUSD = 0;
+var rlsWarned = false;
 
 var DEFAULT_SMS_TEMPLATE =
 'Xurmatli {familiya} {ismi}!\n\n' +
@@ -1582,6 +1578,14 @@ function setSyncStatus(status, text) {
   txt.textContent = text;
 }
 
+function warnRLS() {
+  if (rlsWarned) return;
+  rlsWarned = true;
+  setTimeout(function() {
+    showToast('⚠️ Supabase RLS yoqilgan. SQL Editor\'da RLS\'ni o\'chiring!', 'warning');
+  }, 2000);
+}
+
 /* ============================================================ */
 /* PING */
 /* ============================================================ */
@@ -1644,13 +1648,18 @@ function updatePingUI() {
 function testPing() { playPingLong(); showToast('🔔 Ping sinov'); }
 
 /* ============================================================ */
-/* SUPABASE FUNCTIONS */
+/* SUPABASE FUNCTIONS — XATO USHLASH YAXSHILANDI */
 /* ============================================================ */
 async function supabaseGetAll() {
   try {
     setSyncStatus('loading', 'Yuklanmoqda...');
     var res = await supabaseClient.from('qarzdorlar').select('*').order('id', { ascending: false });
-    if (res.error) { setSyncStatus('error', 'Xatolik'); return null; }
+    if (res.error) {
+      console.error('❌ qarzdorlar xato:', res.error.message);
+      if (res.error.code === '42501' || res.error.message.indexOf('permission') !== -1) warnRLS();
+      setSyncStatus('error', 'Xatolik');
+      return null;
+    }
     setSyncStatus('ok', 'Bulut');
     return (res.data || []).map(function(d) {
       return {
@@ -1661,7 +1670,11 @@ async function supabaseGetAll() {
         muddat: d.muddat, yaratilgan: d.yaratilgan
       };
     });
-  } catch (e) { setSyncStatus('offline', 'Oflayn'); return null; }
+  } catch (e) {
+    console.error('❌ qarzdorlar catch:', e);
+    setSyncStatus('offline', 'Oflayn');
+    return null;
+  }
 }
 
 async function supabaseInsert(q) {
@@ -1673,14 +1686,16 @@ async function supabaseInsert(q) {
       tolangan: q.tolangan || 0, qoldiq: q.qoldiq,
       muddat: q.muddat, yaratilgan: q.yaratilgan || new Date().toISOString()
     }]);
-    return !res.error;
-  } catch (e) { return false; }
+    if (res.error) { console.error('❌ insert qarzdor:', res.error.message); if (res.error.message.indexOf('permission') !== -1 || res.error.code === '42501') warnRLS(); return false; }
+    return true;
+  } catch (e) { console.error('❌ insert catch:', e); return false; }
 }
 
 async function supabaseUpdateTolov(id, tolangan, qoldiq) {
   try {
     var res = await supabaseClient.from('qarzdorlar').update({ tolangan: tolangan, qoldiq: qoldiq }).eq('id', id);
-    return !res.error;
+    if (res.error) { console.error('❌ update tolov:', res.error.message); return false; }
+    return true;
   } catch (e) { return false; }
 }
 
@@ -1694,7 +1709,7 @@ async function supabaseDelete(id) {
 async function supabaseGetRasxodlar() {
   try {
     var res = await supabaseClient.from('rasxodlar').select('*').order('id', { ascending: false });
-    if (res.error) { return []; }
+    if (res.error) { console.error('❌ rasxodlar:', res.error.message); if (res.error.message.indexOf('permission') !== -1 || res.error.code === '42501') warnRLS(); return []; }
     return (res.data || []).map(function(d) {
       return {
         id: d.id, kim: d.kim, nima_uchun: d.nima_uchun,
@@ -1714,14 +1729,16 @@ async function supabaseInsertRasxod(r) {
       qoldiq: r.qoldiq, valyuta: r.valyuta,
       izoh: r.izoh, sana: r.sana
     }]);
-    return !res.error;
+    if (res.error) { console.error('❌ insert rasxod:', res.error.message); return false; }
+    return true;
   } catch (e) { return false; }
 }
 
 async function supabaseUpdateRasxod(id, berildi, qoldiq) {
   try {
     var res = await supabaseClient.from('rasxodlar').update({ berildi: berildi, qoldiq: qoldiq }).eq('id', id);
-    return !res.error;
+    if (res.error) { console.error('❌ update rasxod:', res.error.message); return false; }
+    return true;
   } catch (e) { return false; }
 }
 
@@ -1735,7 +1752,7 @@ async function supabaseDeleteRasxod(id) {
 async function supabaseGetIchki() {
   try {
     var res = await supabaseClient.from('ichki_rasxodlar').select('*').order('id', { ascending: false });
-    if (res.error) { return []; }
+    if (res.error) { console.error('❌ ichki:', res.error.message); if (res.error.message.indexOf('permission') !== -1 || res.error.code === '42501') warnRLS(); return []; }
     return (res.data || []).map(function(d) {
       return {
         id: d.id, nomi: d.nomi, summa: Number(d.summa),
@@ -1750,7 +1767,8 @@ async function supabaseInsertIchki(i) {
     var res = await supabaseClient.from('ichki_rasxodlar').insert([{
       id: i.id, nomi: i.nomi, summa: i.summa, izoh: i.izoh, sana: i.sana
     }]);
-    return !res.error;
+    if (res.error) { console.error('❌ insert ichki:', res.error.message); return false; }
+    return true;
   } catch (e) { return false; }
 }
 
@@ -1764,7 +1782,7 @@ async function supabaseDeleteIchki(id) {
 async function supabaseGetKassa() {
   try {
     var res = await supabaseClient.from('kassa').select('*').order('id', { ascending: false });
-    if (res.error) { return []; }
+    if (res.error) { console.error('❌ kassa:', res.error.message); if (res.error.message.indexOf('permission') !== -1 || res.error.code === '42501') warnRLS(); return []; }
     return (res.data || []).map(function(d) {
       return {
         id: d.id, tur: d.tur, summa: Number(d.summa),
@@ -1781,7 +1799,8 @@ async function supabaseInsertKassa(k) {
       id: k.id, tur: k.tur, summa: k.summa,
       valyuta: k.valyuta || 'UZS', izoh: k.izoh
     }]);
-    return !res.error;
+    if (res.error) { console.error('❌ insert kassa:', res.error.message); return false; }
+    return true;
   } catch (e) { return false; }
 }
 
@@ -2098,7 +2117,7 @@ async function kassaKirim() {
 
   var yangi = { id: Date.now(), tur: 'kirim', summa: summa, valyuta: selectedKassaCurr, izoh: izoh };
   var ok = await supabaseInsertKassa(yangi);
-  if (!ok) { showToast('Xatolik!', 'error'); return; }
+  if (!ok) { showToast('Xatolik! Supabase\'ga saqlanmadi', 'error'); return; }
 
   kassaTarix.push(yangi);
   document.getElementById('kassaSumma').value = '';
@@ -2270,7 +2289,7 @@ async function addTashqi() {
   };
 
   var ok = await supabaseInsertRasxod(yangi);
-  if (!ok) { showToast('Xatolik!', 'error'); return; }
+  if (!ok) { showToast('Xatolik! Saqlanmadi', 'error'); return; }
 
   if (berildi > 0) {
     var kassaYozuv = {
@@ -2454,7 +2473,7 @@ async function addIchki() {
 
   var yangi = { id: Date.now(), nomi: nomi, summa: summa, izoh: izoh, sana: sana };
   var ok = await supabaseInsertIchki(yangi);
-  if (!ok) { showToast('Xatolik!', 'error'); return; }
+  if (!ok) { showToast('Xatolik! Saqlanmadi', 'error'); return; }
 
   var kassaYozuv = {
     id: Date.now() + 4, tur: 'chiqim', summa: summa,
@@ -2523,7 +2542,7 @@ document.getElementById('qarzdorForm').addEventListener('submit', async function
   btn.disabled = false;
   btn.innerHTML = '💾 Qarzdorni saqlash';
 
-  if (!ok) { showToast('Xatolik!', 'error'); return; }
+  if (!ok) { showToast('Xatolik! Supabase\'ga saqlanmadi', 'error'); return; }
 
   qarzdorlar.unshift(yangi);
   this.reset();
@@ -2597,7 +2616,7 @@ async function confirmTolov() {
 
   var ok = await supabaseUpdateTolov(q.id, yangiTolangan, yangiQoldiq);
   btn.disabled = false;
-  if (!ok) { showToast('Xatolik!', 'error'); return; }
+  if (!ok) { showToast('Xatolik! Saqlanmadi', 'error'); return; }
 
   q.tolangan = yangiTolangan;
   q.qoldiq = yangiQoldiq;
@@ -2762,13 +2781,12 @@ function renderNotifBanner() {
 }
 
 /* ============================================================ */
-/* PWA O'RNATISH — Bloom Education usulida (AVTOMATIK) */
+/* PWA O'RNATISH */
 /* ============================================================ */
 window.addEventListener('beforeinstallprompt', function(e) {
   e.preventDefault();
   deferredPrompt = e;
   console.log('✅ PWA o\'rnatishga tayyor');
-  // 3 sekunddan keyin pastda chap burchakda tugma chiqadi
   setTimeout(function() {
     var btn = document.getElementById('pwaInstallBtn');
     if (btn) btn.style.display = 'flex';
@@ -2783,10 +2801,7 @@ async function installPWA() {
     var isAndroid = /Android/.test(navigator.userAgent);
     var isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
     
-    if (isStandalone) {
-      showToast('✅ Ilova allaqachon o\'rnatilgan!');
-      return;
-    }
+    if (isStandalone) { showToast('✅ Ilova allaqachon o\'rnatilgan!'); return; }
     
     if (isIOS) {
       alert("📱 iPhone/iPad ga o'rnatish:\n\n1. Pastdagi 'Ulashish' (⬆️) tugmasini bosing\n2. 'Bosh ekranga qo'shish' ni tanlang\n3. 'Qo'shish' tugmasini bosing");
@@ -2798,7 +2813,6 @@ async function installPWA() {
     return;
   }
   
-  // Avtomatik o'rnatish
   deferredPrompt.prompt();
   var choiceResult = await deferredPrompt.userChoice;
   
@@ -2831,7 +2845,7 @@ async function init() {
 
   var data = await supabaseGetAll();
   if (data === null) {
-    showToast('Internet yo\'q!', 'warning');
+    showToast('Ma\'lumot yuklanmadi — konsolni tekshiring!', 'warning');
   } else {
     qarzdorlar = data;
     renderQarzdorlar();
