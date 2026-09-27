@@ -8,12 +8,13 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="PAM Nasiya">
 <meta name="mobile-web-app-capable" content="yes">
+<meta name="application-name" content="PAM Nasiya">
+<meta name="description" content="Nasiya, kassa va rasxodlar boshqaruv tizimi">
 <title>PAM Nasiya - POP AUTO MAKON</title>
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
 <link rel="apple-touch-icon" href="icon-192.png">
-<meta name="application-name" content="PAM Nasiya">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -27,6 +28,8 @@
     --success: #10b981;
     --danger: #ef4444;
     --warning: #f59e0b;
+    --info: #3b82f6;
+    --purple: #8b5cf6;
     --bg: #06080f;
     --card: rgba(15, 20, 35, 0.78);
     --text: #ffffff;
@@ -236,17 +239,20 @@
   .stat-card.overdue::after { background: var(--danger); }
   .stat-card.soon::after { background: var(--warning); }
   .stat-card.money::after { background: var(--success); }
+  .stat-card.kassa::after { background: var(--info); }
   .stat-card .stat-icon { margin-bottom: 8px; display: flex; width: 30px; height: 30px; align-items: center; justify-content: center; border-radius: 8px; }
   .stat-card.total .stat-icon { background: rgba(239,45,45,0.15); color: var(--red); }
   .stat-card.overdue .stat-icon { background: rgba(239,68,68,0.15); color: var(--danger); }
   .stat-card.soon .stat-icon { background: rgba(245,158,11,0.15); color: var(--warning); }
   .stat-card.money .stat-icon { background: rgba(16,185,129,0.15); color: var(--success); }
+  .stat-card.kassa .stat-icon { background: rgba(59,130,246,0.15); color: var(--info); }
   .stat-card .stat-num { font-size: 26px; font-weight: 800; letter-spacing: -1px; line-height: 1; margin-bottom: 4px; }
   .stat-card .stat-label { font-size: 10px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
   .stat-card.total .stat-num { color: var(--red); }
   .stat-card.overdue .stat-num { color: var(--danger); }
   .stat-card.soon .stat-num { color: var(--warning); }
-  .stat-card.money .stat-num { color: var(--success); font-size: 18px; }
+  .stat-card.money .stat-num { color: var(--success); font-size: 16px; }
+  .stat-card.kassa .stat-num { color: var(--info); font-size: 16px; }
 
   .money-total-box {
     background: linear-gradient(135deg, rgba(16,185,129,0.15), rgba(239,45,45,0.08));
@@ -258,6 +264,23 @@
   .money-total-box .label { font-size: 11px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; display: flex; align-items: center; justify-content: center; gap: 6px; }
   .money-total-box .amount { font-size: 26px; font-weight: 800; letter-spacing: -0.5px; background: linear-gradient(135deg, #10b981, #00d4ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
 
+  .kassa-balance {
+    background: linear-gradient(135deg, rgba(59,130,246,0.2), rgba(15,20,35,0.9));
+    border: 1px solid rgba(59,130,246,0.4);
+    border-radius: 16px; padding: 20px;
+    text-align: center; margin-bottom: 14px;
+    position: relative; overflow: hidden;
+  }
+  .kassa-balance::before {
+    content: ''; position: absolute; top: -50%; right: -30%;
+    width: 200px; height: 200px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(59,130,246,0.4), transparent 70%);
+    animation: floatGlow 4s ease-in-out infinite;
+  }
+  .kassa-balance .label { font-size: 11px; color: #93c5fd; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px; position: relative; }
+  .kassa-balance .amount { font-size: 28px; font-weight: 900; letter-spacing: -1px; position: relative; color: #fff; text-shadow: 0 0 20px rgba(59,130,246,0.5); }
+  .kassa-balance .sub { font-size: 11px; color: var(--text-muted); margin-top: 8px; position: relative; }
+
   .quick-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
   .quick-btn {
     padding: 14px; border-radius: 14px; border: none;
@@ -268,6 +291,8 @@
   .quick-btn:active { transform: scale(0.94); }
   .quick-btn.add { background: linear-gradient(135deg, #ef2d2d, #c41010); box-shadow: 0 8px 20px rgba(239,45,45,0.4); }
   .quick-btn.pay { background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 8px 20px rgba(16,185,129,0.4); }
+  .quick-btn.kassa { background: linear-gradient(135deg, #3b82f6, #1d4ed8); box-shadow: 0 8px 20px rgba(59,130,246,0.4); }
+  .quick-btn.rasxod { background: linear-gradient(135deg, #f59e0b, #d97706); box-shadow: 0 8px 20px rgba(245,158,11,0.4); }
 
   .form-group { margin-bottom: 14px; }
   .form-group label { display: block; font-size: 11px; font-weight: 700; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
@@ -285,6 +310,7 @@
   .form-control.error { border-color: var(--danger); box-shadow: 0 0 0 4px rgba(239,68,68,0.15); animation: shake 0.4s; }
   @keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
   input[type="date"].form-control { color-scheme: dark; }
+  select.form-control { cursor: pointer; }
 
   .input-hint { font-size: 10px; color: var(--text-muted); margin-top: 6px; font-weight: 500; min-height: 14px; }
   .input-hint b { color: var(--red); font-weight: 700; }
@@ -301,6 +327,8 @@
   .btn-primary { background: linear-gradient(135deg, #ef2d2d, #c41010); box-shadow: 0 8px 20px rgba(239,45,45,0.5); }
   .btn-success { background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 8px 20px rgba(16,185,129,0.4); }
   .btn-danger { background: linear-gradient(135deg, #ef4444, #dc2626); box-shadow: 0 8px 20px rgba(239,68,68,0.4); }
+  .btn-info { background: linear-gradient(135deg, #3b82f6, #1d4ed8); box-shadow: 0 8px 20px rgba(59,130,246,0.4); }
+  .btn-warning { background: linear-gradient(135deg, #f59e0b, #d97706); box-shadow: 0 8px 20px rgba(245,158,11,0.4); }
   .btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
   .qarzdor-card {
@@ -396,6 +424,9 @@
     -webkit-user-select: none; user-select: none;
   }
   .chip.active { background: linear-gradient(135deg, var(--red), var(--red-dark)); color: white; border-color: transparent; box-shadow: 0 4px 12px var(--red-glow); }
+  .chip.active.blue { background: linear-gradient(135deg, #3b82f6, #1d4ed8); box-shadow: 0 4px 12px rgba(59,130,246,0.5); }
+  .chip.active.orange { background: linear-gradient(135deg, #f59e0b, #d97706); box-shadow: 0 4px 12px rgba(245,158,11,0.5); }
+  .chip.active.purple { background: linear-gradient(135deg, #8b5cf6, #6d28d9); box-shadow: 0 4px 12px rgba(139,92,246,0.5); }
   .chip:active { transform: scale(0.95); }
 
   .empty-state { text-align: center; padding: 50px 20px; color: var(--text-muted); animation: cardEnter 0.5s; }
@@ -458,6 +489,7 @@
   .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
   .toast.error { background: linear-gradient(135deg, #ef4444, #dc2626); box-shadow: 0 12px 30px rgba(239,68,68,0.5); }
   .toast.warning { background: linear-gradient(135deg, #f59e0b, #d97706); box-shadow: 0 12px 30px rgba(245,158,11,0.5); }
+  .toast.info { background: linear-gradient(135deg, #3b82f6, #1d4ed8); box-shadow: 0 12px 30px rgba(59,130,246,0.5); }
 
   .tolov-item {
     display: flex; align-items: center; gap: 12px;
@@ -491,8 +523,124 @@
   }
   .tolov-item .pay-btn:active { transform: scale(0.92); }
 
+  /* TA'MINOTCHI CARD */
+  .taminotchi-card {
+    background: var(--card);
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    border-radius: 16px; padding: 16px; margin-bottom: 12px;
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--warning);
+    position: relative;
+    animation: cardEnter 0.4s cubic-bezier(0.16,1,0.3,1) backwards;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .taminotchi-card.qarzli {
+    border-left-color: var(--danger);
+    background: linear-gradient(145deg, rgba(239,68,68,0.12), var(--card));
+  }
+  .taminotchi-card.tolangan {
+    border-left-color: var(--success);
+    opacity: 0.85;
+  }
+  .taminotchi-card:active { transform: scale(0.98); }
+
+  .tc-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; gap: 10px; }
+  .tc-name { font-size: 15px; font-weight: 800; margin-bottom: 4px; }
+  .tc-nima { font-size: 11px; color: var(--text-muted); display: flex; align-items: center; gap: 5px; }
+  .tc-badge {
+    padding: 5px 10px; border-radius: 20px;
+    font-size: 10px; font-weight: 800;
+    white-space: nowrap; text-transform: uppercase;
+    letter-spacing: 0.4px;
+    display: inline-flex; align-items: center; gap: 4px;
+  }
+  .tc-badge.qarzli { background: rgba(239,68,68,0.3); color: #fca5a5; border: 1px solid rgba(239,68,68,0.6); animation: badgePulse 1.5s infinite; }
+  .tc-badge.tolangan { background: rgba(16,185,129,0.2); color: #6ee7b7; border: 1px solid rgba(16,185,129,0.4); }
+
+  .tc-money { display: flex; justify-content: space-between; padding: 10px 0; margin: 8px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); font-size: 12px; }
+  .tc-money > div { text-align: center; flex: 1; }
+  .tc-money .m-label { color: var(--text-muted); font-size: 10px; margin-bottom: 3px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700; }
+  .tc-money .m-value { font-weight: 800; font-size: 13px; }
+  .tc-money .m-value.green { color: var(--success); }
+  .tc-money .m-value.red { color: var(--danger); }
+
+  .tc-actions { display: grid; grid-template-columns: 1fr 1fr 44px; gap: 8px; margin-top: 10px; }
+  .tc-btn {
+    padding: 10px 6px; border-radius: 10px;
+    border: none; font-size: 11px; font-weight: 800;
+    cursor: pointer; transition: all 0.2s;
+    display: flex; align-items: center; justify-content: center; gap: 4px;
+    color: white; font-family: inherit;
+  }
+  .tc-btn:active { transform: scale(0.92); }
+  .tc-btn.pay { background: linear-gradient(135deg, #10b981, #059669); }
+  .tc-btn.detail { background: rgba(59,130,246,0.2); color: #93c5fd; border: 1px solid rgba(59,130,246,0.4); }
+  .tc-btn.del { background: rgba(239,68,68,0.15); color: #fca5a5; border: 1px solid rgba(239,68,68,0.3); padding: 10px; }
+
+  /* ICHKI RASXOD */
+  .ichki-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px; border-radius: 14px;
+    background: var(--card);
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--info);
+    margin-bottom: 10px;
+    animation: cardEnter 0.4s cubic-bezier(0.16,1,0.3,1) backwards;
+  }
+  .ichki-item .i-icon {
+    width: 44px; height: 44px; border-radius: 12px;
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; flex-shrink: 0; color: white;
+    box-shadow: 0 4px 12px rgba(59,130,246,0.4);
+  }
+  .ichki-item .i-info { flex: 1; min-width: 0; }
+  .ichki-item .i-info h4 { font-size: 14px; font-weight: 800; margin-bottom: 3px; }
+  .ichki-item .i-info p { font-size: 11px; color: var(--text-muted); }
+  .ichki-item .i-summa { font-size: 15px; font-weight: 800; color: #93c5fd; white-space: nowrap; }
+  .ichki-item .i-del {
+    padding: 8px; border-radius: 8px;
+    background: rgba(239,68,68,0.15);
+    border: 1px solid rgba(239,68,68,0.3);
+    color: #fca5a5; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+  }
+  .ichki-item .i-del:active { transform: scale(0.9); }
+
+  /* KASSA ITEM */
+  .kassa-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 14px; border-radius: 12px;
+    background: var(--card);
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    border: 1px solid var(--border);
+    margin-bottom: 8px;
+    animation: cardEnter 0.4s cubic-bezier(0.16,1,0.3,1) backwards;
+  }
+  .kassa-item.kirim { border-left: 3px solid var(--success); }
+  .kassa-item.chiqim { border-left: 3px solid var(--danger); }
+  .kassa-item .k-icon {
+    width: 36px; height: 36px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; font-size: 16px;
+  }
+  .kassa-item.kirim .k-icon { background: rgba(16,185,129,0.2); color: #10b981; }
+  .kassa-item.chiqim .k-icon { background: rgba(239,68,68,0.2); color: #ef4444; }
+  .kassa-item .k-info { flex: 1; min-width: 0; }
+  .kassa-item .k-info h4 { font-size: 13px; font-weight: 800; margin-bottom: 2px; }
+  .kassa-item .k-info p { font-size: 11px; color: var(--text-muted); }
+  .kassa-item .k-summa { font-size: 14px; font-weight: 800; white-space: nowrap; }
+  .kassa-item.kirim .k-summa { color: #6ee7b7; }
+  .kassa-item.chiqim .k-summa { color: #fca5a5; }
+
   .progress-bar { height: 5px; background: rgba(0,0,0,0.4); border-radius: 3px; overflow: hidden; margin: 8px 0; }
   .progress-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, #10b981, #00d4ff); transition: width 0.6s cubic-bezier(0.16,1,0.3,1); box-shadow: 0 0 8px rgba(16,185,129,0.6); }
+  .progress-fill.warning { background: linear-gradient(90deg, #f59e0b, #ef2d2d); box-shadow: 0 0 8px rgba(245,158,11,0.6); }
 
   .alert-banner {
     border-radius: 14px; padding: 12px 14px;
@@ -509,11 +657,7 @@
     border: 1px solid var(--border-red);
     border-radius: 14px; padding: 14px; margin-bottom: 14px;
     display: flex; align-items: center; gap: 12px;
-    animation: cardEnter 0.5s, installPulse 2s infinite;
-  }
-  @keyframes installPulse {
-    0%,100% { box-shadow: 0 0 0 0 rgba(239,45,45,0.4); }
-    50% { box-shadow: 0 0 0 8px rgba(239,45,45,0); }
+    animation: cardEnter 0.5s;
   }
   .install-banner .ib-icon {
     width: 40px; height: 40px; border-radius: 10px;
@@ -531,11 +675,6 @@
     border: none; font-size: 13px; font-weight: 800;
     cursor: pointer; white-space: nowrap; font-family: inherit;
     box-shadow: 0 4px 12px var(--red-glow);
-    animation: btnPulse 1.5s infinite;
-  }
-  @keyframes btnPulse {
-    0%,100% { transform: scale(1); }
-    50% { transform: scale(1.05); }
   }
   .install-banner .ib-btn:active { transform: scale(0.95); }
 
@@ -586,7 +725,6 @@
   .fab:active { transform: scale(0.88) rotate(90deg); }
   .fab svg { width: 26px; height: 26px; stroke: white; stroke-width: 2.5; }
 
-  /* PING TOGGLE */
   .ping-toggle {
     display: flex; align-items: center; gap: 8px;
     padding: 12px 14px;
@@ -615,11 +753,6 @@
   .ping-toggle.on .ping-icon {
     background: linear-gradient(135deg, #10b981, #059669);
     color: white;
-    animation: pingPulse 2s infinite;
-  }
-  @keyframes pingPulse {
-    0%,100% { box-shadow: 0 0 0 0 rgba(16,185,129,0.6); }
-    50% { box-shadow: 0 0 0 8px rgba(16,185,129,0); }
   }
   .ping-toggle .switch {
     margin-left: auto;
@@ -637,6 +770,75 @@
   }
   .ping-toggle.on .switch::after { left: 20px; }
 
+  .segment {
+    display: flex;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 4px;
+    margin-bottom: 14px;
+    gap: 4px;
+  }
+  .segment button {
+    flex: 1; padding: 10px 6px;
+    border: none; border-radius: 9px;
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 12px; font-weight: 800;
+    cursor: pointer; transition: all 0.25s;
+    font-family: inherit;
+    display: flex; align-items: center; justify-content: center; gap: 5px;
+  }
+  .segment button.active { background: linear-gradient(135deg, #ef2d2d, #c41010); color: white; box-shadow: 0 4px 12px rgba(239,45,45,0.4); }
+  .segment button.active.blue { background: linear-gradient(135deg, #3b82f6, #1d4ed8); box-shadow: 0 4px 12px rgba(59,130,246,0.4); }
+
+  .curr-toggle {
+    display: inline-flex;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 3px;
+    gap: 3px;
+  }
+  .curr-toggle button {
+    padding: 6px 12px;
+    border: none; border-radius: 7px;
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 11px; font-weight: 800;
+    cursor: pointer; font-family: inherit;
+  }
+  .curr-toggle button.active { background: #3b82f6; color: white; }
+
+  /* PWA INSTALL BUTTON */
+  #pwaInstallBtn {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    background: linear-gradient(135deg, var(--red), var(--red-dark));
+    color: white;
+    padding: 14px 22px;
+    border-radius: 50px;
+    border: none;
+    font-weight: 800;
+    font-size: 14px;
+    cursor: pointer;
+    box-shadow: 0 12px 32px var(--red-glow);
+    display: none;
+    align-items: center;
+    gap: 10px;
+    z-index: 5000;
+    font-family: inherit;
+    animation: pwaPulse 2s infinite;
+    transition: transform 0.25s;
+  }
+  #pwaInstallBtn:active { transform: scale(0.95); }
+  #pwaInstallBtn svg { width: 20px; height: 20px; stroke: white; stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+  @keyframes pwaPulse {
+    0%,100% { box-shadow: 0 12px 32px rgba(239,45,45,0.5); }
+    50% { box-shadow: 0 12px 32px rgba(239,45,45,0.9), 0 0 0 8px rgba(239,45,45,0); }
+  }
+
   @media (min-width: 900px) {
     .app-header { padding: 14px 30px; }
     .pam-logo-svg { height: 48px; }
@@ -644,6 +846,7 @@
     .stats-grid { grid-template-columns: repeat(4, 1fr); }
     .money-total-box { padding: 24px; }
     .money-total-box .amount { font-size: 34px; }
+    .kassa-balance .amount { font-size: 38px; }
     .bottom-nav {
       position: fixed; top: 0; bottom: auto;
       left: 50%; transform: translateX(-50%);
@@ -652,22 +855,25 @@
       border: 1px solid var(--border-red);
       border-top: none;
       padding: 8px 20px;
-      max-width: 700px; width: auto;
+      max-width: 850px; width: auto;
       gap: 20px;
     }
-    .nav-item { padding: 8px 16px; min-width: 80px; }
+    .nav-item { padding: 8px 16px; min-width: 75px; }
     .nav-item .nav-icon .ico { width: 20px; height: 20px; }
     body { padding-bottom: 40px; padding-top: 70px; }
     .fab { bottom: 30px; right: 30px; width: 64px; height: 64px; }
-    #qarzdorlarList, #tolovList { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 14px; }
-    .qarzdor-card, .tolov-item { margin-bottom: 0; }
+    #qarzdorlarList, #tolovList, #taminotchiList, #ichkiList, #kassaList { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 14px; }
+    .qarzdor-card, .tolov-item, .taminotchi-card, .ichki-item, .kassa-item { margin-bottom: 0; }
     .modal-overlay { align-items: center; }
     .modal-sheet { border-radius: 20px; max-width: 500px; padding: 26px; border: 1px solid var(--border-red); }
+    .quick-actions { grid-template-columns: repeat(4, 1fr); }
+    #pwaInstallBtn { bottom: 30px; left: 30px; }
   }
 
   @media (hover: hover) {
     .qarzdor-card:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(0,0,0,0.6); border-color: var(--border-red); }
     .tolov-item:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(0,0,0,0.6); }
+    .taminotchi-card:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(0,0,0,0.6); }
   }
 </style>
 </head>
@@ -706,6 +912,7 @@
   </div>
 </header>
 
+<!-- ============ DASHBOARD ============ -->
 <section class="page active" id="page-dashboard">
   <div id="notifBanner"></div>
 
@@ -714,67 +921,56 @@
       <svg class="ico ico-lg" viewBox="0 0 24 24"><path d="M12 3v13m0 0l-5-5m5 5l5-5M5 21h14"/></svg>
     </div>
     <div class="ib-text">
-      <h4 id="installTitle">Ilovani yuklab oling</h4>
-      <p id="installDesc">Bosing — ilova avtomatik yuklab olinadi</p>
+      <h4 id="installTitle">Ilovani o'rnating</h4>
+      <p id="installDesc">Bosing — kompyuter/telefonga o'rnatiladi</p>
     </div>
-    <button class="ib-btn" onclick="installApp()">⬇ Yuklab olish</button>
-  </div>
-
-  <div class="welcome-logo">
-    <svg viewBox="0 0 300 120" xmlns="http://www.w3.org/2000/svg">
-      <g fill="none" stroke="#ef1c1c" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M 55 42 Q 75 22 130 20 L 180 20 Q 225 22 245 42"/>
-        <path d="M 48 46 L 252 46"/>
-        <path d="M 245 42 Q 258 42 260 48 Q 262 55 250 56" />
-        <path d="M 55 42 Q 42 42 40 48 Q 38 55 50 56" />
-      </g>
-      <circle cx="90" cy="58" r="7" fill="none" stroke="#ef1c1c" stroke-width="3"/>
-      <circle cx="210" cy="58" r="7" fill="none" stroke="#ef1c1c" stroke-width="3"/>
-      <text x="150" y="105" font-family="Arial Black, Arial, Helvetica, sans-serif" font-size="72" font-weight="900" text-anchor="middle" font-style="italic" letter-spacing="-3">
-        <tspan fill="#1a1a1a">P</tspan><tspan fill="#ef1c1c">A</tspan><tspan fill="#1a1a1a">M</tspan>
-      </text>
-      <text x="150" y="118" font-family="Arial Black, Arial, sans-serif" font-size="11" font-weight="900" text-anchor="middle" font-style="italic" letter-spacing="1.5">
-        <tspan fill="#1a1a1a">POP AUTO </tspan><tspan fill="#ef1c1c">MAKON</tspan>
-      </text>
-    </svg>
+    <button class="ib-btn" onclick="installPWA()">⬇ Yuklab olish</button>
   </div>
 
   <div class="welcome-box">
     <h2>Xush kelibsiz, <span class="red">POP AUTO MAKON</span>da!</h2>
-    <p>Nasiya va qarzdorlarni boshqarish tizimi</p>
+    <p>Nasiya, kassa va rasxodlar boshqaruv tizimi</p>
   </div>
 
   <div id="alertBanner"></div>
 
+  <div class="kassa-balance">
+    <div class="label">💰 KASSA BALANSI</div>
+    <div class="amount" id="kassaBalance">0 so'm</div>
+    <div class="sub">Kirim: <span id="kassaKirim" style="color:#6ee7b7;">0</span> | Chiqim: <span id="kassaChiqim" style="color:#fca5a5;">0</span></div>
+  </div>
+
   <div class="stats-grid">
     <div class="stat-card total">
-      <div class="stat-icon"><svg class="ico" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></div>
+      <div class="stat-icon"><svg class="ico" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
       <div class="stat-num" id="statTotal">0</div>
       <div class="stat-label">Jami qarzdorlar</div>
     </div>
     <div class="stat-card overdue">
-      <div class="stat-icon"><svg class="ico" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+      <div class="stat-icon"><svg class="ico" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/></svg></div>
       <div class="stat-num" id="statOverdue">0</div>
       <div class="stat-label">Muddati o'tgan</div>
-    </div>
-    <div class="stat-card soon">
-      <div class="stat-icon"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
-      <div class="stat-num" id="statSoon">0</div>
-      <div class="stat-label">Muddati yaqin</div>
     </div>
     <div class="stat-card money">
       <div class="stat-icon"><svg class="ico" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
       <div class="stat-num" id="statPaidNum">0</div>
       <div class="stat-label">To'langan</div>
     </div>
+    <div class="stat-card kassa">
+      <div class="stat-icon"><svg class="ico" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg></div>
+      <div class="stat-num" id="statRasxodNum">0</div>
+      <div class="stat-label">Jami rasxod</div>
+    </div>
   </div>
 
   <div class="money-total-box">
-    <div class="label">
-      <svg class="ico ico-sm" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
-      Umumiy qoldiq qarz
-    </div>
+    <div class="label">📊 UMUMIY QOLDIQ QARZ</div>
     <div class="amount" id="statQarzSumma">0 so'm</div>
+  </div>
+
+  <div class="money-total-box" style="background: linear-gradient(135deg, rgba(245,158,11,0.15), rgba(239,68,68,0.08)); border-color: rgba(245,158,11,0.3);">
+    <div class="label">🚚 TA'MINOTCHILARGA QARZIMIZ</div>
+    <div class="amount" id="statTaminotchiQarz" style="background: linear-gradient(135deg, #f59e0b, #ef4444); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">0</div>
   </div>
 
   <div class="ping-toggle" id="pingToggle" onclick="togglePing()">
@@ -790,20 +986,29 @@
     <div class="quick-actions">
       <button class="quick-btn add" onclick="goToPage('add')">
         <svg class="ico" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        Qarzdor qo'shish
+        Qarzdor
       </button>
       <button class="quick-btn pay" onclick="goToPage('tolov')">
         <svg class="ico" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
-        Qarz to'lash
+        To'lash
+      </button>
+      <button class="quick-btn kassa" onclick="goToPage('kassa')">
+        <svg class="ico" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
+        Kassa
+      </button>
+      <button class="quick-btn rasxod" onclick="goToPage('rasxodlar')">
+        <svg class="ico" viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+        Rasxod
       </button>
     </div>
   </div>
 </section>
 
+<!-- ============ QARZDORLAR ============ -->
 <section class="page" id="page-qarzdorlar">
   <div class="search-box">
     <svg class="ico search-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-    <input type="text" class="form-control" id="searchInput">
+    <input type="text" class="form-control" id="searchInput" placeholder="Qidirish...">
   </div>
 
   <div class="filter-chips">
@@ -818,22 +1023,177 @@
   <div id="qarzdorlarList"></div>
 </section>
 
+<!-- ============ TO'LOV ============ -->
 <section class="page" id="page-tolov">
   <div class="card">
     <div class="section-title">Qarzni to'lash</div>
     <p style="font-size:12px;color:var(--text-muted);line-height:1.6;">
-      To'lov qilish uchun qarzdorni tanlang. Qismli to'lov ham mumkin.
+      To'lov qilish uchun qarzdorni tanlang.
     </p>
   </div>
 
   <div class="search-box">
     <svg class="ico search-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-    <input type="text" class="form-control" id="tolovSearch">
+    <input type="text" class="form-control" id="tolovSearch" placeholder="Qidirish...">
   </div>
 
   <div id="tolovList"></div>
 </section>
 
+<!-- ============ KASSA ============ -->
+<section class="page" id="page-kassa">
+  <div class="kassa-balance">
+    <div class="label">💰 KASSA BALANSI</div>
+    <div class="amount" id="kassaBalance2">0 so'm</div>
+    <div class="sub">Kirim: <span id="kassaKirim2" style="color:#6ee7b7;">0</span> | Chiqim: <span id="kassaChiqim2" style="color:#fca5a5;">0</span></div>
+  </div>
+
+  <div class="card">
+    <div class="section-title">Kassaga pul kiritish</div>
+    <p style="font-size:12px;color:var(--text-muted);line-height:1.6;margin-bottom:14px;">
+      Bugun kassaga sanalgan pulni kiriting.
+    </p>
+
+    <div class="form-group">
+      <label>Valyuta</label>
+      <div class="curr-toggle" id="kassaCurrToggle">
+        <button type="button" class="active" data-curr="UZS" onclick="setKassaCurr('UZS')">UZS</button>
+        <button type="button" data-curr="USD" onclick="setKassaCurr('USD')">USD $</button>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Summa *</label>
+      <input type="number" class="form-control" id="kassaSumma" placeholder="0" min="0" step="1">
+      <div class="input-hint" id="kassaSummaHint"></div>
+    </div>
+    <div class="form-group">
+      <label>Izoh (ixtiyoriy)</label>
+      <input type="text" class="form-control" id="kassaIzoh" placeholder="Masalan: Bugungi savdo">
+    </div>
+
+    <div class="quick-actions" style="grid-template-columns: 1fr 1fr;">
+      <button class="btn btn-success" onclick="kassaKirim()">➕ Kirim</button>
+      <button class="btn btn-danger" onclick="kassaChiqimModal()">➖ Chiqim</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section-title">Kassa tarixi</div>
+    <div id="kassaList"></div>
+  </div>
+</section>
+
+<!-- ============ RASXODLAR ============ -->
+<section class="page" id="page-rasxodlar">
+  <div class="segment" id="rasxodSegment">
+    <button class="active" data-rasxod-tab="tashqi" onclick="switchRasxodTab('tashqi')">🚚 Tashqi (Ta'minotchi)</button>
+    <button data-rasxod-tab="ichki" onclick="switchRasxodTab('ichki')">🏢 Ichki rasxod</button>
+  </div>
+
+  <div id="tab-tashqi">
+    <div class="card">
+      <div class="section-title">Yangi ta'minotchi qo'shish</div>
+      <p style="font-size:12px;color:var(--text-muted);line-height:1.6;margin-bottom:14px;">
+        Do'konga maxsulot kelganda, jami summani yozing. To'lagan pulingizni "berildi" ga kiriting. Qolgani qarz bo'ladi.
+      </p>
+
+      <div class="form-group">
+        <label>Kim (Ta'minotchi ismi) *</label>
+        <input type="text" class="form-control" id="tashqiKim" placeholder="Masalan: Akmal aka">
+      </div>
+      <div class="form-group">
+        <label>Nima uchun (Tavsif) *</label>
+        <input type="text" class="form-control" id="tashqiNima" placeholder="Masalan: Avto ehtiyot qismlar">
+      </div>
+      <div class="form-group">
+        <label>Valyuta</label>
+        <div class="curr-toggle" id="tashqiCurrToggle">
+          <button type="button" class="active" data-curr="UZS" onclick="setTashqiCurr('UZS')">UZS</button>
+          <button type="button" data-curr="USD" onclick="setTashqiCurr('USD')">USD $</button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Jami summa *</label>
+        <input type="number" class="form-control" id="tashqiJami" placeholder="0" min="0" step="0.01">
+        <div class="input-hint" id="tashqiJamiHint"></div>
+      </div>
+      <div class="form-group">
+        <label>Berildi (hozir to'lagan pul)</label>
+        <input type="number" class="form-control" id="tashqiBerildi" placeholder="0" min="0" step="0.01">
+        <div class="input-hint" id="tashqiBerildiHint"></div>
+      </div>
+      <div class="form-group">
+        <label>Izoh (ixtiyoriy)</label>
+        <input type="text" class="form-control" id="tashqiIzoh" placeholder="Qo'shimcha ma'lumot">
+      </div>
+
+      <button class="btn btn-warning" onclick="addTashqi()">📥 Qo'shish</button>
+    </div>
+
+    <div class="stats-mini" style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom:14px;">
+      <div class="stat-mini" style="border-left:3px solid #f59e0b; padding:14px; background:var(--card); border-radius:12px;">
+        <div style="font-size:10px; color:var(--text-muted); font-weight:700; text-transform:uppercase; margin-bottom:5px;">Jami tashqi</div>
+        <div id="statTashqi" style="font-size:15px; font-weight:800; color:#fcd34d;">0</div>
+      </div>
+      <div class="stat-mini" style="border-left:3px solid #ef4444; padding:14px; background:var(--card); border-radius:12px;">
+        <div style="font-size:10px; color:var(--text-muted); font-weight:700; text-transform:uppercase; margin-bottom:5px;">Qarzimiz</div>
+        <div id="statTashqiQarz" style="font-size:15px; font-weight:800; color:#fca5a5;">0</div>
+      </div>
+    </div>
+
+    <div class="search-box">
+      <svg class="ico search-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" class="form-control" id="tashqiSearch" placeholder="Qidirish...">
+    </div>
+
+    <div id="taminotchiList"></div>
+  </div>
+
+  <div id="tab-ichki" style="display:none;">
+    <div class="card">
+      <div class="section-title">Yangi ichki rasxod</div>
+      <p style="font-size:12px;color:var(--text-muted);line-height:1.6;margin-bottom:14px;">
+        Oylik, ijara, kommunal va boshqa ichki xarajatlar uchun.
+      </p>
+
+      <div class="form-group">
+        <label>Nomi *</label>
+        <input type="text" class="form-control" id="ichkiNomi" placeholder="Masalan: Oylik maosh">
+      </div>
+      <div class="form-group">
+        <label>Summa *</label>
+        <input type="number" class="form-control" id="ichkiSumma" placeholder="0" min="0" step="1">
+        <div class="input-hint" id="ichkiSummaHint"></div>
+      </div>
+      <div class="form-group">
+        <label>Izoh (ixtiyoriy)</label>
+        <input type="text" class="form-control" id="ichkiIzoh" placeholder="Qo'shimcha ma'lumot">
+      </div>
+      <div class="form-group">
+        <label>Sana</label>
+        <input type="date" class="form-control" id="ichkiSana">
+      </div>
+
+      <button class="btn btn-info" onclick="addIchki()">📥 Ichki rasxod qo'shish</button>
+    </div>
+
+    <div class="stats-mini" style="display:grid; grid-template-columns: 1fr; gap:10px; margin-bottom:14px;">
+      <div class="stat-mini" style="border-left:3px solid #3b82f6; padding:14px; background:var(--card); border-radius:12px;">
+        <div style="font-size:10px; color:var(--text-muted); font-weight:700; text-transform:uppercase; margin-bottom:5px;">Jami ichki rasxod</div>
+        <div id="statIchki" style="font-size:15px; font-weight:800; color:#93c5fd;">0 so'm</div>
+      </div>
+    </div>
+
+    <div class="search-box">
+      <svg class="ico search-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" class="form-control" id="ichkiSearch" placeholder="Qidirish...">
+    </div>
+
+    <div id="ichkiList"></div>
+  </div>
+</section>
+
+<!-- ============ QO'SHISH ============ -->
 <section class="page" id="page-add">
   <div class="card">
     <div class="section-title">Yangi qarzdor qo'shish</div>
@@ -849,41 +1209,24 @@
         <div class="input-hint" id="summaHint"></div>
       </div>
       <div class="form-group"><label>Qaytarish muddati *</label><input type="date" class="form-control" id="muddat" required></div>
-      <button type="submit" class="btn btn-primary" id="saqlashBtn">
-        <svg class="ico" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
-        Qarzdorni saqlash
-      </button>
+      <button type="submit" class="btn btn-primary" id="saqlashBtn">💾 Qarzdorni saqlash</button>
     </form>
   </div>
 </section>
 
+<!-- ============ SOZLAMALAR ============ -->
 <section class="page" id="page-settings">
   <div class="card">
     <div class="section-title">SMS matnini sozlash</div>
-    <p style="font-size:12px;color:var(--text-muted);line-height:1.6;margin-bottom:14px;">
-      Bu matn barcha qarzdorlarga yuboriladi. O'zgaruvchilardan foydalaning:
-    </p>
     <div style="background:rgba(0,0,0,0.3);padding:12px;border-radius:10px;margin-bottom:14px;font-size:11px;line-height:2;color:var(--text-muted);">
-      <div><code style="color:#ef2d2d;">{familiya}</code> — familiya</div>
-      <div><code style="color:#ef2d2d;">{ismi}</code> — ism</div>
-      <div><code style="color:#ef2d2d;">{maxsulot}</code> — maxsulot</div>
-      <div><code style="color:#ef2d2d;">{summa}</code> — summa</div>
-      <div><code style="color:#ef2d2d;">{tolangan}</code> — to'langan</div>
-      <div><code style="color:#ef2d2d;">{qoldiq}</code> — qoldiq</div>
-      <div><code style="color:#ef2d2d;">{muddat}</code> — muddat</div>
-      <div><code style="color:#ef2d2d;">{yaratilgan}</code> — olingan sana</div>
+      <div><code style="color:#ef2d2d;">{familiya}</code>, <code style="color:#ef2d2d;">{ismi}</code>, <code style="color:#ef2d2d;">{maxsulot}</code>, <code style="color:#ef2d2d;">{summa}</code>, <code style="color:#ef2d2d;">{tolangan}</code>, <code style="color:#ef2d2d;">{qoldiq}</code>, <code style="color:#ef2d2d;">{muddat}</code>, <code style="color:#ef2d2d;">{yaratilgan}</code></div>
     </div>
     <div class="form-group">
       <label>SMS matni</label>
-      <textarea id="smsTemplate" class="form-control" rows="14" style="font-size:13px;line-height:1.6;font-family:inherit;"></textarea>
+      <textarea id="smsTemplate" class="form-control" rows="10" style="font-size:13px;line-height:1.6;font-family:inherit;"></textarea>
     </div>
-    <button class="btn btn-success" onclick="saveSmsTemplate()">
-      <svg class="ico" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/></svg>
-      SMS matnini saqlash
-    </button>
-    <button class="btn btn-primary" style="margin-top:10px;" onclick="resetSmsTemplate()">
-      Standart matnga qaytarish
-    </button>
+    <button class="btn btn-success" onclick="saveSmsTemplate()">💾 Saqlash</button>
+    <button class="btn btn-primary" style="margin-top:10px;" onclick="resetSmsTemplate()">Standart matn</button>
   </div>
 
   <div class="card">
@@ -895,45 +1238,54 @@
       <span id="pingLabel2">Ping eslatma: O'chiq</span>
       <div class="switch"></div>
     </div>
-    <p style="font-size:11px;color:var(--text-muted);line-height:1.6;">
-      Yoqilganda muddati kelgan qarzdorlar haqida <b style="color:#10b981;">ping ovozi</b> bilan eslatma keladi.
+    <button class="btn btn-primary" style="margin-top:10px;" onclick="testPing()">🔔 Pingni sinash</button>
+  </div>
+
+  <div class="card">
+    <div class="section-title">Ilova o'rnatish</div>
+    <p style="font-size:12px;color:var(--text-muted);line-height:1.6;margin-bottom:14px;">
+      <b style="color:#fff;">Kompyuterda:</b> Brauzer manzil qatoridagi ⊕ belgisini bosing yoki menyudan "Ilova o'rnatish" ni tanlang.<br><br>
+      <b style="color:#fff;">Telefonda:</b> Chrome menyusidan "Bosh ekranga qo'shish" ni tanlang.
     </p>
-    <button class="btn btn-primary" style="margin-top:10px;" onclick="testPing()">
-      🔔 Ping ovozini sinab ko'rish
+    <button class="btn btn-primary" onclick="installPWA()">
+      <svg class="ico" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Ilovani o'rnatish
     </button>
   </div>
 
   <div class="card">
     <div class="section-title">Ilova haqida</div>
     <div style="font-size:12px;color:var(--text-muted);line-height:1.8;">
-      <div>📱 <b style="color:#fff;">PAM Nasiya</b> — v4.0</div>
+      <div>📱 <b style="color:#fff;">PAM Nasiya</b> — v8.0</div>
       <div>🏢 POP AUTO MAKON</div>
+      <div>💰 Kassa + Rasxodlar + Ta'minotchi qarz</div>
       <div>💾 Ma'lumotlar: Supabase bulutda</div>
     </div>
-    <button class="btn btn-primary" style="margin-top:14px;" onclick="installApp()">
-      <svg class="ico" viewBox="0 0 24 24"><path d="M12 3v13m0 0l-5-5m5 5l5-5M5 21h14"/></svg>
-      Ilovani yuklab olish
-    </button>
   </div>
 </section>
 
+<!-- ============ BOTTOM NAV ============ -->
 <nav class="bottom-nav">
   <button class="nav-item active" data-page="dashboard">
     <span class="nav-icon"><svg class="ico" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span>
     <span>Asosiy</span>
   </button>
   <button class="nav-item" data-page="qarzdorlar">
-    <span class="nav-icon"><svg class="ico" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></span>
-    <span>Qarzdorlar</span>
+    <span class="nav-icon"><svg class="ico" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></span>
+    <span>Qarzdor</span>
     <span class="nav-badge" id="navBadge" style="display:none;">0</span>
+  </button>
+  <button class="nav-item" data-page="kassa">
+    <span class="nav-icon"><svg class="ico" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg></span>
+    <span>Kassa</span>
+  </button>
+  <button class="nav-item" data-page="rasxodlar">
+    <span class="nav-icon"><svg class="ico" viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></span>
+    <span>Rasxod</span>
   </button>
   <button class="nav-item" data-page="tolov">
     <span class="nav-icon"><svg class="ico" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></span>
     <span>To'lash</span>
-  </button>
-  <button class="nav-item" data-page="add">
-    <span class="nav-icon"><svg class="ico" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
-    <span>Qo'shish</span>
   </button>
   <button class="nav-item" data-page="settings">
     <span class="nav-icon"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/></svg></span>
@@ -941,21 +1293,15 @@
   </button>
 </nav>
 
+<!-- ============ MODALS ============ -->
 <div class="modal-overlay" id="smsModal">
   <div class="modal-sheet">
     <div class="modal-handle"></div>
-    <div class="modal-title">
-      <svg class="ico" viewBox="0 0 24 24" style="color:#ef2d2d"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
-      SMS yuborish
-    </div>
-    <p class="modal-desc">Shabloningiz asosida:</p>
+    <div class="modal-title">📱 SMS yuborish</div>
     <textarea id="smsText" class="form-control" rows="12" style="font-size:13px;line-height:1.6;font-family:inherit;"></textarea>
     <div class="modal-actions">
       <button class="btn btn-danger" onclick="closeModal('smsModal')">Bekor qilish</button>
-      <button class="btn btn-success" onclick="sendSms()">
-        <svg class="ico" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-        Yuborish
-      </button>
+      <button class="btn btn-success" onclick="sendSms()">📤 Yuborish</button>
     </div>
   </div>
 </div>
@@ -963,10 +1309,7 @@
 <div class="modal-overlay" id="tolovModal">
   <div class="modal-sheet">
     <div class="modal-handle"></div>
-    <div class="modal-title">
-      <svg class="ico" viewBox="0 0 24 24" style="color:#10b981"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
-      To'lovni qabul qilish
-    </div>
+    <div class="modal-title">💰 To'lovni qabul qilish</div>
     <div class="info-box" id="tolovInfoBox"></div>
     <div class="form-group">
       <label>To'lanayotgan summa (so'm)</label>
@@ -980,10 +1323,71 @@
     </div>
     <div class="modal-actions">
       <button class="btn btn-danger" onclick="closeModal('tolovModal')">Bekor qilish</button>
-      <button class="btn btn-success" onclick="confirmTolov()" id="tolovBtn">
-        <svg class="ico" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-        Tasdiqlash
-      </button>
+      <button class="btn btn-success" onclick="confirmTolov()" id="tolovBtn">✅ Tasdiqlash</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="taminotchiPulModal">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title">💸 Ta'minotchiga pul berish</div>
+    <div class="info-box" id="taminotchiInfoBox"></div>
+    <div class="form-group">
+      <label>Beriladigan summa</label>
+      <input type="number" class="form-control" id="taminotchiPulSumma" min="0" step="0.01">
+      <div class="input-hint" id="taminotchiPulHint"></div>
+    </div>
+    <div class="quick-pay">
+      <button type="button" class="chip" onclick="setTaminotchiPulPercent(25)">25%</button>
+      <button type="button" class="chip" onclick="setTaminotchiPulPercent(50)">50%</button>
+      <button type="button" class="chip" onclick="setTaminotchiPulPercent(75)">75%</button>
+      <button type="button" class="chip" onclick="setTaminotchiPulPercent(100)">To'liq</button>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-danger" onclick="closeModal('taminotchiPulModal')">Bekor qilish</button>
+      <button class="btn btn-success" onclick="confirmTaminotchiPul()" id="taminotchiPulBtn">💸 Berish</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="taminotchiTarixModal">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title">📋 To'lovlar tarixi</div>
+    <div id="taminotchiTarixContent"></div>
+    <div class="modal-actions">
+      <button class="btn btn-primary" onclick="closeModal('taminotchiTarixModal')">Yopish</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="kassaChiqimModalOverlay">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title">📤 Kassadan chiqim</div>
+    <div class="info-box">
+      <div class="info-row"><span class="lbl">Kassa balansi</span><span class="val" id="chiqimBalans">0 so'm</span></div>
+    </div>
+    <div class="form-group">
+      <label>Valyuta</label>
+      <div class="curr-toggle" id="chiqimCurrToggle">
+        <button type="button" class="active" data-curr="UZS" onclick="setChiqimCurr('UZS')">UZS</button>
+        <button type="button" data-curr="USD" onclick="setChiqimCurr('USD')">USD $</button>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Summa *</label>
+      <input type="number" class="form-control" id="chiqimSumma" placeholder="0" min="0" step="0.01">
+      <div class="input-hint" id="chiqimSummaHint"></div>
+    </div>
+    <div class="form-group">
+      <label>Izoh</label>
+      <input type="text" class="form-control" id="chiqimIzoh" placeholder="Nima uchun?">
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-danger" onclick="closeModal('kassaChiqimModalOverlay')">Bekor qilish</button>
+      <button class="btn btn-warning" onclick="confirmKassaChiqim()">📤 Chiqim qilish</button>
     </div>
   </div>
 </div>
@@ -991,10 +1395,7 @@
 <div class="modal-overlay" id="delModal">
   <div class="modal-sheet">
     <div class="modal-handle"></div>
-    <div class="modal-title">
-      <svg class="ico" viewBox="0 0 24 24" style="color:#ef4444"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
-      O'chirishni tasdiqlash
-    </div>
+    <div class="modal-title">🗑 O'chirishni tasdiqlash</div>
     <p class="modal-desc" id="delText"></p>
     <div class="modal-actions">
       <button class="btn btn-primary" onclick="closeModal('delModal')">Yo'q</button>
@@ -1006,14 +1407,11 @@
 <div class="modal-overlay" id="reminderModal">
   <div class="modal-sheet">
     <div class="modal-handle"></div>
-    <div class="modal-title" style="color:#ef2d2d;">
-      <svg class="ico ico-lg" viewBox="0 0 24 24" style="color:#ef2d2d"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
-      Muddat eslatmasi
-    </div>
+    <div class="modal-title" style="color:#ef2d2d;">🔔 Muddat eslatmasi</div>
     <div id="reminderContent"></div>
     <div class="modal-actions">
       <button class="btn btn-primary" onclick="closeModal('reminderModal')">Yopish</button>
-      <button class="btn btn-success" onclick="reminderGoList()">Ro'yxatga o'tish</button>
+      <button class="btn btn-success" onclick="reminderGoList()">Ro'yxat</button>
     </div>
   </div>
 </div>
@@ -1024,36 +1422,50 @@
   <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
 </button>
 
+<!-- PWA O'RNATISH TUGMASI -->
+<button id="pwaInstallBtn" onclick="installPWA()">
+  <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+  <span>Ilovani o'rnatish</span>
+</button>
+
 <script>
-/* ============================================================
-   SERVICE WORKER
-   ============================================================ */
+/* ============================================================ */
+/* SERVICE WORKER */
+/* ============================================================ */
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function() {
-    navigator.serviceWorker.register('./sw.js')
-      .then(function(reg) { console.log('✅ SW:', reg.scope); })
-      .catch(function(err) { console.error('❌ SW xatosi:', err); });
+    navigator.serviceWorker.register('./sw.js').then(function(r){ console.log('✅ SW:', r.scope); }).catch(function(e){ console.error('❌ SW:', e); });
   });
 }
 
-/* ============================================================
-   SUPABASE
-   ============================================================ */
+/* ============================================================ */
+/* SUPABASE */
+/* ============================================================ */
 var SUPABASE_URL = 'https://ozigkdzfelsmadzdhukz.supabase.co';
-var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im96aWdrZHpmZWxzbWFkemRodWt6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAxODczNDgsImV4cCI6MjEwNTc2MzM0OH0.SQw38xVrmm7FBcUCSLIGJTaAgVQAxg6n-xla_cGpSW0';
+var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im96aWdrZHpmZWxzbWFkemRodWt6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA1NzYzNDgsImV4cCI6MjEwNTc2MzM0OH0.SQw38xVrmm7FBcUCSLIGJTaAgVQAxg6n-xla_cGpSW0';
 var supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-/* ============================================================
-   GLOBAL STATE
-   ============================================================ */
+/* ============================================================ */
+/* GLOBAL STATE */
+/* ============================================================ */
 var qarzdorlar = [];
+var taminotchilar = [];
+var ichkiRasxodlar = [];
+var kassaTarix = [];
 var currentSmsId = null;
 var currentTolovId = null;
 var currentDeleteId = null;
+var currentDeleteType = 'qarzdor';
 var currentFilter = 'all';
+var currentTaminotchiId = null;
+var selectedKassaCurr = 'UZS';
+var selectedTashqiCurr = 'UZS';
+var selectedChiqimCurr = 'UZS';
 var pingEnabled = localStorage.getItem('pam_ping_enabled') === 'true';
 var pingAnnouncedToday = JSON.parse(localStorage.getItem('pam_ping_announced') || '{}');
 var deferredPrompt = null;
+var kassaBalanceUZS = 0;
+var kassaBalanceUSD = 0;
 
 var DEFAULT_SMS_TEMPLATE =
 'Xurmatli {familiya} {ismi}!\n\n' +
@@ -1063,36 +1475,57 @@ var DEFAULT_SMS_TEMPLATE =
 'To\'langan: {tolangan}\n' +
 'Qoldiq qarz: {qoldiq}\n\n' +
 'Siz bilan {muddat} sanasiga kelishgan edik. Iltimos, kerakli summani to\'lab qo\'ying.\n\n' +
-'Hurmat bilan,\n"POP AUTO MAKON" jamoasi\n' +
-'Aloqa uchun: +998 XX XXX XX XX';
+'Hurmat bilan,\n"POP AUTO MAKON" jamoasi';
 
 var smsTemplate = localStorage.getItem('pam_sms_template') || DEFAULT_SMS_TEMPLATE;
 
-/* ============================================================
-   FORMATLASH
-   ============================================================ */
+/* ============================================================ */
+/* FORMATLASH */
+/* ============================================================ */
 function formatDate(d) {
   if (!d) return '-';
   var dt = new Date(d);
   return String(dt.getDate()).padStart(2, '0') + '.' + String(dt.getMonth()+1).padStart(2, '0') + '.' + dt.getFullYear();
 }
 
-function formatSumma(n) {
-  n = Math.round(Number(n) || 0);
-  var neg = n < 0;
-  var s = String(Math.abs(n));
-  var result = '';
-  var count = 0;
-  for (var i = s.length - 1; i >= 0; i--) {
-    result = s[i] + result;
-    count++;
-    if (count % 3 === 0 && i > 0) result = ' ' + result;
+function formatSumma(n, currency) {
+  currency = currency || 'UZS';
+  n = Number(n) || 0;
+  if (currency === 'USD') {
+    var s = n.toFixed(2);
+    var parts = s.split('.');
+    var intPart = parts[0];
+    var decPart = parts[1];
+    var result = '';
+    var count = 0;
+    for (var i = intPart.length - 1; i >= 0; i--) {
+      result = intPart[i] + result;
+      count++;
+      if (count % 3 === 0 && i > 0) result = ' ' + result;
+    }
+    return '$' + result + '.' + decPart;
+  } else {
+    n = Math.round(n);
+    var neg = n < 0;
+    var s2 = String(Math.abs(n));
+    var result2 = '';
+    var count2 = 0;
+    for (var j = s2.length - 1; j >= 0; j--) {
+      result2 = s2[j] + result2;
+      count2++;
+      if (count2 % 3 === 0 && j > 0) result2 = ' ' + result2;
+    }
+    return (neg ? '-' : '') + result2 + " so'm";
   }
-  return (neg ? '-' : '') + result + " so'm";
 }
 
-function formatSummaShort(n) {
-  n = Math.round(Number(n) || 0);
+function formatSummaShort(n, currency) {
+  currency = currency || 'UZS';
+  n = Number(n) || 0;
+  if (currency === 'USD') {
+    return '$' + n.toFixed(2);
+  }
+  n = Math.round(n);
   var neg = n < 0;
   n = Math.abs(n);
   var out = '';
@@ -1149,57 +1582,42 @@ function setSyncStatus(status, text) {
   txt.textContent = text;
 }
 
-/* ============================================================
-   PING OVOZI (eslatma uchun)
-   ============================================================ */
+/* ============================================================ */
+/* PING */
+/* ============================================================ */
 function playPingSound() {
   try {
     var ctx = new (window.AudioContext || window.webkitAudioContext)();
     var now = ctx.currentTime;
-    // 3 tonli ping: 880Hz → 1200Hz → 880Hz
     [0, 0.18, 0.36].forEach(function(offset, i) {
       var osc = ctx.createOscillator();
       var gain = ctx.createGain();
-      osc.connect(gain);
-      gain.connect(ctx.destination);
+      osc.connect(gain); gain.connect(ctx.destination);
       osc.type = 'sine';
       osc.frequency.value = i === 0 ? 880 : i === 1 ? 1200 : 880;
       gain.gain.setValueAtTime(0, now + offset);
       gain.gain.linearRampToValueAtTime(0.4, now + offset + 0.02);
       gain.gain.exponentialRampToValueAtTime(0.001, now + offset + 0.15);
-      osc.start(now + offset);
-      osc.stop(now + offset + 0.18);
+      osc.start(now + offset); osc.stop(now + offset + 0.18);
     });
-  } catch(e) { console.log('Ping xatosi:', e); }
+  } catch(e) {}
 }
 
-// Uzoqroq ping (bir necha marta)
-function playPingLong() {
-  playPingSound();
-  setTimeout(playPingSound, 700);
-}
+function playPingLong() { playPingSound(); setTimeout(playPingSound, 700); }
 
-// Ping eslatma e'lon qilish
 function announcePingReminders() {
   if (!pingEnabled) return;
   var items = getReminderList();
   if (items.length === 0) return;
-
   var today = todayKey();
   if (pingAnnouncedToday[today]) return;
-
-  // Ping ovozi
   setTimeout(function() {
     playPingLong();
-    
-    // Toast xabar
     if (items.length === 1) {
-      var q = items[0];
-      showToast('🔔 ' + q.ismi + ' ' + q.familyasi + ' — ' + q.text, 'error');
+      showToast('🔔 ' + items[0].ismi + ' ' + items[0].familyasi + ' — ' + items[0].text, 'error');
     } else {
       showToast('🔔 ' + items.length + ' ta qarzdorning muddati keldi!', 'error');
     }
-    
     pingAnnouncedToday[today] = true;
     localStorage.setItem('pam_ping_announced', JSON.stringify(pingAnnouncedToday));
   }, 2000);
@@ -1209,17 +1627,8 @@ function togglePing() {
   pingEnabled = !pingEnabled;
   localStorage.setItem('pam_ping_enabled', pingEnabled ? 'true' : 'false');
   updatePingUI();
-  
-  if (pingEnabled) {
-    showToast('🔔 Ping eslatma yoqildi');
-    // Sinov uchun ping chalish
-    setTimeout(function() {
-      playPingSound();
-      showToast('🔔 Ping ovozi sinov uchun');
-    }, 400);
-  } else {
-    showToast('🔕 Ping eslatma o\'chirildi');
-  }
+  if (pingEnabled) { showToast('🔔 Ping yoqildi'); setTimeout(playPingSound, 400); }
+  else { showToast('🔕 Ping o\'chirildi'); }
 }
 
 function updatePingUI() {
@@ -1227,20 +1636,16 @@ function updatePingUI() {
   var t2 = document.getElementById('pingToggle2');
   var l1 = document.getElementById('pingLabel');
   var l2 = document.getElementById('pingLabel2');
-  
   [t1, t2].forEach(function(el) { if (el) el.classList.toggle('on', pingEnabled); });
   if (l1) l1.textContent = 'Ping eslatma: ' + (pingEnabled ? 'Yoqilgan' : 'O\'chiq');
   if (l2) l2.textContent = 'Ping eslatma: ' + (pingEnabled ? 'Yoqilgan' : 'O\'chiq');
 }
 
-function testPing() {
-  playPingLong();
-  showToast('🔔 Ping ovozi sinov uchun');
-}
+function testPing() { playPingLong(); showToast('🔔 Ping sinov'); }
 
-/* ============================================================
-   SUPABASE
-   ============================================================ */
+/* ============================================================ */
+/* SUPABASE FUNCTIONS */
+/* ============================================================ */
 async function supabaseGetAll() {
   try {
     setSyncStatus('loading', 'Yuklanmoqda...');
@@ -1268,30 +1673,128 @@ async function supabaseInsert(q) {
       tolangan: q.tolangan || 0, qoldiq: q.qoldiq,
       muddat: q.muddat, yaratilgan: q.yaratilgan || new Date().toISOString()
     }]);
-    if (res.error) return false;
-    return true;
+    return !res.error;
   } catch (e) { return false; }
 }
 
 async function supabaseUpdateTolov(id, tolangan, qoldiq) {
   try {
     var res = await supabaseClient.from('qarzdorlar').update({ tolangan: tolangan, qoldiq: qoldiq }).eq('id', id);
-    if (res.error) return false;
-    return true;
+    return !res.error;
   } catch (e) { return false; }
 }
 
 async function supabaseDelete(id) {
   try {
     var res = await supabaseClient.from('qarzdorlar').delete().eq('id', id);
-    if (res.error) return false;
-    return true;
+    return !res.error;
   } catch (e) { return false; }
 }
 
-/* ============================================================
-   NAVIGATSIYA
-   ============================================================ */
+async function supabaseGetRasxodlar() {
+  try {
+    var res = await supabaseClient.from('rasxodlar').select('*').order('id', { ascending: false });
+    if (res.error) { return []; }
+    return (res.data || []).map(function(d) {
+      return {
+        id: d.id, kim: d.kim, nima_uchun: d.nima_uchun,
+        jami_summa: Number(d.jami_summa), berildi: Number(d.berildi),
+        qoldiq: Number(d.qoldiq), valyuta: d.valyuta || 'UZS',
+        izoh: d.izoh, sana: d.sana, yaratilgan: d.yaratilgan
+      };
+    });
+  } catch (e) { return []; }
+}
+
+async function supabaseInsertRasxod(r) {
+  try {
+    var res = await supabaseClient.from('rasxodlar').insert([{
+      id: r.id, kim: r.kim, nima_uchun: r.nima_uchun,
+      jami_summa: r.jami_summa, berildi: r.berildi,
+      qoldiq: r.qoldiq, valyuta: r.valyuta,
+      izoh: r.izoh, sana: r.sana
+    }]);
+    return !res.error;
+  } catch (e) { return false; }
+}
+
+async function supabaseUpdateRasxod(id, berildi, qoldiq) {
+  try {
+    var res = await supabaseClient.from('rasxodlar').update({ berildi: berildi, qoldiq: qoldiq }).eq('id', id);
+    return !res.error;
+  } catch (e) { return false; }
+}
+
+async function supabaseDeleteRasxod(id) {
+  try {
+    var res = await supabaseClient.from('rasxodlar').delete().eq('id', id);
+    return !res.error;
+  } catch (e) { return false; }
+}
+
+async function supabaseGetIchki() {
+  try {
+    var res = await supabaseClient.from('ichki_rasxodlar').select('*').order('id', { ascending: false });
+    if (res.error) { return []; }
+    return (res.data || []).map(function(d) {
+      return {
+        id: d.id, nomi: d.nomi, summa: Number(d.summa),
+        izoh: d.izoh, sana: d.sana, yaratilgan: d.yaratilgan
+      };
+    });
+  } catch (e) { return []; }
+}
+
+async function supabaseInsertIchki(i) {
+  try {
+    var res = await supabaseClient.from('ichki_rasxodlar').insert([{
+      id: i.id, nomi: i.nomi, summa: i.summa, izoh: i.izoh, sana: i.sana
+    }]);
+    return !res.error;
+  } catch (e) { return false; }
+}
+
+async function supabaseDeleteIchki(id) {
+  try {
+    var res = await supabaseClient.from('ichki_rasxodlar').delete().eq('id', id);
+    return !res.error;
+  } catch (e) { return false; }
+}
+
+async function supabaseGetKassa() {
+  try {
+    var res = await supabaseClient.from('kassa').select('*').order('id', { ascending: false });
+    if (res.error) { return []; }
+    return (res.data || []).map(function(d) {
+      return {
+        id: d.id, tur: d.tur, summa: Number(d.summa),
+        valyuta: d.valyuta || 'UZS', izoh: d.izoh,
+        sana: d.sana, yaratilgan: d.yaratilgan
+      };
+    });
+  } catch (e) { return []; }
+}
+
+async function supabaseInsertKassa(k) {
+  try {
+    var res = await supabaseClient.from('kassa').insert([{
+      id: k.id, tur: k.tur, summa: k.summa,
+      valyuta: k.valyuta || 'UZS', izoh: k.izoh
+    }]);
+    return !res.error;
+  } catch (e) { return false; }
+}
+
+async function supabaseDeleteKassa(id) {
+  try {
+    var res = await supabaseClient.from('kassa').delete().eq('id', id);
+    return !res.error;
+  } catch (e) { return false; }
+}
+
+/* ============================================================ */
+/* NAVIGATSIYA */
+/* ============================================================ */
 function goToPage(page) {
   document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
   document.querySelectorAll('.nav-item').forEach(function(n) { n.classList.remove('active'); });
@@ -1303,6 +1806,8 @@ function goToPage(page) {
   document.getElementById('fab').style.display = (page === 'add') ? 'none' : 'flex';
   if (page === 'qarzdorlar') renderQarzdorlar();
   if (page === 'tolov') renderTolovList();
+  if (page === 'kassa') renderKassa();
+  if (page === 'rasxodlar') renderRasxodlarAll();
   if (page === 'dashboard') renderDashboard();
   if (page === 'settings') renderSettings();
 }
@@ -1310,9 +1815,9 @@ document.querySelectorAll('.nav-item').forEach(function(btn) {
   btn.addEventListener('click', function() { goToPage(btn.dataset.page); });
 });
 
-/* ============================================================
-   SOZLAMALAR
-   ============================================================ */
+/* ============================================================ */
+/* SOZLAMALAR */
+/* ============================================================ */
 function renderSettings() {
   document.getElementById('smsTemplate').value = smsTemplate;
   updatePingUI();
@@ -1320,10 +1825,10 @@ function renderSettings() {
 
 function saveSmsTemplate() {
   var val = document.getElementById('smsTemplate').value.trim();
-  if (!val) { showToast('SMS matni bo\'sh!', 'error'); return; }
+  if (!val) { showToast('Bo\'sh!', 'error'); return; }
   smsTemplate = val;
   localStorage.setItem('pam_sms_template', smsTemplate);
-  showToast('✅ SMS matni saqlandi!');
+  showToast('✅ Saqlandi!');
 }
 
 function resetSmsTemplate() {
@@ -1331,37 +1836,51 @@ function resetSmsTemplate() {
   smsTemplate = DEFAULT_SMS_TEMPLATE;
   localStorage.setItem('pam_sms_template', smsTemplate);
   document.getElementById('smsTemplate').value = smsTemplate;
-  showToast('✅ Standart matn tiklandi!');
+  showToast('✅ Tiklandi!');
 }
 
 function fillSmsTemplate(q) {
   return smsTemplate
-    .replace(/{familiya}/g, q.familyasi)
-    .replace(/{ismi}/g, q.ismi)
-    .replace(/{maxsulot}/g, q.maxsulot)
-    .replace(/{summa}/g, formatSumma(q.summa))
+    .replace(/{familiya}/g, q.familyasi).replace(/{ismi}/g, q.ismi)
+    .replace(/{maxsulot}/g, q.maxsulot).replace(/{summa}/g, formatSumma(q.summa))
     .replace(/{tolangan}/g, formatSumma(q.tolangan || 0))
     .replace(/{qoldiq}/g, formatSumma(q.qoldiq))
     .replace(/{muddat}/g, formatDate(q.muddat))
     .replace(/{yaratilgan}/g, formatDate(q.yaratilgan));
 }
 
-/* ============================================================
-   DASHBOARD
-   ============================================================ */
+/* ============================================================ */
+/* DASHBOARD */
+/* ============================================================ */
 function renderDashboard() {
   var total = qarzdorlar.length;
   var overdue = qarzdorlar.filter(function(q) { return q.qoldiq > 0 && getHolat(q).type === 'overdue'; }).length;
   var today = qarzdorlar.filter(function(q) { return q.qoldiq > 0 && getHolat(q).type === 'today'; }).length;
-  var soon = qarzdorlar.filter(function(q) { return q.qoldiq > 0 && getHolat(q).type === 'soon'; }).length;
   var jamiTolangan = qarzdorlar.reduce(function(s, q) { return s + (q.tolangan || 0); }, 0);
   var qarzSumma = qarzdorlar.reduce(function(s, q) { return s + q.qoldiq; }, 0);
 
+  var jamiIchki = ichkiRasxodlar.reduce(function(s, r) { return s + r.summa; }, 0);
+  var jamiTashqi = taminotchilar.reduce(function(s, r) { return s + r.jami_summa; }, 0);
+  var jamiRasxod = jamiIchki + jamiTashqi;
+
+  var tQarzUZS = taminotchilar.filter(function(t) { return t.valyuta === 'UZS'; }).reduce(function(s, t) { return s + t.qoldiq; }, 0);
+  var tQarzUSD = taminotchilar.filter(function(t) { return t.valyuta === 'USD'; }).reduce(function(s, t) { return s + t.qoldiq; }, 0);
+
   document.getElementById('statTotal').textContent = total;
   document.getElementById('statOverdue').textContent = overdue + today;
-  document.getElementById('statSoon').textContent = soon;
   document.getElementById('statPaidNum').textContent = formatSummaShort(jamiTolangan);
   document.getElementById('statQarzSumma').textContent = formatSumma(qarzSumma);
+  document.getElementById('statRasxodNum').textContent = formatSummaShort(jamiRasxod);
+
+  var elTQ = document.getElementById('statTaminotchiQarz');
+  if (elTQ) {
+    var parts = [];
+    if (tQarzUZS > 0) parts.push(formatSumma(tQarzUZS));
+    if (tQarzUSD > 0) parts.push(formatSumma(tQarzUSD, 'USD'));
+    elTQ.textContent = parts.length > 0 ? parts.join(' + ') : '0';
+  }
+
+  updateKassaBalanceUI();
 
   var alertBox = document.getElementById('alertBanner');
   if (overdue > 0 || today > 0) {
@@ -1370,8 +1889,7 @@ function renderDashboard() {
     else if (today > 0) msg = '<b>' + today + ' ta</b> qarzdorning muddati <b>BUGUN</b>!';
     else msg = '<b>' + overdue + ' ta</b> qarzdorning muddati o\'tgan!';
     alertBox.innerHTML = '<div class="alert-banner ' + (today > 0 ? 'today' : 'danger') + '">' +
-      '<svg class="ico ico-lg" viewBox="0 0 24 24" style="color:#ef4444;flex-shrink:0"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>' +
-      '<div class="text">' + msg + '<br>Iltimos, qo\'ng\'iroq qiling yoki SMS yuboring.</div></div>';
+      '<div style="font-size:24px;">⚠️</div><div class="text">' + msg + '</div></div>';
   } else { alertBox.innerHTML = ''; }
 
   var bellBadge = document.getElementById('bellBadge');
@@ -1397,11 +1915,36 @@ function renderDashboard() {
     '<div>' + formatDate(now) + '</div>';
 }
 
-/* ============================================================
-   QARZDORLAR
-   ============================================================ */
+function updateKassaBalanceUI() {
+  var kirimUZS = kassaTarix.filter(function(k) { return k.tur === 'kirim' && k.valyuta === 'UZS'; }).reduce(function(s, k) { return s + k.summa; }, 0);
+  var chiqimUZS = kassaTarix.filter(function(k) { return k.tur === 'chiqim' && k.valyuta === 'UZS'; }).reduce(function(s, k) { return s + k.summa; }, 0);
+  var kirimUSD = kassaTarix.filter(function(k) { return k.tur === 'kirim' && k.valyuta === 'USD'; }).reduce(function(s, k) { return s + k.summa; }, 0);
+  var chiqimUSD = kassaTarix.filter(function(k) { return k.tur === 'chiqim' && k.valyuta === 'USD'; }).reduce(function(s, k) { return s + k.summa; }, 0);
+
+  kassaBalanceUZS = kirimUZS - chiqimUZS;
+  kassaBalanceUSD = kirimUSD - chiqimUSD;
+
+  var parts = [];
+  if (kassaBalanceUZS !== 0 || kassaBalanceUSD === 0) parts.push(formatSumma(kassaBalanceUZS));
+  if (kassaBalanceUSD !== 0) parts.push(formatSumma(kassaBalanceUSD, 'USD'));
+  var balText = parts.join(' + ');
+
+  var el1 = document.getElementById('kassaBalance');
+  var el2 = document.getElementById('kassaBalance2');
+  if (el1) el1.textContent = balText;
+  if (el2) el2.textContent = balText;
+
+  var k1 = document.getElementById('kassaKirim'); if (k1) k1.textContent = formatSummaShort(kirimUZS) + (kirimUSD > 0 ? ' + $' + kirimUSD.toFixed(2) : '');
+  var k2 = document.getElementById('kassaKirim2'); if (k2) k2.textContent = formatSummaShort(kirimUZS) + (kirimUSD > 0 ? ' + $' + kirimUSD.toFixed(2) : '');
+  var c1 = document.getElementById('kassaChiqim'); if (c1) c1.textContent = formatSummaShort(chiqimUZS) + (chiqimUSD > 0 ? ' + $' + chiqimUSD.toFixed(2) : '');
+  var c2 = document.getElementById('kassaChiqim2'); if (c2) c2.textContent = formatSummaShort(chiqimUZS) + (chiqimUSD > 0 ? ' + $' + chiqimUSD.toFixed(2) : '');
+}
+
+/* ============================================================ */
+/* QARZDORLAR */
+/* ============================================================ */
 function renderQarzdorlar() {
-  var search = document.getElementById('searchInput').value.toLowerCase().trim();
+  var search = (document.getElementById('searchInput').value || '').toLowerCase().trim();
   var list = document.getElementById('qarzdorlarList');
   var filtered = qarzdorlar.slice();
 
@@ -1421,7 +1964,7 @@ function renderQarzdorlar() {
   filtered.sort(function(a, b) { return priority[getHolat(a).type] - priority[getHolat(b).type]; });
 
   if (filtered.length === 0) {
-    list.innerHTML = '<div class="empty-state"><div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div><h3>Qarzdorlar topilmadi</h3><p>' + (search || currentFilter !== 'all' ? 'Boshqa filtr bilan urinib ko\'ring' : 'Yangi qarzdor qo\'shing') + '</p></div>';
+    list.innerHTML = '<div class="empty-state"><h3>Qarzdorlar topilmadi</h3><p>Yangi qarzdor qo\'shing</p></div>';
     return;
   }
 
@@ -1434,24 +1977,24 @@ function renderQarzdorlar() {
       '<div class="q-header">' +
         '<div style="flex:1;min-width:0;">' +
           '<div class="q-name">' + q.ismi + ' ' + q.familyasi + '</div>' +
-          '<div class="q-phone"><svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg><a href="tel:' + q.telRaqami + '">' + q.telRaqami + '</a></div>' +
+          '<div class="q-phone"><a href="tel:' + q.telRaqami + '">' + q.telRaqami + '</a></div>' +
         '</div>' +
         '<div class="q-badge ' + holat.badge + '">' + holat.text + '</div>' +
       '</div>' +
-      '<div class="q-info"><svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>' + q.yashashJoyi + '</div>' +
-      '<div class="q-info"><svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg><b>' + q.maxsulot + '</b></div>' +
+      '<div class="q-info">📍 ' + q.yashashJoyi + '</div>' +
+      '<div class="q-info">📦 <b>' + q.maxsulot + '</b></div>' +
       '<div class="progress-bar"><div class="progress-fill" style="width:' + percent + '%"></div></div>' +
       '<div class="q-money">' +
         '<div><div class="m-label">Jami</div><div class="m-value">' + formatSumma(q.summa) + '</div></div>' +
         '<div><div class="m-label">To\'landi</div><div class="m-value green">' + formatSumma(tolangan) + '</div></div>' +
         '<div><div class="m-label">Qoldiq</div><div class="m-value red">' + formatSumma(q.qoldiq) + '</div></div>' +
       '</div>' +
-      '<div class="q-info" style="margin-top:8px;"><svg class="ico ico-sm" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Muddat: <b style="color:#fff;">' + formatDate(q.muddat) + '</b></div>' +
+      '<div class="q-info" style="margin-top:8px;">📅 Muddat: <b style="color:#fff;">' + formatDate(q.muddat) + '</b></div>' +
       '<div class="q-actions">' +
-        '<button class="qa-btn call" onclick="callClient(\'' + q.telRaqami + '\')"><svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>Qo\'ng\'iroq</button>' +
-        '<button class="qa-btn sms" onclick="openSmsModal(' + q.id + ')"><svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>SMS</button>' +
-        '<button class="qa-btn pay" onclick="openTolovModal(' + q.id + ')"><svg class="ico ico-sm" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>To\'lash</button>' +
-        '<button class="qa-btn del" onclick="openDeleteModal(' + q.id + ')"><svg class="ico ico-sm" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg></button>' +
+        '<button class="qa-btn call" onclick="callClient(\'' + q.telRaqami + '\')">📞</button>' +
+        '<button class="qa-btn sms" onclick="openSmsModal(' + q.id + ')">💬 SMS</button>' +
+        '<button class="qa-btn pay" onclick="openTolovModal(' + q.id + ')">💰 To\'lash</button>' +
+        '<button class="qa-btn del" onclick="openDeleteModal(' + q.id + ', \'qarzdor\')">🗑</button>' +
       '</div>' +
     '</div>';
   }).join('');
@@ -1475,9 +2018,9 @@ function setFilter(f) {
   renderQarzdorlar();
 }
 
-/* ============================================================
-   TO'LOV RO'YXATI
-   ============================================================ */
+/* ============================================================ */
+/* TO'LOV LIST */
+/* ============================================================ */
 function renderTolovList() {
   var search = (document.getElementById('tolovSearch').value || '').toLowerCase().trim();
   var list = document.getElementById('tolovList');
@@ -1493,7 +2036,7 @@ function renderTolovList() {
   filtered.sort(function(a, b) { return priority[getHolat(a).type] - priority[getHolat(b).type]; });
 
   if (filtered.length === 0) {
-    list.innerHTML = '<div class="empty-state"><div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div><h3>Qarz yo\'q</h3><p>' + (search ? 'Natija topilmadi' : 'Barcha qarzlar to\'langan!') + '</p></div>';
+    list.innerHTML = '<div class="empty-state"><h3>Qarz yo\'q</h3><p>Barcha qarzlar to\'langan!</p></div>';
     return;
   }
 
@@ -1501,28 +2044,452 @@ function renderTolovList() {
     return '<div class="tolov-item" style="animation-delay:' + (i * 0.04) + 's">' +
       '<div class="avatar">' + initials(q.ismi, q.familyasi) + '</div>' +
       '<div class="info"><h4>' + q.ismi + ' ' + q.familyasi + '</h4><p>Qoldiq: <b>' + formatSumma(q.qoldiq) + '</b></p><p>Muddat: ' + formatDate(q.muddat) + '</p></div>' +
-      '<button class="pay-btn" onclick="openTolovModal(' + q.id + ')"><svg class="ico ico-sm" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>To\'lash</button>' +
+      '<button class="pay-btn" onclick="openTolovModal(' + q.id + ')">💰 To\'lash</button>' +
     '</div>';
   }).join('');
 }
 document.getElementById('tolovSearch').addEventListener('input', renderTolovList);
 
-/* ============================================================
-   INPUT
-   ============================================================ */
+/* ============================================================ */
+/* KASSA */
+/* ============================================================ */
+function setKassaCurr(c) {
+  selectedKassaCurr = c;
+  document.querySelectorAll('#kassaCurrToggle button').forEach(function(b) { b.classList.toggle('active', b.dataset.curr === c); });
+}
+function setTashqiCurr(c) {
+  selectedTashqiCurr = c;
+  document.querySelectorAll('#tashqiCurrToggle button').forEach(function(b) { b.classList.toggle('active', b.dataset.curr === c); });
+}
+function setChiqimCurr(c) {
+  selectedChiqimCurr = c;
+  document.querySelectorAll('#chiqimCurrToggle button').forEach(function(b) { b.classList.toggle('active', b.dataset.curr === c); });
+}
+
+function renderKassa() {
+  updateKassaBalanceUI();
+  var list = document.getElementById('kassaList');
+  if (!list) return;
+
+  if (kassaTarix.length === 0) {
+    list.innerHTML = '<div class="empty-state"><h3>Kassa bo\'sh</h3><p>Birinchi kirimni qiling</p></div>';
+    return;
+  }
+
+  var sorted = kassaTarix.slice().sort(function(a, b) { return b.id - a.id; });
+
+  list.innerHTML = sorted.slice(0, 100).map(function(k, i) {
+    return '<div class="kassa-item ' + k.tur + '" style="animation-delay:' + (i * 0.03) + 's">' +
+      '<div class="k-icon">' + (k.tur === 'kirim' ? '📥' : '📤') + '</div>' +
+      '<div class="k-info">' +
+        '<h4>' + (k.tur === 'kirim' ? 'Kirim' : 'Chiqim') + ' ' + (k.valyuta === 'USD' ? '(USD)' : '') + '</h4>' +
+        '<p>' + (k.izoh || 'Izohsiz') + ' • ' + formatDate(k.sana || k.yaratilgan) + '</p>' +
+      '</div>' +
+      '<div class="k-summa">' + (k.tur === 'kirim' ? '+' : '-') + formatSummaShort(k.summa, k.valyuta) + '</div>' +
+      '<button class="i-del" onclick="openDeleteModal(' + k.id + ', \'kassa\')" style="margin-left:8px;">🗑</button>' +
+    '</div>';
+  }).join('');
+}
+
+async function kassaKirim() {
+  var summa = Number(document.getElementById('kassaSumma').value);
+  var izoh = document.getElementById('kassaIzoh').value.trim() || 'Kassa kirimi';
+  if (!summa || summa <= 0) { showToast('To\'g\'ri summa!', 'error'); return; }
+
+  var yangi = { id: Date.now(), tur: 'kirim', summa: summa, valyuta: selectedKassaCurr, izoh: izoh };
+  var ok = await supabaseInsertKassa(yangi);
+  if (!ok) { showToast('Xatolik!', 'error'); return; }
+
+  kassaTarix.push(yangi);
+  document.getElementById('kassaSumma').value = '';
+  document.getElementById('kassaIzoh').value = '';
+  document.getElementById('kassaSummaHint').innerHTML = '';
+  showToast('✅ ' + formatSumma(summa, selectedKassaCurr) + ' kiritildi!');
+  renderKassa();
+  renderDashboard();
+}
+
+function kassaChiqimModal() {
+  var parts = [];
+  if (kassaBalanceUZS !== 0 || kassaBalanceUSD === 0) parts.push(formatSumma(kassaBalanceUZS));
+  if (kassaBalanceUSD !== 0) parts.push(formatSumma(kassaBalanceUSD, 'USD'));
+  document.getElementById('chiqimBalans').textContent = parts.join(' + ');
+  document.getElementById('chiqimSumma').value = '';
+  document.getElementById('chiqimIzoh').value = '';
+  document.getElementById('chiqimSummaHint').innerHTML = '';
+  openModal('kassaChiqimModalOverlay');
+}
+
+async function confirmKassaChiqim() {
+  var summa = Number(document.getElementById('chiqimSumma').value);
+  var izoh = document.getElementById('chiqimIzoh').value.trim() || 'Kassa chiqimi';
+  if (!summa || summa <= 0) { showToast('To\'g\'ri summa!', 'error'); return; }
+
+  var bal = selectedChiqimCurr === 'USD' ? kassaBalanceUSD : kassaBalanceUZS;
+  if (summa > bal) { showToast('Kassada buncha pul yo\'q!', 'error'); return; }
+
+  var yangi = { id: Date.now(), tur: 'chiqim', summa: summa, valyuta: selectedChiqimCurr, izoh: izoh };
+  var ok = await supabaseInsertKassa(yangi);
+  if (!ok) { showToast('Xatolik!', 'error'); return; }
+
+  kassaTarix.push(yangi);
+  closeModal('kassaChiqimModalOverlay');
+  showToast('✅ ' + formatSumma(summa, selectedChiqimCurr) + ' chiqarildi!');
+  renderKassa();
+  renderDashboard();
+}
+
+document.getElementById('kassaSumma').addEventListener('input', function() {
+  var val = this.value.replace(/[^\d.]/g, '');
+  this.value = val;
+  if (val) document.getElementById('kassaSummaHint').innerHTML = formatSumma(val, selectedKassaCurr);
+  else document.getElementById('kassaSummaHint').innerHTML = '';
+});
+document.getElementById('chiqimSumma').addEventListener('input', function() {
+  this.value = this.value.replace(/[^\d.]/g, '');
+  var v = this.value;
+  if (v) document.getElementById('chiqimSummaHint').innerHTML = formatSumma(v, selectedChiqimCurr);
+  else document.getElementById('chiqimSummaHint').innerHTML = '';
+});
+
+/* ============================================================ */
+/* RASXODLAR */
+/* ============================================================ */
+function switchRasxodTab(tab) {
+  document.querySelectorAll('#rasxodSegment button').forEach(function(b) { b.classList.toggle('active', b.dataset.rasxodTab === tab); });
+  document.getElementById('tab-tashqi').style.display = (tab === 'tashqi') ? 'block' : 'none';
+  document.getElementById('tab-ichki').style.display = (tab === 'ichki') ? 'block' : 'none';
+  if (tab === 'tashqi') renderTaminotchilar();
+  else renderIchki();
+}
+
+function renderRasxodlarAll() {
+  renderTaminotchilar();
+  renderIchki();
+}
+
+function renderTaminotchilar() {
+  var list = document.getElementById('taminotchiList');
+  if (!list) return;
+
+  var search = (document.getElementById('tashqiSearch').value || '').toLowerCase().trim();
+  var filtered = taminotchilar.slice();
+
+  if (search) {
+    filtered = filtered.filter(function(t) {
+      return (t.kim || '').toLowerCase().indexOf(search) !== -1 ||
+        (t.nima_uchun || '').toLowerCase().indexOf(search) !== -1;
+    });
+  }
+
+  filtered.sort(function(a, b) { return b.id - a.id; });
+
+  var jamiUZS = taminotchilar.filter(function(t) { return t.valyuta === 'UZS'; }).reduce(function(s, t) { return s + t.jami_summa; }, 0);
+  var jamiUSD = taminotchilar.filter(function(t) { return t.valyuta === 'USD'; }).reduce(function(s, t) { return s + t.jami_summa; }, 0);
+  var qarzUZS = taminotchilar.filter(function(t) { return t.valyuta === 'UZS'; }).reduce(function(s, t) { return s + t.qoldiq; }, 0);
+  var qarzUSD = taminotchilar.filter(function(t) { return t.valyuta === 'USD'; }).reduce(function(s, t) { return s + t.qoldiq; }, 0);
+
+  var parts = [];
+  if (jamiUZS > 0) parts.push(formatSumma(jamiUZS));
+  if (jamiUSD > 0) parts.push(formatSumma(jamiUSD, 'USD'));
+  var elS = document.getElementById('statTashqi');
+  if (elS) elS.textContent = parts.length > 0 ? parts.join(' + ') : '0';
+
+  var qparts = [];
+  if (qarzUZS > 0) qparts.push(formatSumma(qarzUZS));
+  if (qarzUSD > 0) qparts.push(formatSumma(qarzUSD, 'USD'));
+  var elQ = document.getElementById('statTashqiQarz');
+  if (elQ) elQ.textContent = qparts.length > 0 ? qparts.join(' + ') : '0';
+
+  if (filtered.length === 0) {
+    list.innerHTML = '<div class="empty-state"><h3>Ta\'minotchilar yo\'q</h3><p>Yangi ta\'minotchi qo\'shing</p></div>';
+    return;
+  }
+
+  list.innerHTML = filtered.map(function(t, i) {
+    var percent = t.jami_summa > 0 ? Math.min(100, (t.berildi / t.jami_summa) * 100) : 0;
+    var isQarzli = t.qoldiq > 0.01;
+    var cardClass = isQarzli ? 'qarzli' : 'tolangan';
+    var badgeClass = isQarzli ? 'qarzli' : 'tolangan';
+    var badgeText = isQarzli ? 'QARZ: ' + formatSummaShort(t.qoldiq, t.valyuta) : 'TO\'LANGAN';
+
+    return '<div class="taminotchi-card ' + cardClass + '" style="animation-delay:' + (i * 0.04) + 's">' +
+      '<div class="tc-header">' +
+        '<div style="flex:1;min-width:0;">' +
+          '<div class="tc-name">' + t.kim + '</div>' +
+          '<div class="tc-nima">📦 ' + t.nima_uchun + '</div>' +
+        '</div>' +
+        '<div class="tc-badge ' + badgeClass + '">' + badgeText + '</div>' +
+      '</div>' +
+      '<div class="progress-bar"><div class="progress-fill ' + (isQarzli ? 'warning' : '') + '" style="width:' + percent + '%"></div></div>' +
+      '<div class="tc-money">' +
+        '<div><div class="m-label">Jami</div><div class="m-value">' + formatSumma(t.jami_summa, t.valyuta) + '</div></div>' +
+        '<div><div class="m-label">Berildi</div><div class="m-value green">' + formatSumma(t.berildi, t.valyuta) + '</div></div>' +
+        '<div><div class="m-label">Qoldiq</div><div class="m-value ' + (isQarzli ? 'red' : 'green') + '">' + formatSumma(t.qoldiq, t.valyuta) + '</div></div>' +
+      '</div>' +
+      '<div class="tc-actions">' +
+        '<button class="tc-btn pay" onclick="openTaminotchiPulModal(' + t.id + ')">💸 Pul berish</button>' +
+        '<button class="tc-btn detail" onclick="showTaminotchiTarix(' + t.id + ')">📋 Tarix</button>' +
+        '<button class="tc-btn del" onclick="openDeleteModal(' + t.id + ', \'tashqi\')">🗑</button>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+document.getElementById('tashqiSearch').addEventListener('input', renderTaminotchilar);
+document.getElementById('tashqiJami').addEventListener('input', function() {
+  this.value = this.value.replace(/[^\d.]/g, '');
+  if (this.value) document.getElementById('tashqiJamiHint').innerHTML = formatSumma(this.value, selectedTashqiCurr);
+  else document.getElementById('tashqiJamiHint').innerHTML = '';
+});
+document.getElementById('tashqiBerildi').addEventListener('input', function() {
+  this.value = this.value.replace(/[^\d.]/g, '');
+  if (this.value) document.getElementById('tashqiBerildiHint').innerHTML = formatSumma(this.value, selectedTashqiCurr);
+  else document.getElementById('tashqiBerildiHint').innerHTML = '';
+});
+
+async function addTashqi() {
+  var kim = document.getElementById('tashqiKim').value.trim();
+  var nima = document.getElementById('tashqiNima').value.trim();
+  var jami = Number(document.getElementById('tashqiJami').value);
+  var berildi = Number(document.getElementById('tashqiBerildi').value) || 0;
+  var izoh = document.getElementById('tashqiIzoh').value.trim();
+
+  if (!kim) { showToast('Kim ekanligini yozing!', 'error'); return; }
+  if (!nima) { showToast('Nima uchun ekanligini yozing!', 'error'); return; }
+  if (!jami || jami <= 0) { showToast('Jami summa kiriting!', 'error'); return; }
+  if (berildi < 0) { showToast('Berildi 0 dan kichik!', 'error'); return; }
+  if (berildi > jami) { showToast('Berildi jamidan katta!', 'error'); return; }
+
+  var qoldiq = jami - berildi;
+  var yangi = {
+    id: Date.now(), kim: kim, nima_uchun: nima,
+    jami_summa: jami, berildi: berildi, qoldiq: qoldiq,
+    valyuta: selectedTashqiCurr, izoh: izoh,
+    sana: new Date().toISOString().slice(0, 10)
+  };
+
+  var ok = await supabaseInsertRasxod(yangi);
+  if (!ok) { showToast('Xatolik!', 'error'); return; }
+
+  if (berildi > 0) {
+    var kassaYozuv = {
+      id: Date.now() + 1, tur: 'chiqim', summa: berildi,
+      valyuta: selectedTashqiCurr,
+      izoh: 'Ta\'minotchi: ' + kim
+    };
+    await supabaseInsertKassa(kassaYozuv);
+    kassaTarix.push(kassaYozuv);
+  }
+
+  taminotchilar.push(yangi);
+  document.getElementById('tashqiKim').value = '';
+  document.getElementById('tashqiNima').value = '';
+  document.getElementById('tashqiJami').value = '';
+  document.getElementById('tashqiBerildi').value = '';
+  document.getElementById('tashqiIzoh').value = '';
+  document.getElementById('tashqiJamiHint').innerHTML = '';
+  document.getElementById('tashqiBerildiHint').innerHTML = '';
+
+  showToast('✅ Ta\'minotchi qo\'shildi!');
+  renderTaminotchilar();
+  renderKassa();
+  renderDashboard();
+}
+
+function openTaminotchiPulModal(id) {
+  currentTaminotchiId = id;
+  var t = taminotchilar.find(function(x) { return x.id === id; });
+  if (!t) return;
+
+  document.getElementById('taminotchiInfoBox').innerHTML =
+    '<div class="info-row"><span class="lbl">Kim</span><span class="val">' + t.kim + '</span></div>' +
+    '<div class="info-row"><span class="lbl">Nima uchun</span><span class="val">' + t.nima_uchun + '</span></div>' +
+    '<div class="info-row"><span class="lbl">Jami</span><span class="val">' + formatSumma(t.jami_summa, t.valyuta) + '</span></div>' +
+    '<div class="info-row"><span class="lbl">Berildi</span><span class="val" style="color:#10b981;">' + formatSumma(t.berildi, t.valyuta) + '</span></div>' +
+    '<div class="info-row"><span class="lbl">Qoldiq</span><span class="val" style="color:#ef4444;">' + formatSumma(t.qoldiq, t.valyuta) + '</span></div>';
+
+  document.getElementById('taminotchiPulSumma').value = '';
+  document.getElementById('taminotchiPulHint').innerHTML = '';
+  openModal('taminotchiPulModal');
+}
+
+function setTaminotchiPulPercent(p) {
+  var t = taminotchilar.find(function(x) { return x.id === currentTaminotchiId; });
+  if (!t) return;
+  document.getElementById('taminotchiPulSumma').value = (t.qoldiq * (p / 100)).toFixed(2);
+  document.getElementById('taminotchiPulHint').innerHTML = formatSumma(t.qoldiq * (p / 100), t.valyuta);
+}
+
+document.getElementById('taminotchiPulSumma').addEventListener('input', function() {
+  this.value = this.value.replace(/[^\d.]/g, '');
+  var t = taminotchilar.find(function(x) { return x.id === currentTaminotchiId; });
+  if (this.value && t) document.getElementById('taminotchiPulHint').innerHTML = formatSumma(this.value, t.valyuta);
+  else document.getElementById('taminotchiPulHint').innerHTML = '';
+});
+
+async function confirmTaminotchiPul() {
+  var t = taminotchilar.find(function(x) { return x.id === currentTaminotchiId; });
+  if (!t) return;
+
+  var summa = Number(document.getElementById('taminotchiPulSumma').value);
+  if (!summa || summa <= 0) { showToast('To\'g\'ri summa!', 'error'); return; }
+  if (summa > t.qoldiq) { showToast('Summa qoldiqdan katta!', 'error'); return; }
+
+  var yangiBerildi = t.berildi + summa;
+  var yangiQoldiq = t.jami_summa - yangiBerildi;
+
+  var btn = document.getElementById('taminotchiPulBtn');
+  btn.disabled = true;
+
+  var ok = await supabaseUpdateRasxod(t.id, yangiBerildi, yangiQoldiq);
+  btn.disabled = false;
+
+  if (!ok) { showToast('Xatolik!', 'error'); return; }
+
+  var kassaYozuv = {
+    id: Date.now() + 3, tur: 'chiqim', summa: summa,
+    valyuta: t.valyuta,
+    izoh: 'Ta\'minotchi to\'lovi: ' + t.kim
+  };
+  await supabaseInsertKassa(kassaYozuv);
+  kassaTarix.push(kassaYozuv);
+
+  t.berildi = yangiBerildi;
+  t.qoldiq = yangiQoldiq;
+
+  closeModal('taminotchiPulModal');
+  showToast('✅ ' + formatSumma(summa, t.valyuta) + ' berildi!');
+  renderTaminotchilar();
+  renderKassa();
+  renderDashboard();
+}
+
+function showTaminotchiTarix(id) {
+  var t = taminotchilar.find(function(x) { return x.id === id; });
+  if (!t) return;
+
+  var tolovlar = kassaTarix.filter(function(k) {
+    return k.tur === 'chiqim' && k.izoh && k.izoh.indexOf(t.kim) !== -1;
+  });
+
+  var html = '<div class="info-box">' +
+    '<div class="info-row"><span class="lbl">Kim</span><span class="val">' + t.kim + '</span></div>' +
+    '<div class="info-row"><span class="lbl">Nima uchun</span><span class="val">' + t.nima_uchun + '</span></div>' +
+    '<div class="info-row"><span class="lbl">Jami summa</span><span class="val">' + formatSumma(t.jami_summa, t.valyuta) + '</span></div>' +
+    '<div class="info-row"><span class="lbl">Berildi</span><span class="val" style="color:#10b981;">' + formatSumma(t.berildi, t.valyuta) + '</span></div>' +
+    '<div class="info-row"><span class="lbl">Qoldiq</span><span class="val" style="color:#ef4444;">' + formatSumma(t.qoldiq, t.valyuta) + '</span></div>' +
+    '<div class="info-row"><span class="lbl">Sana</span><span class="val">' + formatDate(t.sana) + '</span></div>' +
+    (t.izoh ? '<div class="info-row"><span class="lbl">Izoh</span><span class="val">' + t.izoh + '</span></div>' : '') +
+    '</div>';
+
+  if (tolovlar.length > 0) {
+    html += '<div style="font-size:12px;color:var(--text-muted);margin:14px 0 8px;font-weight:700;">TO\'LOVLAR TARIXI:</div>';
+    tolovlar.sort(function(a, b) { return b.id - a.id; }).forEach(function(k) {
+      html += '<div style="padding:10px;margin-bottom:6px;background:rgba(16,185,129,0.1);border-left:3px solid #10b981;border-radius:8px;">' +
+        '<div style="font-size:13px;font-weight:800;color:#6ee7b7;">' + formatSumma(k.summa, k.valyuta) + '</div>' +
+        '<div style="font-size:11px;color:var(--text-muted);margin-top:3px;">' + formatDate(k.sana || k.yaratilgan) + ' • ' + (k.izoh || '') + '</div>' +
+      '</div>';
+    });
+  }
+
+  document.getElementById('taminotchiTarixContent').innerHTML = html;
+  openModal('taminotchiTarixModal');
+}
+
+/* ============================================================ */
+/* ICHKI RASXOD */
+/* ============================================================ */
+function renderIchki() {
+  var list = document.getElementById('ichkiList');
+  if (!list) return;
+
+  var search = (document.getElementById('ichkiSearch').value || '').toLowerCase().trim();
+  var filtered = ichkiRasxodlar.slice();
+  if (search) {
+    filtered = filtered.filter(function(r) {
+      return (r.nomi || '').toLowerCase().indexOf(search) !== -1 ||
+        (r.izoh || '').toLowerCase().indexOf(search) !== -1;
+    });
+  }
+  filtered.sort(function(a, b) { return b.id - a.id; });
+
+  var jami = ichkiRasxodlar.reduce(function(s, r) { return s + r.summa; }, 0);
+  var el = document.getElementById('statIchki');
+  if (el) el.textContent = formatSumma(jami);
+
+  if (filtered.length === 0) {
+    list.innerHTML = '<div class="empty-state"><h3>Ichki rasxodlar yo\'q</h3><p>Yangi qo\'shing</p></div>';
+    return;
+  }
+
+  list.innerHTML = filtered.map(function(r, i) {
+    return '<div class="ichki-item" style="animation-delay:' + (i * 0.04) + 's">' +
+      '<div class="i-icon">🏢</div>' +
+      '<div class="i-info">' +
+        '<h4>' + r.nomi + '</h4>' +
+        '<p>' + (r.izoh || 'Izohsiz') + ' • ' + formatDate(r.sana || r.yaratilgan) + '</p>' +
+      '</div>' +
+      '<div class="i-summa">' + formatSumma(r.summa) + '</div>' +
+      '<button class="i-del" onclick="openDeleteModal(' + r.id + ', \'ichki\')">🗑</button>' +
+    '</div>';
+  }).join('');
+}
+
+document.getElementById('ichkiSearch').addEventListener('input', renderIchki);
+document.getElementById('ichkiSumma').addEventListener('input', function() {
+  this.value = this.value.replace(/[^\d]/g, '');
+  if (this.value) document.getElementById('ichkiSummaHint').innerHTML = formatSumma(this.value);
+  else document.getElementById('ichkiSummaHint').innerHTML = '';
+});
+
+async function addIchki() {
+  var nomi = document.getElementById('ichkiNomi').value.trim();
+  var summa = Math.round(Number(document.getElementById('ichkiSumma').value));
+  var izoh = document.getElementById('ichkiIzoh').value.trim();
+  var sana = document.getElementById('ichkiSana').value || new Date().toISOString().slice(0, 10);
+
+  if (!nomi) { showToast('Nomini yozing!', 'error'); return; }
+  if (!summa || summa <= 0) { showToast('Summa kiriting!', 'error'); return; }
+
+  var yangi = { id: Date.now(), nomi: nomi, summa: summa, izoh: izoh, sana: sana };
+  var ok = await supabaseInsertIchki(yangi);
+  if (!ok) { showToast('Xatolik!', 'error'); return; }
+
+  var kassaYozuv = {
+    id: Date.now() + 4, tur: 'chiqim', summa: summa,
+    valyuta: 'UZS', izoh: 'Ichki rasxod: ' + nomi
+  };
+  await supabaseInsertKassa(kassaYozuv);
+  kassaTarix.push(kassaYozuv);
+
+  ichkiRasxodlar.push(yangi);
+  document.getElementById('ichkiNomi').value = '';
+  document.getElementById('ichkiSumma').value = '';
+  document.getElementById('ichkiIzoh').value = '';
+  document.getElementById('ichkiSummaHint').innerHTML = '';
+
+  showToast('✅ Ichki rasxod qo\'shildi!');
+  renderIchki();
+  renderKassa();
+  renderDashboard();
+}
+
+/* ============================================================ */
+/* INPUT FORMATTING */
+/* ============================================================ */
 document.getElementById('summa').addEventListener('input', function() {
   var val = this.value.replace(/[^\d]/g, '');
   if (val) { this.value = val; document.getElementById('summaHint').innerHTML = formatSumma(val); }
   else { document.getElementById('summaHint').innerHTML = ''; }
 });
-
 document.getElementById('tolovSumma').addEventListener('input', function() {
   this.value = this.value.replace(/[^\d]/g, '');
 });
 
-/* ============================================================
-   YANGI QARZDOR
-   ============================================================ */
+/* ============================================================ */
+/* YANGI QARZDOR */
+/* ============================================================ */
 document.getElementById('qarzdorForm').addEventListener('submit', async function(e) {
   e.preventDefault();
   var inputs = ['ismi','familyasi','yashashJoyi','telRaqami','maxsulot','summa','muddat'];
@@ -1534,7 +2501,7 @@ document.getElementById('qarzdorForm').addEventListener('submit', async function
   if (!valid) { showToast('Barcha maydonlarni to\'ldiring!', 'error'); return; }
 
   var summa = Math.round(Number(document.getElementById('summa').value));
-  if (!summa || summa <= 0) { showToast('Summa 0 dan katta bo\'lishi kerak!', 'error'); return; }
+  if (!summa || summa <= 0) { showToast('Summa 0 dan katta!', 'error'); return; }
 
   var btn = document.getElementById('saqlashBtn');
   btn.disabled = true;
@@ -1554,9 +2521,9 @@ document.getElementById('qarzdorForm').addEventListener('submit', async function
 
   var ok = await supabaseInsert(yangi);
   btn.disabled = false;
-  btn.innerHTML = '<svg class="ico" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Qarzdorni saqlash';
+  btn.innerHTML = '💾 Qarzdorni saqlash';
 
-  if (!ok) { showToast('Saqlashda xatolik!', 'error'); return; }
+  if (!ok) { showToast('Xatolik!', 'error'); return; }
 
   qarzdorlar.unshift(yangi);
   this.reset();
@@ -1566,16 +2533,15 @@ document.getElementById('qarzdorForm').addEventListener('submit', async function
 });
 
 function callClient(tel) { window.location.href = 'tel:' + tel.replace(/\s/g, ''); }
-
 function openModal(id) { document.getElementById(id).classList.add('active'); }
 function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 document.querySelectorAll('.modal-overlay').forEach(function(m) {
   m.addEventListener('click', function(e) { if (e.target === m) m.classList.remove('active'); });
 });
 
-/* ============================================================
-   SMS
-   ============================================================ */
+/* ============================================================ */
+/* SMS */
+/* ============================================================ */
 function openSmsModal(id) {
   currentSmsId = id;
   var q = qarzdorlar.find(function(x) { return x.id === id; });
@@ -1583,7 +2549,6 @@ function openSmsModal(id) {
   document.getElementById('smsText').value = fillSmsTemplate(q);
   openModal('smsModal');
 }
-
 function sendSms() {
   var q = qarzdorlar.find(function(x) { return x.id === currentSmsId; });
   if (!q) return;
@@ -1591,12 +2556,12 @@ function sendSms() {
   var tel = q.telRaqami.replace(/\s+/g, '').replace(/[^\d+]/g, '');
   window.location.href = 'sms:' + tel + '?body=' + encodeURIComponent(text);
   closeModal('smsModal');
-  showToast('📲 SMS ilovasi ochilmoqda...');
+  showToast('📲 SMS ochilmoqda...');
 }
 
-/* ============================================================
-   TO'LOV
-   ============================================================ */
+/* ============================================================ */
+/* TO'LOV */
+/* ============================================================ */
 function openTolovModal(id) {
   currentTolovId = id;
   var q = qarzdorlar.find(function(x) { return x.id === id; });
@@ -1604,13 +2569,10 @@ function openTolovModal(id) {
 
   document.getElementById('tolovInfoBox').innerHTML =
     '<div class="info-row"><span class="lbl">Qarzdor</span><span class="val">' + q.ismi + ' ' + q.familyasi + '</span></div>' +
-    '<div class="info-row"><span class="lbl">Maxsulot</span><span class="val">' + q.maxsulot + '</span></div>' +
     '<div class="info-row"><span class="lbl">Jami</span><span class="val">' + formatSumma(q.summa) + '</span></div>' +
     '<div class="info-row"><span class="lbl">To\'langan</span><span class="val" style="color:#10b981;">' + formatSumma(q.tolangan || 0) + '</span></div>' +
-    '<div class="info-row"><span class="lbl">Qoldiq</span><span class="val" style="color:#ef4444;">' + formatSumma(q.qoldiq) + '</span></div>' +
-    '<div class="info-row"><span class="lbl">Muddat</span><span class="val">' + formatDate(q.muddat) + '</span></div>';
+    '<div class="info-row"><span class="lbl">Qoldiq</span><span class="val" style="color:#ef4444;">' + formatSumma(q.qoldiq) + '</span></div>';
   document.getElementById('tolovSumma').value = '';
-  document.getElementById('tolovSumma').max = q.qoldiq;
   openModal('tolovModal');
 }
 
@@ -1624,7 +2586,7 @@ async function confirmTolov() {
   var q = qarzdorlar.find(function(x) { return x.id === currentTolovId; });
   if (!q) return;
   var summa = Math.round(Number(document.getElementById('tolovSumma').value));
-  if (!summa || summa <= 0) { showToast('To\'g\'ri summa kiriting!', 'error'); return; }
+  if (!summa || summa <= 0) { showToast('To\'g\'ri summa!', 'error'); return; }
   if (summa > q.qoldiq) { showToast('Summa qoldiqdan katta!', 'error'); return; }
 
   var btn = document.getElementById('tolovBtn');
@@ -1635,45 +2597,87 @@ async function confirmTolov() {
 
   var ok = await supabaseUpdateTolov(q.id, yangiTolangan, yangiQoldiq);
   btn.disabled = false;
-
-  if (!ok) { showToast('Saqlashda xatolik!', 'error'); return; }
+  if (!ok) { showToast('Xatolik!', 'error'); return; }
 
   q.tolangan = yangiTolangan;
   q.qoldiq = yangiQoldiq;
 
+  var kassaYozuv = {
+    id: Date.now() + 5, tur: 'kirim', summa: summa, valyuta: 'UZS',
+    izoh: 'Qarz to\'lovi: ' + q.ismi + ' ' + q.familyasi
+  };
+  await supabaseInsertKassa(kassaYozuv);
+  kassaTarix.push(kassaYozuv);
+
   closeModal('tolovModal');
-  showToast(q.qoldiq <= 0 ? '🎉 ' + q.ismi + ' qarzini to\'liq to\'ladi!' : '✅ ' + formatSumma(summa) + ' qabul qilindi!');
+  showToast(q.qoldiq <= 0 ? '🎉 To\'liq to\'landi!' : '✅ ' + formatSumma(summa) + ' qabul qilindi!');
   renderQarzdorlar();
   renderTolovList();
+  renderKassa();
   renderDashboard();
 }
 
-/* ============================================================
-   O'CHIRISH
-   ============================================================ */
-function openDeleteModal(id) {
+/* ============================================================ */
+/* O'CHIRISH */
+/* ============================================================ */
+function openDeleteModal(id, type) {
   currentDeleteId = id;
-  var q = qarzdorlar.find(function(x) { return x.id === id; });
-  if (!q) return;
-  document.getElementById('delText').innerHTML =
-    '<b>' + q.ismi + ' ' + q.familyasi + '</b> ni o\'chirmoqchimisiz?<br><small style="color:#8b95b8;">Bu amalni qaytarish mumkin emas.</small>';
+  currentDeleteType = type || 'qarzdor';
+
+  var text = '';
+  if (type === 'tashqi') {
+    var t = taminotchilar.find(function(x) { return x.id === id; });
+    if (!t) return;
+    text = '<b>' + t.kim + '</b> ni o\'chirmoqchimisiz?<br><small style="color:#8b95b8;">' + t.nima_uchun + ' • ' + formatSumma(t.jami_summa, t.valyuta) + '</small>';
+  } else if (type === 'ichki') {
+    var r = ichkiRasxodlar.find(function(x) { return x.id === id; });
+    if (!r) return;
+    text = '<b>' + r.nomi + '</b> rasxodini o\'chirmoqchimisiz?<br><small style="color:#8b95b8;">' + formatSumma(r.summa) + '</small>';
+  } else if (type === 'kassa') {
+    var k = kassaTarix.find(function(x) { return x.id === id; });
+    if (!k) return;
+    text = '<b>' + (k.tur === 'kirim' ? 'Kirim' : 'Chiqim') + '</b> yozuvini o\'chirmoqchimisiz?<br><small style="color:#8b95b8;">' + formatSumma(k.summa, k.valyuta) + '</small>';
+  } else {
+    var q = qarzdorlar.find(function(x) { return x.id === id; });
+    if (!q) return;
+    text = '<b>' + q.ismi + ' ' + q.familyasi + '</b> ni o\'chirmoqchimisiz?';
+  }
+
+  document.getElementById('delText').innerHTML = text;
   openModal('delModal');
 }
 
 async function confirmDelete() {
   if (!currentDeleteId) return;
-  var ok = await supabaseDelete(currentDeleteId);
-  if (!ok) { showToast('O\'chirishda xatolik!', 'error'); return; }
-  qarzdorlar = qarzdorlar.filter(function(x) { return x.id !== currentDeleteId; });
+  var ok = false;
+
+  if (currentDeleteType === 'tashqi') {
+    ok = await supabaseDeleteRasxod(currentDeleteId);
+    if (ok) taminotchilar = taminotchilar.filter(function(x) { return x.id !== currentDeleteId; });
+  } else if (currentDeleteType === 'ichki') {
+    ok = await supabaseDeleteIchki(currentDeleteId);
+    if (ok) ichkiRasxodlar = ichkiRasxodlar.filter(function(x) { return x.id !== currentDeleteId; });
+  } else if (currentDeleteType === 'kassa') {
+    ok = await supabaseDeleteKassa(currentDeleteId);
+    if (ok) kassaTarix = kassaTarix.filter(function(x) { return x.id !== currentDeleteId; });
+  } else {
+    ok = await supabaseDelete(currentDeleteId);
+    if (ok) qarzdorlar = qarzdorlar.filter(function(x) { return x.id !== currentDeleteId; });
+  }
+
+  if (!ok) { showToast('Xatolik!', 'error'); return; }
   closeModal('delModal');
   showToast('🗑 O\'chirildi');
   renderQarzdorlar();
+  renderTaminotchilar();
+  renderIchki();
+  renderKassa();
   renderDashboard();
 }
 
-/* ============================================================
-   ESLATMALAR
-   ============================================================ */
+/* ============================================================ */
+/* ESLATMALAR */
+/* ============================================================ */
 function todayKey() {
   var d = new Date();
   return d.getFullYear() + '-' + (d.getMonth()+1) + '-' + d.getDate();
@@ -1689,18 +2693,14 @@ function getReminderList() {
     if (kun === 0) text = 'BUGUN to\'lash kuni!';
     else if (kun === -1) text = 'Kechagi muddat o\'tdi!';
     else text = 'Muddat ' + Math.abs(kun) + ' kun o\'tgan!';
-    return {
-      id: q.id, ismi: q.ismi, familyasi: q.familyasi,
-      tel: q.telRaqami, qoldiq: formatSumma(q.qoldiq),
-      text: text, kun: kun, maxsulot: q.maxsulot
-    };
+    return { id: q.id, ismi: q.ismi, familyasi: q.familyasi, tel: q.telRaqami, qoldiq: formatSumma(q.qoldiq), text: text, kun: kun, maxsulot: q.maxsulot };
   });
 }
 
 function showReminderModal() {
   var items = getReminderList();
-  if (items.length === 0) { showToast('Hozirda eslatma yo\'q!'); return; }
-  playPingSound(); // Modal ochilganda ping
+  if (items.length === 0) { showToast('Eslatma yo\'q!'); return; }
+  playPingSound();
   var html = '<div style="max-height:50vh;overflow-y:auto;">';
   items.forEach(function(q) {
     var color = q.kun === 0 ? '#ef2d2d' : '#ef4444';
@@ -1708,10 +2708,8 @@ function showReminderModal() {
       '<div style="font-weight:800;font-size:14px;margin-bottom:4px;">' + q.ismi + ' ' + q.familyasi + '</div>' +
       '<div style="font-size:11px;color:' + color + ';font-weight:700;margin-bottom:6px;">' + q.text + '</div>' +
       '<div style="font-size:11px;color:#8b95b8;margin-bottom:8px;">' + q.maxsulot + '<br>Qoldiq: <b style="color:#ef4444;">' + q.qoldiq + '</b></div>' +
-      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">' +
-        '<a href="tel:' + q.tel + '" style="padding:8px;text-align:center;background:rgba(239,45,45,0.2);border:1px solid rgba(239,45,45,0.4);border-radius:8px;color:#ff8a8a;font-size:11px;font-weight:800;text-decoration:none;">Qo\'ng\'iroq</a>' +
-        '<button onclick="closeModal(\'reminderModal\');openSmsModal(' + q.id + ')" style="padding:8px;background:rgba(245,158,11,0.2);border:1px solid rgba(245,158,11,0.4);border-radius:8px;color:#fcd34d;font-size:11px;font-weight:800;cursor:pointer;font-family:inherit;">SMS</button>' +
-      '</div></div>';
+      '<a href="tel:' + q.tel + '" style="display:block;padding:8px;text-align:center;background:rgba(239,45,45,0.2);border:1px solid rgba(239,45,45,0.4);border-radius:8px;color:#ff8a8a;font-size:11px;font-weight:800;text-decoration:none;">📞 Qo\'ng\'iroq</a>' +
+    '</div>';
   });
   html += '</div>';
   document.getElementById('reminderContent').innerHTML = html;
@@ -1724,39 +2722,32 @@ function reminderGoList() {
   setTimeout(function() { setFilter('today'); }, 300);
 }
 
-/* ============================================================
-   NOTIFICATION
-   ============================================================ */
+/* ============================================================ */
+/* NOTIFICATION */
+/* ============================================================ */
 function sendNotification(items) {
   if (items.length === 0) return;
   if (!('Notification' in window) || Notification.permission !== 'granted') return;
-
-  // Ping ovozi
   playPingSound();
-
   if (items.length === 1) {
     var q = items[0];
     new Notification('🔔 PAM Nasiya', {
       body: q.ismi + ' ' + q.familyasi + '\n' + q.text + '\nQoldiq: ' + q.qoldiq,
-      icon: 'icon-192.png', badge: 'icon-192.png',
-      tag: 'pam-' + q.id, requireInteraction: true,
-      vibrate: [300, 100, 300, 100, 300]
+      icon: 'icon-192.png', tag: 'pam-' + q.id, requireInteraction: true
     });
   } else {
-    new Notification('🔔 PAM Nasiya - ' + items.length + ' ta eslatma', {
-      body: items.slice(0, 3).map(function(q) { return '• ' + q.ismi + ' ' + q.familyasi; }).join('\n') + (items.length > 3 ? '\n... va yana ' + (items.length - 3) : ''),
-      icon: 'icon-192.png', badge: 'icon-192.png',
-      tag: 'pam-batch', requireInteraction: true,
-      vibrate: [300, 100, 300, 100, 300, 100, 300]
+    new Notification('🔔 PAM Nasiya - ' + items.length, {
+      body: items.slice(0, 3).map(function(q) { return '• ' + q.ismi + ' ' + q.familyasi; }).join('\n'),
+      icon: 'icon-192.png', tag: 'pam-batch', requireInteraction: true
     });
   }
 }
 
 function requestNotifPermission() {
-  if (!('Notification' in window)) { showToast('Brauzer notification qo\'llab-quvvatlamaydi', 'error'); return; }
-  if (Notification.permission === 'granted') { showToast('Notification allaqachon yoqilgan!'); return; }
+  if (!('Notification' in window)) { showToast('Qo\'llab-quvvatlanmaydi', 'error'); return; }
+  if (Notification.permission === 'granted') { showToast('Allaqachon yoqilgan!'); return; }
   Notification.requestPermission().then(function(perm) {
-    if (perm === 'granted') { showToast('✅ Notification yoqildi!'); renderNotifBanner(); }
+    if (perm === 'granted') { showToast('✅ Yoqildi!'); renderNotifBanner(); }
   });
 }
 
@@ -1765,115 +2756,128 @@ function renderNotifBanner() {
   if (!('Notification' in window)) { banner.innerHTML = ''; return; }
   if (Notification.permission === 'granted') { banner.innerHTML = ''; return; }
   banner.innerHTML = '<div class="notif-banner">' +
-    '<div class="nb-icon"><svg class="ico ico-lg" viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg></div>' +
-    '<div class="nb-text"><h4>Eslatmalarni yoqing</h4><p>Ping ovozi bilan notification keladi</p></div>' +
+    '<div class="nb-icon">🔔</div>' +
+    '<div class="nb-text"><h4>Eslatmalarni yoqing</h4><p>Ping ovozi bilan notification</p></div>' +
     '<button class="nb-btn" onclick="requestNotifPermission()">Yoqish</button></div>';
 }
 
-/* ============================================================
-   PWA O'RNATISH — AVTOMATIK
-   ============================================================ */
+/* ============================================================ */
+/* PWA O'RNATISH — Bloom Education usulida (AVTOMATIK) */
+/* ============================================================ */
 window.addEventListener('beforeinstallprompt', function(e) {
   e.preventDefault();
   deferredPrompt = e;
-  document.getElementById('installBanner').style.display = 'flex';
   console.log('✅ PWA o\'rnatishga tayyor');
+  // 3 sekunddan keyin pastda chap burchakda tugma chiqadi
+  setTimeout(function() {
+    var btn = document.getElementById('pwaInstallBtn');
+    if (btn) btn.style.display = 'flex';
+  }, 3000);
 });
+
+async function installPWA() {
+  var btn = document.getElementById('pwaInstallBtn');
+  
+  if (!deferredPrompt) {
+    var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    var isAndroid = /Android/.test(navigator.userAgent);
+    var isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+    
+    if (isStandalone) {
+      showToast('✅ Ilova allaqachon o\'rnatilgan!');
+      return;
+    }
+    
+    if (isIOS) {
+      alert("📱 iPhone/iPad ga o'rnatish:\n\n1. Pastdagi 'Ulashish' (⬆️) tugmasini bosing\n2. 'Bosh ekranga qo'shish' ni tanlang\n3. 'Qo'shish' tugmasini bosing");
+    } else if (isAndroid) {
+      alert("📱 Android ga o'rnatish:\n\n1. Chrome menyusini oching (⋮)\n2. 'Ilova o'rnatish' yoki 'Bosh ekranga qo'shish' ni tanlang\n3. Tasdiqlang");
+    } else {
+      alert("💻 Kompyuterga o'rnatish:\n\nBrauzer manzil qatoridagi ⊕ belgisini bosing.\n\nYoki brauzer menyusidan 'Ilova o'rnatish' ni tanlang.");
+    }
+    return;
+  }
+  
+  // Avtomatik o'rnatish
+  deferredPrompt.prompt();
+  var choiceResult = await deferredPrompt.userChoice;
+  
+  if (choiceResult.outcome === 'accepted') {
+    showToast('🎉 Ilova o\'rnatildi!');
+    if (btn) btn.style.display = 'none';
+  } else {
+    showToast('O\'rnatish bekor qilindi', 'warning');
+  }
+  deferredPrompt = null;
+}
 
 window.addEventListener('appinstalled', function() {
   showToast('🎉 PAM Nasiya ilovasi o\'rnatildi!');
-  document.getElementById('installBanner').style.display = 'none';
+  var btn = document.getElementById('pwaInstallBtn');
+  if (btn) btn.style.display = 'none';
   deferredPrompt = null;
 });
 
-function installApp() {
-  var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-  var isAndroid = /Android/.test(navigator.userAgent);
-  var isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
-
-  if (isStandalone) {
-    showToast('✅ Ilova allaqachon o\'rnatilgan!');
-    return;
-  }
-
-  if (deferredPrompt) {
-    deferredPrompt.prompt();
-    deferredPrompt.userChoice.then(function(choice) {
-      if (choice.outcome === 'accepted') {
-        showToast('🎉 Ilova o\'rnatilmoqda!');
-        setTimeout(function() { showToast('📱 Bosh ekranni tekshiring'); }, 2000);
-      } else {
-        showToast('O\'rnatish bekor qilindi');
-      }
-      deferredPrompt = null;
-      document.getElementById('installBanner').style.display = 'none';
-    });
-    return;
-  }
-
-  if (isIOS) {
-    alert("📱 iPhone/iPad ga o'rnatish:\n\n" +
-      "1️⃣ Pastdagi 'Ulashish' (⬆️) tugmasini bosing\n" +
-      "2️⃣ 'Bosh ekranga qo'shish' ni tanlang\n" +
-      "3️⃣ 'Qo'shish' tugmasini bosing\n\n" +
-      "✅ Bosh ekranda PAM logotipi paydo bo'ladi!");
-    return;
-  }
-
-  if (isAndroid) {
-    alert("📱 Android ga o'rnatish:\n\n" +
-      "1️⃣ Chrome menyusini oching (⋮)\n" +
-      "2️⃣ 'Ilova o'rnatish' yoki 'Bosh ekranga qo'shish' ni tanlang\n" +
-      "3️⃣ Tasdiqlang\n\n" +
-      "✅ Bosh ekranda PAM logotipi paydo bo'ladi!");
-    return;
-  }
-
-  alert("💻 Kompyuterga o'rnatish:\n\nBrauzer manzil qatoridagi 'O'rnatish' (⊕) belgisini bosing.\n\nYoki brauzer menyusidan 'Ilova o'rnatish' ni tanlang.");
-}
-
-/* ============================================================
-   INIT
-   ============================================================ */
+/* ============================================================ */
+/* INIT */
+/* ============================================================ */
 async function init() {
   updatePingUI();
   renderNotifBanner();
   renderDashboard();
-  renderQarzdorlar();
-  renderTolovList();
+
+  var sanaEl = document.getElementById('ichkiSana');
+  if (sanaEl) sanaEl.value = new Date().toISOString().slice(0, 10);
 
   var data = await supabaseGetAll();
   if (data === null) {
-    showToast('Internet aloqasi yo\'q!', 'warning');
+    showToast('Internet yo\'q!', 'warning');
   } else {
     qarzdorlar = data;
-    renderDashboard();
     renderQarzdorlar();
     renderTolovList();
     if (qarzdorlar.length > 0) {
-      setTimeout(function() { showToast('✅ ' + qarzdorlar.length + ' ta qarzdor yuklandi'); }, 300);
+      setTimeout(function() { showToast('✅ ' + qarzdorlar.length + ' ta qarzdor'); }, 300);
     }
-    // Notification
     setTimeout(function() {
       var items = getReminderList();
       if (items.length > 0) sendNotification(items);
     }, 3000);
-    // Ping eslatma
-    setTimeout(function() { announcePingReminders(); }, 4500);
+    setTimeout(announcePingReminders, 4500);
   }
 
+  var rData = await supabaseGetRasxodlar();
+  taminotchilar = rData || [];
+  renderTaminotchilar();
+
+  var iData = await supabaseGetIchki();
+  ichkiRasxodlar = iData || [];
+  renderIchki();
+
+  var kData = await supabaseGetKassa();
+  kassaTarix = kData || [];
+  renderKassa();
+  renderDashboard();
+
   var isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
-  var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+  var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
   var isAndroid = /Android/.test(navigator.userAgent);
-  if (!isStandalone && (isIOS || isAndroid)) {
+  if (!isStandalone) {
     document.getElementById('installBanner').style.display = 'flex';
-    document.getElementById('installTitle').textContent = isIOS ? 'iPhone/iPad ga o\'rnatish' : 'Android ga o\'rnatish';
-    document.getElementById('installDesc').textContent = isIOS ? 'Share → Bosh ekranga qo\'shish' : 'Yuklab olish uchun bosing';
+    if (isIOS) {
+      document.getElementById('installTitle').textContent = 'iPhone/iPad ga o\'rnatish';
+      document.getElementById('installDesc').textContent = 'Share → Bosh ekranga qo\'shish';
+    } else if (isAndroid) {
+      document.getElementById('installTitle').textContent = 'Android ga o\'rnatish';
+      document.getElementById('installDesc').textContent = 'Yuklab olish uchun bosing';
+    } else {
+      document.getElementById('installTitle').textContent = 'Kompyuterga o\'rnatish';
+      document.getElementById('installDesc').textContent = 'Ish stoliga ikonka qo\'yish';
+    }
   }
 
   document.getElementById('bellBtn').onclick = showReminderModal;
 
-  // Har 5 daqiqada tekshirish
   setInterval(function() {
     var items = getReminderList();
     if (items.length > 0) sendNotification(items);

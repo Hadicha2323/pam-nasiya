@@ -1,4 +1,4 @@
-var CACHE_NAME = 'pam-nasiya-v3';
+var CACHE_NAME = 'pam-nasiya-v8';
 var urlsToCache = [
   './', './index.html', './manifest.json',
   './icon-192.png', './icon-512.png',
