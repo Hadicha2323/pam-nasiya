@@ -31,6 +31,8 @@
     --info: #3b82f6;
     --purple: #8b5cf6;
     --purple-glow: rgba(139,92,246,0.5);
+    --orange: #f97316;
+    --orange-glow: rgba(249,115,22,0.5);
     --bg: #06080f;
     --card: rgba(15, 20, 35, 0.78);
     --text: #ffffff;
@@ -196,8 +198,6 @@
     background: linear-gradient(180deg, var(--red), var(--red-dark));
     box-shadow: 0 0 8px var(--red-glow);
   }
-  .section-title.purple { color: #8b5cf6; }
-  .section-title.purple::before { background: linear-gradient(180deg, #8b5cf6, #6d28d9); box-shadow: 0 0 8px var(--purple-glow); }
 
   .welcome-box {
     background: linear-gradient(135deg, rgba(239,45,45,0.18) 0%, rgba(15,20,35,0.9) 60%), linear-gradient(135deg, #1a1a1a 0%, #0f1423 100%);
@@ -226,26 +226,21 @@
     border: 1px solid var(--border);
     position: relative; overflow: hidden;
     animation: cardEnter 0.5s cubic-bezier(0.16,1,0.3,1) backwards;
-    transition: transform 0.2s;
   }
-  .stat-card:active { transform: scale(0.97); }
   .stat-card::after { content: ''; position: absolute; top: 0; right: 0; width: 70px; height: 70px; border-radius: 50%; opacity: 0.2; filter: blur(22px); }
   .stat-card.total::after { background: var(--red); }
   .stat-card.overdue::after { background: var(--danger); }
-  .stat-card.soon::after { background: var(--warning); }
   .stat-card.money::after { background: var(--success); }
   .stat-card.kassa::after { background: var(--info); }
   .stat-card .stat-icon { margin-bottom: 8px; display: flex; width: 30px; height: 30px; align-items: center; justify-content: center; border-radius: 8px; }
   .stat-card.total .stat-icon { background: rgba(239,45,45,0.15); color: var(--red); }
   .stat-card.overdue .stat-icon { background: rgba(239,68,68,0.15); color: var(--danger); }
-  .stat-card.soon .stat-icon { background: rgba(245,158,11,0.15); color: var(--warning); }
   .stat-card.money .stat-icon { background: rgba(16,185,129,0.15); color: var(--success); }
   .stat-card.kassa .stat-icon { background: rgba(59,130,246,0.15); color: var(--info); }
   .stat-card .stat-num { font-size: 26px; font-weight: 800; letter-spacing: -1px; line-height: 1; margin-bottom: 4px; }
   .stat-card .stat-label { font-size: 10px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
   .stat-card.total .stat-num { color: var(--red); }
   .stat-card.overdue .stat-num { color: var(--danger); }
-  .stat-card.soon .stat-num { color: var(--warning); }
   .stat-card.money .stat-num { color: var(--success); font-size: 16px; }
   .stat-card.kassa .stat-num { color: var(--info); font-size: 16px; }
 
@@ -298,15 +293,13 @@
     border-radius: 12px; color: white;
     font-size: 15px; font-weight: 500;
     transition: all 0.25s; outline: none;
-    font-family: inherit; -webkit-appearance: none; appearance: none;
+    font-family: inherit;
   }
   .form-control::placeholder { color: #4a5479; font-weight: 400; }
   .form-control:focus { border-color: var(--red); background: rgba(239,45,45,0.05); box-shadow: 0 0 0 4px rgba(239,45,45,0.1); }
-  .form-control.error { border-color: var(--danger); box-shadow: 0 0 0 4px rgba(239,68,68,0.15); animation: shake 0.4s; }
-  .form-control[readonly] { background: rgba(139,92,246,0.08); border-color: rgba(139,92,246,0.4); color: #c4b5fd; cursor: not-allowed; }
+  .form-control.error { border-color: var(--danger); animation: shake 0.4s; }
   @keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
   input[type="date"].form-control { color-scheme: dark; }
-  select.form-control { cursor: pointer; }
 
   .input-hint { font-size: 10px; color: var(--text-muted); margin-top: 6px; font-weight: 500; min-height: 14px; }
   .input-hint b { color: var(--red); font-weight: 700; }
@@ -317,7 +310,6 @@
     cursor: pointer; transition: all 0.25s;
     color: white; font-family: inherit;
     display: flex; align-items: center; justify-content: center; gap: 8px;
-    -webkit-user-select: none; user-select: none;
   }
   .btn:active { transform: scale(0.97); }
   .btn-primary { background: linear-gradient(135deg, #ef2d2d, #c41010); box-shadow: 0 8px 20px rgba(239,45,45,0.5); }
@@ -325,7 +317,7 @@
   .btn-danger { background: linear-gradient(135deg, #ef4444, #dc2626); box-shadow: 0 8px 20px rgba(239,68,68,0.4); }
   .btn-info { background: linear-gradient(135deg, #3b82f6, #1d4ed8); box-shadow: 0 8px 20px rgba(59,130,246,0.4); }
   .btn-warning { background: linear-gradient(135deg, #f59e0b, #d97706); box-shadow: 0 8px 20px rgba(245,158,11,0.4); }
-  .btn-purple { background: linear-gradient(135deg, #8b5cf6, #6d28d9); box-shadow: 0 8px 20px rgba(139,92,246,0.5); }
+  .btn-orange { background: linear-gradient(135deg, #f97316, #ea580c); box-shadow: 0 8px 20px rgba(249,115,22,0.5); }
   .btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
   .qarzdor-card {
@@ -337,33 +329,16 @@
     border-left: 4px solid var(--red);
     position: relative;
     animation: cardEnter 0.4s cubic-bezier(0.16,1,0.3,1) backwards;
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition: transform 0.2s;
   }
-  .qarzdor-card:active { transform: scale(0.98); }
-  .qarzdor-card.overdue {
-    border-left-color: var(--danger);
-    background: linear-gradient(145deg, rgba(239,68,68,0.15), var(--card));
-    animation: cardEnter 0.4s cubic-bezier(0.16,1,0.3,1) backwards, urgentPulse 2s ease-in-out infinite;
-  }
-  @keyframes urgentPulse {
-    0%,100% { box-shadow: 0 8px 32px rgba(0,0,0,0.5); }
-    50% { box-shadow: 0 8px 32px rgba(239,68,68,0.5); }
-  }
-  .qarzdor-card.today {
-    border-left-color: #ef2d2d;
-    background: linear-gradient(145deg, rgba(239,45,45,0.18), var(--card));
-    animation: cardEnter 0.4s cubic-bezier(0.16,1,0.3,1) backwards, todayPulse 1.5s ease-in-out infinite;
-  }
-  @keyframes todayPulse {
-    0%,100% { box-shadow: 0 8px 32px rgba(0,0,0,0.5); }
-    50% { box-shadow: 0 8px 35px rgba(239,45,45,0.7); }
-  }
+  .qarzdor-card.overdue { border-left-color: var(--danger); background: linear-gradient(145deg, rgba(239,68,68,0.15), var(--card)); }
+  .qarzdor-card.today { border-left-color: #ef2d2d; background: linear-gradient(145deg, rgba(239,45,45,0.18), var(--card)); }
   .qarzdor-card.soon { border-left-color: var(--warning); }
   .qarzdor-card.paid { border-left-color: var(--success); opacity: 0.75; }
   .qarzdor-card.ok { border-left-color: var(--red); }
 
   .q-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; gap: 10px; }
-  .q-name { font-size: 15px; font-weight: 800; margin-bottom: 3px; letter-spacing: -0.2px; }
+  .q-name { font-size: 15px; font-weight: 800; margin-bottom: 3px; }
   .q-phone { font-size: 11px; color: var(--text-muted); display: flex; align-items: center; gap: 4px; }
   .q-phone a { color: var(--red); text-decoration: none; font-weight: 700; }
   .q-info { font-size: 12px; color: var(--text-muted); margin-bottom: 6px; display: flex; align-items: center; gap: 5px; }
@@ -373,19 +348,19 @@
     padding: 5px 10px; border-radius: 20px;
     font-size: 10px; font-weight: 800;
     white-space: nowrap; text-transform: uppercase;
-    letter-spacing: 0.4px;
     display: inline-flex; align-items: center; gap: 4px;
   }
-  .q-badge.danger { background: rgba(239,68,68,0.3); color: #fca5a5; border: 1px solid rgba(239,68,68,0.6); animation: badgePulse 1.5s infinite; }
-  .q-badge.today { background: rgba(239,45,45,0.3); color: #fff; border: 1px solid rgba(239,45,45,0.7); animation: badgePulse 1s infinite; }
+  .q-badge.danger { background: rgba(239,68,68,0.3); color: #fca5a5; border: 1px solid rgba(239,68,68,0.6); }
+  .q-badge.today { background: rgba(239,45,45,0.3); color: #fff; border: 1px solid rgba(239,45,45,0.7); }
   .q-badge.warning { background: rgba(245,158,11,0.2); color: #fcd34d; border: 1px solid rgba(245,158,11,0.4); }
   .q-badge.success { background: rgba(16,185,129,0.2); color: #6ee7b7; border: 1px solid rgba(16,185,129,0.4); }
   .q-badge.info { background: rgba(239,45,45,0.15); color: #ff8a8a; border: 1px solid var(--border-red); }
   .q-badge.purple { background: rgba(139,92,246,0.2); color: #c4b5fd; border: 1px solid rgba(139,92,246,0.4); }
+  .q-badge.orange { background: rgba(249,115,22,0.2); color: #fdba74; border: 1px solid rgba(249,115,22,0.4); }
 
   .q-money { display: flex; justify-content: space-between; padding: 10px 0; margin: 8px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); font-size: 12px; }
   .q-money > div { text-align: center; flex: 1; }
-  .q-money .m-label { color: var(--text-muted); font-size: 10px; margin-bottom: 3px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700; }
+  .q-money .m-label { color: var(--text-muted); font-size: 10px; margin-bottom: 3px; text-transform: uppercase; font-weight: 700; }
   .q-money .m-value { font-weight: 800; font-size: 12px; }
   .q-money .m-value.green { color: var(--success); }
   .q-money .m-value.red { color: var(--danger); }
@@ -398,13 +373,13 @@
     cursor: pointer; transition: all 0.2s;
     display: flex; align-items: center; justify-content: center; gap: 4px;
     color: white; font-family: inherit;
-    -webkit-user-select: none; user-select: none;
   }
   .qa-btn:active { transform: scale(0.92); }
   .qa-btn.call { background: rgba(239,45,45,0.2); color: #ff8a8a; border: 1px solid var(--border-red); }
   .qa-btn.sms { background: rgba(245,158,11,0.2); color: #fcd34d; border: 1px solid rgba(245,158,11,0.3); }
   .qa-btn.pay { background: linear-gradient(135deg, #10b981, #059669); }
   .qa-btn.renew { background: linear-gradient(135deg, #8b5cf6, #6d28d9); box-shadow: 0 4px 12px var(--purple-glow); }
+  .qa-btn.addmore { background: linear-gradient(135deg, #f97316, #ea580c); box-shadow: 0 4px 12px var(--orange-glow); }
   .qa-btn.del { background: rgba(239,68,68,0.15); color: #fca5a5; border: 1px solid rgba(239,68,68,0.3); padding: 10px; }
 
   .search-box { position: relative; margin-bottom: 14px; }
@@ -421,19 +396,13 @@
     color: var(--text-muted);
     cursor: pointer; white-space: nowrap;
     transition: all 0.2s; font-family: inherit;
-    -webkit-user-select: none; user-select: none;
   }
   .chip.active { background: linear-gradient(135deg, var(--red), var(--red-dark)); color: white; border-color: transparent; box-shadow: 0 4px 12px var(--red-glow); }
-  .chip.active.blue { background: linear-gradient(135deg, #3b82f6, #1d4ed8); box-shadow: 0 4px 12px rgba(59,130,246,0.5); }
-  .chip.active.orange { background: linear-gradient(135deg, #f59e0b, #d97706); box-shadow: 0 4px 12px rgba(245,158,11,0.5); }
-  .chip.active.purple { background: linear-gradient(135deg, #8b5cf6, #6d28d9); box-shadow: 0 4px 12px rgba(139,92,246,0.5); }
-  .chip.active.green { background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 4px 12px rgba(16,185,129,0.5); }
+  .chip.active.green { background: linear-gradient(135deg, #10b981, #059669); }
+  .chip.active.purple { background: linear-gradient(135deg, #8b5cf6, #6d28d9); }
   .chip:active { transform: scale(0.95); }
 
-  .empty-state { text-align: center; padding: 50px 20px; color: var(--text-muted); animation: cardEnter 0.5s; }
-  .empty-state .empty-icon { margin-bottom: 14px; opacity: 0.4; animation: floatIcon 3s ease-in-out infinite; display: flex; justify-content: center; }
-  .empty-state .empty-icon svg { width: 64px; height: 64px; }
-  @keyframes floatIcon { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+  .empty-state { text-align: center; padding: 50px 20px; color: var(--text-muted); }
   .empty-state h3 { font-size: 15px; margin-bottom: 6px; color: #b8c3e0; }
   .empty-state p { font-size: 12px; }
 
@@ -466,6 +435,7 @@
   .modal-desc { font-size: 12px; color: var(--text-muted); margin-bottom: 12px; line-height: 1.6; }
 
   .info-box { padding: 14px; border-radius: 12px; background: rgba(0,0,0,0.35); border: 1px solid var(--border); margin-bottom: 14px; }
+  .info-box.orange { background: rgba(249,115,22,0.1); border-color: rgba(249,115,22,0.3); }
   .info-box .info-row { display: flex; justify-content: space-between; font-size: 12px; padding: 7px 0; border-bottom: 1px dashed var(--border); gap: 10px; }
   .info-box .info-row:last-child { border-bottom: none; }
   .info-box .info-row .lbl { color: var(--text-muted); }
@@ -480,18 +450,14 @@
     background: linear-gradient(135deg, #10b981, #059669);
     color: white; padding: 13px 20px;
     border-radius: 14px; font-size: 13px; font-weight: 700;
-    box-shadow: 0 12px 30px rgba(16,185,129,0.5);
     z-index: 3000; opacity: 0;
     transition: all 0.35s cubic-bezier(0.16,1,0.3,1);
-    pointer-events: none;
-    max-width: 90vw; text-align: center;
-    display: flex; align-items: center; gap: 8px;
+    pointer-events: none; max-width: 90vw; text-align: center;
   }
   .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-  .toast.error { background: linear-gradient(135deg, #ef4444, #dc2626); box-shadow: 0 12px 30px rgba(239,68,68,0.5); }
-  .toast.warning { background: linear-gradient(135deg, #f59e0b, #d97706); box-shadow: 0 12px 30px rgba(245,158,11,0.5); }
-  .toast.info { background: linear-gradient(135deg, #3b82f6, #1d4ed8); box-shadow: 0 12px 30px rgba(59,130,246,0.5); }
-  .toast.purple { background: linear-gradient(135deg, #8b5cf6, #6d28d9); box-shadow: 0 12px 30px rgba(139,92,246,0.5); }
+  .toast.error { background: linear-gradient(135deg, #ef4444, #dc2626); }
+  .toast.warning { background: linear-gradient(135deg, #f59e0b, #d97706); }
+  .toast.orange { background: linear-gradient(135deg, #f97316, #ea580c); }
 
   .tolov-item {
     display: flex; align-items: center; gap: 12px;
@@ -501,30 +467,27 @@
     -webkit-backdrop-filter: blur(20px) saturate(160%);
     border: 1px solid var(--border);
     margin-bottom: 10px;
-    animation: cardEnter 0.4s cubic-bezier(0.16,1,0.3,1) backwards;
   }
   .tolov-item .avatar {
     width: 44px; height: 44px; border-radius: 12px;
     background: linear-gradient(135deg, var(--red), var(--red-dark));
     display: flex; align-items: center; justify-content: center;
     font-size: 16px; font-weight: 800; flex-shrink: 0;
-    color: white; box-shadow: 0 4px 12px var(--red-glow);
+    color: white;
   }
   .tolov-item .info { flex: 1; min-width: 0; }
-  .tolov-item .info h4 { font-size: 14px; font-weight: 800; margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .tolov-item .info p { font-size: 11px; color: var(--text-muted); margin-bottom: 2px; }
+  .tolov-item .info h4 { font-size: 14px; font-weight: 800; margin-bottom: 3px; }
+  .tolov-item .info p { font-size: 11px; color: var(--text-muted); }
   .tolov-item .info p b { color: #ef4444; }
   .tolov-item .pay-btn {
     padding: 9px 14px; border-radius: 10px;
     background: linear-gradient(135deg, #10b981, #059669);
     border: none; color: white;
     font-size: 12px; font-weight: 800;
-    cursor: pointer; transition: all 0.2s;
-    font-family: inherit; white-space: nowrap;
-    display: flex; align-items: center; gap: 5px;
+    cursor: pointer; font-family: inherit;
   }
-  .tolov-item .pay-btn:active { transform: scale(0.92); }
 
+  /* TA'MINOTCHI CARD - YANGILANGAN */
   .taminotchi-card {
     background: var(--card);
     backdrop-filter: blur(20px) saturate(160%);
@@ -534,7 +497,6 @@
     border-left: 4px solid var(--warning);
     position: relative;
     animation: cardEnter 0.4s cubic-bezier(0.16,1,0.3,1) backwards;
-    transition: transform 0.2s, box-shadow 0.2s;
   }
   .taminotchi-card.qarzli {
     border-left-color: var(--danger);
@@ -544,29 +506,56 @@
     border-left-color: var(--success);
     opacity: 0.85;
   }
-  .taminotchi-card:active { transform: scale(0.98); }
 
-  .tc-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; gap: 10px; }
+  .tc-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; gap: 10px; }
   .tc-name { font-size: 15px; font-weight: 800; margin-bottom: 4px; }
-  .tc-nima { font-size: 11px; color: var(--text-muted); display: flex; align-items: center; gap: 5px; }
+  .tc-nima { font-size: 11px; color: var(--text-muted); line-height: 1.5; }
   .tc-badge {
     padding: 5px 10px; border-radius: 20px;
     font-size: 10px; font-weight: 800;
     white-space: nowrap; text-transform: uppercase;
-    letter-spacing: 0.4px;
     display: inline-flex; align-items: center; gap: 4px;
   }
-  .tc-badge.qarzli { background: rgba(239,68,68,0.3); color: #fca5a5; border: 1px solid rgba(239,68,68,0.6); animation: badgePulse 1.5s infinite; }
+  .tc-badge.qarzli { background: rgba(239,68,68,0.3); color: #fca5a5; border: 1px solid rgba(239,68,68,0.6); }
   .tc-badge.tolangan { background: rgba(16,185,129,0.2); color: #6ee7b7; border: 1px solid rgba(16,185,129,0.4); }
 
-  .tc-money { display: flex; justify-content: space-between; padding: 10px 0; margin: 8px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); font-size: 12px; }
+  /* JAMI QARZ - KATTA */
+  .tc-total-box {
+    background: linear-gradient(135deg, rgba(239,68,68,0.2), rgba(239,68,68,0.05));
+    border: 1px solid rgba(239,68,68,0.4);
+    border-radius: 12px; padding: 14px;
+    text-align: center; margin: 10px 0;
+    position: relative; overflow: hidden;
+  }
+  .tc-total-box.paid {
+    background: linear-gradient(135deg, rgba(16,185,129,0.2), rgba(16,185,129,0.05));
+    border-color: rgba(16,185,129,0.4);
+  }
+  .tc-total-box .tc-label {
+    font-size: 10px; color: var(--text-muted); font-weight: 700;
+    text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px;
+  }
+  .tc-total-box .tc-amount {
+    font-size: 22px; font-weight: 900; letter-spacing: -0.5px;
+    color: #fca5a5;
+    text-shadow: 0 0 20px rgba(239,68,68,0.5);
+  }
+  .tc-total-box.paid .tc-amount {
+    color: #6ee7b7;
+    text-shadow: 0 0 20px rgba(16,185,129,0.5);
+  }
+  .tc-total-box .tc-sub {
+    font-size: 10px; color: var(--text-muted); margin-top: 6px;
+  }
+
+  .tc-money { display: flex; justify-content: space-between; padding: 8px 0; font-size: 11px; }
   .tc-money > div { text-align: center; flex: 1; }
-  .tc-money .m-label { color: var(--text-muted); font-size: 10px; margin-bottom: 3px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700; }
-  .tc-money .m-value { font-weight: 800; font-size: 13px; }
+  .tc-money .m-label { color: var(--text-muted); font-size: 9px; margin-bottom: 3px; text-transform: uppercase; font-weight: 700; }
+  .tc-money .m-value { font-weight: 800; font-size: 12px; }
   .tc-money .m-value.green { color: var(--success); }
   .tc-money .m-value.red { color: var(--danger); }
 
-  .tc-actions { display: grid; grid-template-columns: 1fr 1fr 44px; gap: 8px; margin-top: 10px; }
+  .tc-actions { display: grid; grid-template-columns: 1fr 1fr 1fr 44px; gap: 8px; margin-top: 10px; }
   .tc-btn {
     padding: 10px 6px; border-radius: 10px;
     border: none; font-size: 11px; font-weight: 800;
@@ -576,134 +565,79 @@
   }
   .tc-btn:active { transform: scale(0.92); }
   .tc-btn.pay { background: linear-gradient(135deg, #10b981, #059669); }
+  .tc-btn.addmore { background: linear-gradient(135deg, #f97316, #ea580c); }
   .tc-btn.detail { background: rgba(59,130,246,0.2); color: #93c5fd; border: 1px solid rgba(59,130,246,0.4); }
   .tc-btn.del { background: rgba(239,68,68,0.15); color: #fca5a5; border: 1px solid rgba(239,68,68,0.3); padding: 10px; }
 
-  .ichki-item {
-    display: flex; align-items: center; gap: 12px;
-    padding: 14px; border-radius: 14px;
-    background: var(--card);
-    backdrop-filter: blur(20px) saturate(160%);
-    -webkit-backdrop-filter: blur(20px) saturate(160%);
-    border: 1px solid var(--border);
-    border-left: 4px solid var(--info);
-    margin-bottom: 10px;
-    animation: cardEnter 0.4s cubic-bezier(0.16,1,0.3,1) backwards;
+  /* TARIX ITEM */
+  .tarix-item {
+    padding: 14px; margin-bottom: 10px;
+    background: rgba(0,0,0,0.35);
+    border-radius: 12px;
+    border-left: 4px solid #f97316;
+    animation: cardEnter 0.3s backwards;
   }
-  .ichki-item .i-icon {
-    width: 44px; height: 44px; border-radius: 12px;
-    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 20px; flex-shrink: 0; color: white;
-    box-shadow: 0 4px 12px rgba(59,130,246,0.4);
+  .tarix-item.tolov {
+    border-left-color: #10b981;
+    background: rgba(16,185,129,0.08);
   }
-  .ichki-item .i-info { flex: 1; min-width: 0; }
-  .ichki-item .i-info h4 { font-size: 14px; font-weight: 800; margin-bottom: 3px; }
-  .ichki-item .i-info p { font-size: 11px; color: var(--text-muted); }
-  .ichki-item .i-summa { font-size: 15px; font-weight: 800; color: #93c5fd; white-space: nowrap; }
-  .ichki-item .i-del {
-    padding: 8px; border-radius: 8px;
-    background: rgba(239,68,68,0.15);
-    border: 1px solid rgba(239,68,68,0.3);
-    color: #fca5a5; cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    transition: all 0.2s;
+  .tarix-item .ti-header {
+    display: flex; justify-content: space-between;
+    align-items: center; margin-bottom: 8px;
   }
-  .ichki-item .i-del:active { transform: scale(0.9); }
+  .tarix-item .ti-date {
+    font-size: 11px; color: var(--text-muted); font-weight: 700;
+    display: flex; align-items: center; gap: 5px;
+  }
+  .tarix-item .ti-badge {
+    font-size: 10px; padding: 4px 10px; border-radius: 12px;
+    font-weight: 800; text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+  .tarix-item .ti-badge.qarz {
+    background: rgba(249,115,22,0.2); color: #fdba74;
+    border: 1px solid rgba(249,115,22,0.4);
+  }
+  .tarix-item .ti-badge.tolov {
+    background: rgba(16,185,129,0.2); color: #6ee7b7;
+    border: 1px solid rgba(16,185,129,0.4);
+  }
+  .tarix-item .ti-product {
+    font-size: 13px; font-weight: 800;
+    color: #fff; margin-bottom: 6px;
+  }
+  .tarix-item .ti-money {
+    font-size: 16px; font-weight: 900;
+    color: #fdba74; letter-spacing: -0.3px;
+  }
+  .tarix-item.tolov .ti-money { color: #6ee7b7; }
+  .tarix-item .ti-note {
+    font-size: 11px; color: var(--text-muted);
+    margin-top: 6px; font-style: italic;
+  }
 
-  .kassa-item {
-    display: flex; align-items: center; gap: 12px;
-    padding: 12px 14px; border-radius: 12px;
-    background: var(--card);
-    backdrop-filter: blur(20px) saturate(160%);
-    -webkit-backdrop-filter: blur(20px) saturate(160%);
-    border: 1px solid var(--border);
-    margin-bottom: 8px;
-    animation: cardEnter 0.4s cubic-bezier(0.16,1,0.3,1) backwards;
+  /* UMUMIY */
+  .overall-jami-box {
+    background: linear-gradient(135deg, rgba(239,68,68,0.25), rgba(139,92,246,0.15));
+    border: 1px solid rgba(239,68,68,0.5);
+    border-radius: 16px; padding: 20px;
+    text-align: center; margin-bottom: 16px;
+    position: relative; overflow: hidden;
   }
-  .kassa-item.kirim { border-left: 3px solid var(--success); }
-  .kassa-item.chiqim { border-left: 3px solid var(--danger); }
-  .kassa-item .k-icon {
-    width: 36px; height: 36px; border-radius: 10px;
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0; font-size: 16px;
+  .overall-jami-box .oj-label {
+    font-size: 11px; color: #fca5a5; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px;
   }
-  .kassa-item.kirim .k-icon { background: rgba(16,185,129,0.2); color: #10b981; }
-  .kassa-item.chiqim .k-icon { background: rgba(239,68,68,0.2); color: #ef4444; }
-  .kassa-item .k-info { flex: 1; min-width: 0; }
-  .kassa-item .k-info h4 { font-size: 13px; font-weight: 800; margin-bottom: 2px; }
-  .kassa-item .k-info p { font-size: 11px; color: var(--text-muted); }
-  .kassa-item .k-summa { font-size: 14px; font-weight: 800; white-space: nowrap; }
-  .kassa-item.kirim .k-summa { color: #6ee7b7; }
-  .kassa-item.chiqim .k-summa { color: #fca5a5; }
-
-  .progress-bar { height: 5px; background: rgba(0,0,0,0.4); border-radius: 3px; overflow: hidden; margin: 8px 0; }
-  .progress-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, #10b981, #00d4ff); transition: width 0.6s cubic-bezier(0.16,1,0.3,1); box-shadow: 0 0 8px rgba(16,185,129,0.6); }
-  .progress-fill.warning { background: linear-gradient(90deg, #f59e0b, #ef2d2d); box-shadow: 0 0 8px rgba(245,158,11,0.6); }
-
-  .alert-banner {
-    border-radius: 14px; padding: 12px 14px;
-    display: flex; align-items: center; gap: 10px;
-    margin-bottom: 14px; animation: cardEnter 0.5s;
+  .overall-jami-box .oj-amount {
+    font-size: 30px; font-weight: 900; letter-spacing: -1px;
+    color: #fff;
+    text-shadow: 0 0 25px rgba(239,68,68,0.6);
   }
-  .alert-banner.danger { background: linear-gradient(135deg, rgba(239,68,68,0.25), rgba(239,68,68,0.05)); border: 1px solid rgba(239,68,68,0.5); }
-  .alert-banner.today { background: linear-gradient(135deg, rgba(239,45,45,0.3), rgba(239,45,45,0.08)); border: 1px solid rgba(239,45,45,0.6); animation: cardEnter 0.5s, urgentPulse 2s infinite; }
-  .alert-banner .text { font-size: 12px; font-weight: 600; color: #fca5a5; flex: 1; }
-  .alert-banner .text b { color: #fff; }
-
-  .install-banner {
-    background: linear-gradient(135deg, rgba(239,45,45,0.25), rgba(15,20,35,0.9));
-    border: 1px solid var(--border-red);
-    border-radius: 14px; padding: 14px; margin-bottom: 14px;
-    display: flex; align-items: center; gap: 12px;
-    animation: cardEnter 0.5s;
-  }
-  .install-banner .ib-icon {
-    width: 40px; height: 40px; border-radius: 10px;
-    background: linear-gradient(135deg, var(--red), var(--red-dark));
-    display: flex; align-items: center; justify-content: center;
-    color: white; flex-shrink: 0;
-    box-shadow: 0 4px 12px var(--red-glow);
-  }
-  .install-banner .ib-text { flex: 1; }
-  .install-banner .ib-text h4 { font-size: 13px; font-weight: 800; margin-bottom: 3px; }
-  .install-banner .ib-text p { font-size: 11px; color: var(--text-muted); }
-  .install-banner .ib-btn {
-    padding: 10px 16px; border-radius: 10px;
-    background: linear-gradient(135deg, var(--red), var(--red-dark)); color: white;
-    border: none; font-size: 13px; font-weight: 800;
-    cursor: pointer; white-space: nowrap; font-family: inherit;
-    box-shadow: 0 4px 12px var(--red-glow);
-  }
-  .install-banner .ib-btn:active { transform: scale(0.95); }
-
-  .notif-banner {
-    background: linear-gradient(135deg, rgba(245,158,11,0.2), rgba(15,20,35,0.9));
-    border: 1px solid rgba(245,158,11,0.4);
-    border-radius: 14px; padding: 14px; margin-bottom: 14px;
-    display: flex; align-items: center; gap: 12px;
-    animation: cardEnter 0.5s;
-  }
-  .notif-banner .nb-icon {
-    width: 40px; height: 40px; border-radius: 10px;
-    background: linear-gradient(135deg, #f59e0b, #d97706);
-    display: flex; align-items: center; justify-content: center;
-    color: white; flex-shrink: 0;
-    box-shadow: 0 4px 12px rgba(245,158,11,0.5);
-    font-size: 20px;
-  }
-  .notif-banner .nb-text { flex: 1; }
-  .notif-banner .nb-text h4 { font-size: 13px; font-weight: 800; margin-bottom: 3px; }
-  .notif-banner .nb-text p { font-size: 11px; color: var(--text-muted); }
-  .notif-banner .nb-btn {
-    padding: 8px 14px; border-radius: 10px;
-    background: #f59e0b; color: white;
-    border: none; font-size: 12px; font-weight: 800;
-    cursor: pointer; white-space: nowrap; font-family: inherit;
+  .overall-jami-box .oj-sub {
+    font-size: 11px; color: var(--text-muted); margin-top: 8px;
   }
 
   ::-webkit-scrollbar { width: 6px; height: 6px; }
-  ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: rgba(239,45,45,0.4); border-radius: 3px; }
 
   .fab {
@@ -718,11 +652,7 @@
     box-shadow: 0 10px 25px var(--red-glow);
     z-index: 500;
     display: flex; align-items: center; justify-content: center;
-    transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
-    animation: fabEnter 0.5s cubic-bezier(0.34,1.56,0.64,1);
   }
-  @keyframes fabEnter { from { transform: scale(0) rotate(-180deg); } to { transform: scale(1) rotate(0); } }
-  .fab:active { transform: scale(0.88) rotate(90deg); }
   .fab svg { width: 26px; height: 26px; stroke: white; stroke-width: 2.5; }
 
   .ping-toggle {
@@ -736,29 +666,18 @@
     cursor: pointer; transition: all 0.2s;
     margin-bottom: 10px;
   }
-  .ping-toggle.on {
-    background: rgba(16,185,129,0.15);
-    border-color: rgba(16,185,129,0.4);
-    color: #6ee7b7;
-  }
+  .ping-toggle.on { background: rgba(16,185,129,0.15); border-color: rgba(16,185,129,0.4); color: #6ee7b7; }
   .ping-toggle .ping-icon {
-    width: 36px; height: 36px;
-    border-radius: 10px;
+    width: 36px; height: 36px; border-radius: 10px;
     background: linear-gradient(135deg, rgba(239,45,45,0.2), rgba(239,45,45,0.05));
     border: 1px solid var(--border-red);
     display: flex; align-items: center; justify-content: center;
-    color: var(--red);
-    flex-shrink: 0;
+    color: var(--red); flex-shrink: 0;
   }
-  .ping-toggle.on .ping-icon {
-    background: linear-gradient(135deg, #10b981, #059669);
-    color: white;
-  }
+  .ping-toggle.on .ping-icon { background: linear-gradient(135deg, #10b981, #059669); color: white; }
   .ping-toggle .switch {
-    margin-left: auto;
-    width: 40px; height: 22px;
-    background: rgba(255,255,255,0.1);
-    border-radius: 11px;
+    margin-left: auto; width: 40px; height: 22px;
+    background: rgba(255,255,255,0.1); border-radius: 11px;
     position: relative; transition: all 0.3s;
   }
   .ping-toggle.on .switch { background: #10b981; }
@@ -766,155 +685,156 @@
     content: ''; position: absolute; top: 2px; left: 2px;
     width: 18px; height: 18px; border-radius: 50%;
     background: white; transition: all 0.3s;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
   }
   .ping-toggle.on .switch::after { left: 20px; }
 
   .segment {
-    display: flex;
-    background: rgba(0,0,0,0.3);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 4px;
-    margin-bottom: 14px;
-    gap: 4px;
+    display: flex; background: rgba(0,0,0,0.3);
+    border: 1px solid var(--border); border-radius: 12px;
+    padding: 4px; margin-bottom: 14px; gap: 4px;
   }
   .segment button {
     flex: 1; padding: 10px 6px;
     border: none; border-radius: 9px;
-    background: transparent;
-    color: var(--text-muted);
+    background: transparent; color: var(--text-muted);
     font-size: 12px; font-weight: 800;
     cursor: pointer; transition: all 0.25s;
     font-family: inherit;
     display: flex; align-items: center; justify-content: center; gap: 5px;
   }
-  .segment button.active { background: linear-gradient(135deg, #ef2d2d, #c41010); color: white; box-shadow: 0 4px 12px rgba(239,45,45,0.4); }
+  .segment button.active { background: linear-gradient(135deg, #ef2d2d, #c41010); color: white; }
 
   .curr-toggle {
-    display: inline-flex;
-    background: rgba(0,0,0,0.3);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 3px;
-    gap: 3px;
+    display: inline-flex; background: rgba(0,0,0,0.3);
+    border: 1px solid var(--border); border-radius: 10px;
+    padding: 3px; gap: 3px;
   }
   .curr-toggle button {
-    padding: 6px 12px;
-    border: none; border-radius: 7px;
-    background: transparent;
-    color: var(--text-muted);
-    font-size: 11px; font-weight: 800;
-    cursor: pointer; font-family: inherit;
+    padding: 6px 12px; border: none; border-radius: 7px;
+    background: transparent; color: var(--text-muted);
+    font-size: 11px; font-weight: 800; cursor: pointer;
+    font-family: inherit;
   }
   .curr-toggle button.active { background: #3b82f6; color: white; }
 
   #pwaInstallBtn {
-    position: fixed;
-    bottom: 20px;
-    left: 20px;
+    position: fixed; bottom: 20px; left: 20px;
     background: linear-gradient(135deg, var(--red), var(--red-dark));
-    color: white;
-    padding: 14px 22px;
-    border-radius: 50px;
-    border: none;
-    font-weight: 800;
-    font-size: 14px;
+    color: white; padding: 14px 22px;
+    border-radius: 50px; border: none;
+    font-weight: 800; font-size: 14px;
     cursor: pointer;
     box-shadow: 0 12px 32px var(--red-glow);
-    display: none;
-    align-items: center;
-    gap: 10px;
-    z-index: 5000;
-    font-family: inherit;
-    animation: pwaPulse 2s infinite;
-    transition: transform 0.25s;
+    display: none; align-items: center; gap: 10px;
+    z-index: 5000; font-family: inherit;
   }
-  #pwaInstallBtn:active { transform: scale(0.95); }
-  #pwaInstallBtn svg { width: 20px; height: 20px; stroke: white; stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; }
-  @keyframes pwaPulse {
-    0%,100% { box-shadow: 0 12px 32px rgba(239,45,45,0.5); }
-    50% { box-shadow: 0 12px 32px rgba(239,45,45,0.9), 0 0 0 8px rgba(239,45,45,0); }
+  #pwaInstallBtn svg { width: 20px; height: 20px; stroke: white; stroke-width: 2; fill: none; }
+
+  .ichki-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px; border-radius: 14px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--info);
+    margin-bottom: 10px;
+  }
+  .ichki-item .i-icon {
+    width: 44px; height: 44px; border-radius: 12px;
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; flex-shrink: 0; color: white;
+  }
+  .ichki-item .i-info { flex: 1; min-width: 0; }
+  .ichki-item .i-info h4 { font-size: 14px; font-weight: 800; margin-bottom: 3px; }
+  .ichki-item .i-info p { font-size: 11px; color: var(--text-muted); }
+  .ichki-item .i-summa { font-size: 15px; font-weight: 800; color: #93c5fd; }
+  .ichki-item .i-del {
+    padding: 8px; border-radius: 8px;
+    background: rgba(239,68,68,0.15);
+    border: 1px solid rgba(239,68,68,0.3);
+    color: #fca5a5; cursor: pointer;
   }
 
-  /* QAYTA NASIYA */
-  .renew-banner {
-    background: linear-gradient(135deg, rgba(139,92,246,0.25), rgba(139,92,246,0.05));
-    border: 1px solid rgba(139,92,246,0.5);
+  .kassa-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 14px; border-radius: 12px;
+    background: var(--card); border: 1px solid var(--border);
+    margin-bottom: 8px;
+  }
+  .kassa-item.kirim { border-left: 3px solid var(--success); }
+  .kassa-item.chiqim { border-left: 3px solid var(--danger); }
+  .kassa-item .k-icon {
+    width: 36px; height: 36px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; font-size: 16px;
+  }
+  .kassa-item.kirim .k-icon { background: rgba(16,185,129,0.2); color: #10b981; }
+  .kassa-item.chiqim .k-icon { background: rgba(239,68,68,0.2); color: #ef4444; }
+  .kassa-item .k-info { flex: 1; min-width: 0; }
+  .kassa-item .k-info h4 { font-size: 13px; font-weight: 800; margin-bottom: 2px; }
+  .kassa-item .k-info p { font-size: 11px; color: var(--text-muted); }
+  .kassa-item .k-summa { font-size: 14px; font-weight: 800; }
+  .kassa-item.kirim .k-summa { color: #6ee7b7; }
+  .kassa-item.chiqim .k-summa { color: #fca5a5; }
+
+  .progress-bar { height: 5px; background: rgba(0,0,0,0.4); border-radius: 3px; overflow: hidden; margin: 8px 0; }
+  .progress-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, #10b981, #00d4ff); transition: width 0.6s; }
+  .progress-fill.warning { background: linear-gradient(90deg, #f59e0b, #ef2d2d); }
+
+  .alert-banner {
+    border-radius: 14px; padding: 12px 14px;
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 14px;
+  }
+  .alert-banner.danger { background: linear-gradient(135deg, rgba(239,68,68,0.25), rgba(239,68,68,0.05)); border: 1px solid rgba(239,68,68,0.5); }
+  .alert-banner.today { background: linear-gradient(135deg, rgba(239,45,45,0.3), rgba(239,45,45,0.08)); border: 1px solid rgba(239,45,45,0.6); }
+  .alert-banner .text { font-size: 12px; font-weight: 600; color: #fca5a5; flex: 1; }
+
+  .install-banner {
+    background: linear-gradient(135deg, rgba(239,45,45,0.25), rgba(15,20,35,0.9));
+    border: 1px solid var(--border-red);
     border-radius: 14px; padding: 14px; margin-bottom: 14px;
     display: flex; align-items: center; gap: 12px;
-    animation: cardEnter 0.5s;
   }
-  .renew-banner .rb-icon {
+  .install-banner .ib-icon {
     width: 40px; height: 40px; border-radius: 10px;
-    background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+    background: linear-gradient(135deg, var(--red), var(--red-dark));
     display: flex; align-items: center; justify-content: center;
-    color: white; flex-shrink: 0; font-size: 20px;
-    box-shadow: 0 4px 12px var(--purple-glow);
+    color: white; flex-shrink: 0;
   }
-  .renew-banner .rb-text { flex: 1; }
-  .renew-banner .rb-text h4 { font-size: 13px; font-weight: 800; margin-bottom: 3px; color: #c4b5fd; }
-  .renew-banner .rb-text p { font-size: 11px; color: var(--text-muted); }
-  .renew-banner .rb-close {
-    width: 32px; height: 32px; border-radius: 8px;
-    background: rgba(139,92,246,0.2); color: #c4b5fd;
-    border: 1px solid rgba(139,92,246,0.4);
-    cursor: pointer; font-size: 16px;
-    display: flex; align-items: center; justify-content: center;
-    font-family: inherit;
+  .install-banner .ib-text { flex: 1; }
+  .install-banner .ib-text h4 { font-size: 13px; font-weight: 800; margin-bottom: 3px; }
+  .install-banner .ib-text p { font-size: 11px; color: var(--text-muted); }
+  .install-banner .ib-btn {
+    padding: 10px 16px; border-radius: 10px;
+    background: linear-gradient(135deg, var(--red), var(--red-dark));
+    color: white; border: none;
+    font-size: 13px; font-weight: 800;
+    cursor: pointer; font-family: inherit;
   }
-
-  .history-list { max-height: 60vh; overflow-y: auto; }
-  .history-item {
-    padding: 12px; margin-bottom: 10px;
-    background: rgba(0,0,0,0.3);
-    border-radius: 10px;
-    border-left: 3px solid #8b5cf6;
-  }
-  .history-item .hi-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
-  .history-item .hi-date { font-size: 10px; color: var(--text-muted); font-weight: 700; }
-  .history-item .hi-status { font-size: 9px; padding: 3px 8px; border-radius: 10px; font-weight: 800; text-transform: uppercase; }
-  .history-item .hi-status.paid { background: rgba(16,185,129,0.2); color: #6ee7b7; }
-  .history-item .hi-status.active { background: rgba(239,45,45,0.2); color: #fca5a5; }
-  .history-item .hi-product { font-size: 12px; font-weight: 700; color: #b8c3e0; margin-bottom: 4px; }
-  .history-item .hi-money { display: flex; gap: 12px; font-size: 11px; color: var(--text-muted); flex-wrap: wrap; }
-  .history-item .hi-money b { color: #fff; }
 
   @media (min-width: 900px) {
     .app-header { padding: 14px 30px; }
     .pam-logo-svg { height: 48px; }
     .page { max-width: 1200px; margin: 0 auto; padding: 24px 30px; }
     .stats-grid { grid-template-columns: repeat(4, 1fr); }
-    .money-total-box { padding: 24px; }
-    .money-total-box .amount { font-size: 34px; }
-    .kassa-balance .amount { font-size: 38px; }
     .bottom-nav {
       position: fixed; top: 0; bottom: auto;
       left: 50%; transform: translateX(-50%);
       margin-top: 82px;
       border-radius: 0 0 16px 16px;
       border: 1px solid var(--border-red);
-      border-top: none;
-      padding: 8px 20px;
-      max-width: 850px; width: auto;
-      gap: 20px;
+      border-top: none; padding: 8px 20px;
+      max-width: 850px; width: auto; gap: 20px;
     }
     .nav-item { padding: 8px 16px; min-width: 75px; }
-    .nav-item .nav-icon .ico { width: 20px; height: 20px; }
     body { padding-bottom: 40px; padding-top: 70px; }
     .fab { bottom: 30px; right: 30px; width: 64px; height: 64px; }
     #qarzdorlarList, #tolovList, #taminotchiList, #ichkiList, #kassaList { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 14px; }
     .qarzdor-card, .tolov-item, .taminotchi-card, .ichki-item, .kassa-item { margin-bottom: 0; }
     .modal-overlay { align-items: center; }
-    .modal-sheet { border-radius: 20px; max-width: 500px; padding: 26px; border: 1px solid var(--border-red); }
+    .modal-sheet { border-radius: 20px; max-width: 500px; padding: 26px; }
     .quick-actions { grid-template-columns: repeat(4, 1fr); }
-    #pwaInstallBtn { bottom: 30px; left: 30px; }
-  }
-
-  @media (hover: hover) {
-    .qarzdor-card:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(0,0,0,0.6); border-color: var(--border-red); }
-    .tolov-item:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(0,0,0,0.6); }
-    .taminotchi-card:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(0,0,0,0.6); }
   }
 </style>
 </head>
@@ -953,10 +873,7 @@
   </div>
 </header>
 
-<!-- DASHBOARD -->
 <section class="page active" id="page-dashboard">
-  <div id="notifBanner"></div>
-
   <div class="install-banner" id="installBanner" style="display:none;">
     <div class="ib-icon">
       <svg class="ico ico-lg" viewBox="0 0 24 24"><path d="M12 3v13m0 0l-5-5m5 5l5-5M5 21h14"/></svg>
@@ -1009,9 +926,10 @@
     <div class="amount" id="statQarzSumma">0 so'm</div>
   </div>
 
-  <div class="money-total-box" style="background: linear-gradient(135deg, rgba(245,158,11,0.15), rgba(239,68,68,0.08)); border-color: rgba(245,158,11,0.3);">
-    <div class="label">🚚 TA'MINOTCHILARGA QARZIMIZ</div>
-    <div class="amount" id="statTaminotchiQarz" style="background: linear-gradient(135deg, #f59e0b, #ef4444); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">0</div>
+  <div class="overall-jami-box">
+    <div class="oj-label">🚚 TA'MINOTCHILARGA JAMI QARZIMIZ</div>
+    <div class="oj-amount" id="statTaminotchiQarz">0</div>
+    <div class="oj-sub" id="statTaminotchiQarzSub">Hech kimga qarz yo'q</div>
   </div>
 
   <div class="ping-toggle" id="pingToggle" onclick="togglePing()">
@@ -1034,7 +952,7 @@
         To'lash
       </button>
       <button class="quick-btn kassa" onclick="goToPage('kassa')">
-        <svg class="ico" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
+        <svg class="ico" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/></svg>
         Kassa
       </button>
       <button class="quick-btn rasxod" onclick="goToPage('rasxodlar')">
@@ -1045,7 +963,6 @@
   </div>
 </section>
 
-<!-- QARZDORLAR -->
 <section class="page" id="page-qarzdorlar">
   <div class="search-box">
     <svg class="ico search-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
@@ -1057,31 +974,23 @@
     <button class="chip" data-filter="all">Barchasi</button>
     <button class="chip" data-filter="today">🔥 Bugun</button>
     <button class="chip" data-filter="overdue">Muddati o'tgan</button>
-    <button class="chip" data-filter="soon">Yaqin</button>
     <button class="chip" data-filter="paid">✅ To'langan</button>
   </div>
 
   <div id="qarzdorlarList"></div>
 </section>
 
-<!-- TO'LOV -->
 <section class="page" id="page-tolov">
   <div class="card">
     <div class="section-title">Qarzni to'lash</div>
-    <p style="font-size:12px;color:var(--text-muted);line-height:1.6;">
-      To'lov qilish uchun qarzdorni tanlang.
-    </p>
   </div>
-
   <div class="search-box">
-    <svg class="ico search-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <svg class="ico search-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/></svg>
     <input type="text" class="form-control" id="tolovSearch" placeholder="Qidirish...">
   </div>
-
   <div id="tolovList"></div>
 </section>
 
-<!-- KASSA -->
 <section class="page" id="page-kassa">
   <div class="kassa-balance">
     <div class="label">💰 KASSA BALANSI</div>
@@ -1091,10 +1000,6 @@
 
   <div class="card">
     <div class="section-title">Kassaga pul kiritish</div>
-    <p style="font-size:12px;color:var(--text-muted);line-height:1.6;margin-bottom:14px;">
-      Bugun kassaga sanalgan pulni kiriting.
-    </p>
-
     <div class="form-group">
       <label>Valyuta</label>
       <div class="curr-toggle" id="kassaCurrToggle">
@@ -1104,14 +1009,13 @@
     </div>
     <div class="form-group">
       <label>Summa *</label>
-      <input type="number" class="form-control" id="kassaSumma" placeholder="0" min="0" step="1">
+      <input type="number" class="form-control" id="kassaSumma" placeholder="0">
       <div class="input-hint" id="kassaSummaHint"></div>
     </div>
     <div class="form-group">
-      <label>Izoh (ixtiyoriy)</label>
-      <input type="text" class="form-control" id="kassaIzoh" placeholder="Masalan: Bugungi savdo">
+      <label>Izoh</label>
+      <input type="text" class="form-control" id="kassaIzoh" placeholder="Izoh...">
     </div>
-
     <div class="quick-actions" style="grid-template-columns: 1fr 1fr;">
       <button class="btn btn-success" onclick="kassaKirim()">➕ Kirim</button>
       <button class="btn btn-danger" onclick="kassaChiqimModal()">➖ Chiqim</button>
@@ -1124,7 +1028,6 @@
   </div>
 </section>
 
-<!-- RASXODLAR -->
 <section class="page" id="page-rasxodlar">
   <div class="segment" id="rasxodSegment">
     <button class="active" data-rasxod-tab="tashqi" onclick="switchRasxodTab('tashqi')">🚚 Tashqi (Ta'minotchi)</button>
@@ -1135,7 +1038,7 @@
     <div class="card">
       <div class="section-title">Yangi ta'minotchi qo'shish</div>
       <p style="font-size:12px;color:var(--text-muted);line-height:1.6;margin-bottom:14px;">
-        Do'konga maxsulot kelganda, jami summani yozing. To'lagan pulingizni "berildi" ga kiriting. Qolgani qarz bo'ladi.
+        Yangi ta'minotchi. Keyin unga "➕ Qarz" tugmasi orqali qo'shimcha maxsulot qo'shishingiz mumkin.
       </p>
 
       <div class="form-group">
@@ -1155,17 +1058,17 @@
       </div>
       <div class="form-group">
         <label>Jami summa *</label>
-        <input type="number" class="form-control" id="tashqiJami" placeholder="0" min="0" step="0.01">
+        <input type="number" class="form-control" id="tashqiJami" placeholder="0">
         <div class="input-hint" id="tashqiJamiHint"></div>
       </div>
       <div class="form-group">
         <label>Berildi (hozir to'lagan pul)</label>
-        <input type="number" class="form-control" id="tashqiBerildi" placeholder="0" min="0" step="0.01">
+        <input type="number" class="form-control" id="tashqiBerildi" placeholder="0">
         <div class="input-hint" id="tashqiBerildiHint"></div>
       </div>
       <div class="form-group">
         <label>Izoh (ixtiyoriy)</label>
-        <input type="text" class="form-control" id="tashqiIzoh" placeholder="Qo'shimcha ma'lumot">
+        <input type="text" class="form-control" id="tashqiIzoh" placeholder="Izoh...">
       </div>
 
       <button class="btn btn-warning" onclick="addTashqi()">📥 Qo'shish</button>
@@ -1183,7 +1086,7 @@
     </div>
 
     <div class="search-box">
-      <svg class="ico search-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <svg class="ico search-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/></svg>
       <input type="text" class="form-control" id="tashqiSearch" placeholder="Qidirish...">
     </div>
 
@@ -1193,28 +1096,23 @@
   <div id="tab-ichki" style="display:none;">
     <div class="card">
       <div class="section-title">Yangi ichki rasxod</div>
-      <p style="font-size:12px;color:var(--text-muted);line-height:1.6;margin-bottom:14px;">
-        Oylik, ijara, kommunal va boshqa ichki xarajatlar uchun.
-      </p>
-
       <div class="form-group">
         <label>Nomi *</label>
         <input type="text" class="form-control" id="ichkiNomi" placeholder="Masalan: Oylik maosh">
       </div>
       <div class="form-group">
         <label>Summa *</label>
-        <input type="number" class="form-control" id="ichkiSumma" placeholder="0" min="0" step="1">
+        <input type="number" class="form-control" id="ichkiSumma" placeholder="0">
         <div class="input-hint" id="ichkiSummaHint"></div>
       </div>
       <div class="form-group">
-        <label>Izoh (ixtiyoriy)</label>
-        <input type="text" class="form-control" id="ichkiIzoh" placeholder="Qo'shimcha ma'lumot">
+        <label>Izoh</label>
+        <input type="text" class="form-control" id="ichkiIzoh" placeholder="Izoh...">
       </div>
       <div class="form-group">
         <label>Sana</label>
         <input type="date" class="form-control" id="ichkiSana">
       </div>
-
       <button class="btn btn-info" onclick="addIchki()">📥 Ichki rasxod qo'shish</button>
     </div>
 
@@ -1226,7 +1124,7 @@
     </div>
 
     <div class="search-box">
-      <svg class="ico search-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <svg class="ico search-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/></svg>
       <input type="text" class="form-control" id="ichkiSearch" placeholder="Qidirish...">
     </div>
 
@@ -1234,10 +1132,8 @@
   </div>
 </section>
 
-<!-- QO'SHISH -->
 <section class="page" id="page-add">
   <div id="renewBannerContainer"></div>
-
   <div class="card">
     <div class="section-title" id="formTitle">Yangi qarzdor qo'shish</div>
     <form id="qarzdorForm" autocomplete="off">
@@ -1248,26 +1144,22 @@
       <div class="form-group"><label>Olingan maxsulot *</label><input type="text" class="form-control" id="maxsulot" required></div>
       <div class="form-group">
         <label>Qarz summasi (so'm) *</label>
-        <input type="number" class="form-control" id="summa" min="0" step="1" required>
+        <input type="number" class="form-control" id="summa" required>
         <div class="input-hint" id="summaHint"></div>
       </div>
       <div class="form-group"><label>Qaytarish muddati *</label><input type="date" class="form-control" id="muddat" required></div>
-      <button type="submit" class="btn btn-primary" id="saqlashBtn">💾 Qarzdorni saqlash</button>
+      <button type="submit" class="btn btn-primary" id="saqlashBtn">💾 Saqlash</button>
       <button type="button" class="btn btn-danger" style="margin-top:10px;display:none;" id="cancelRenewBtn" onclick="cancelRenew()">Bekor qilish</button>
     </form>
   </div>
 </section>
 
-<!-- SOZLAMALAR -->
 <section class="page" id="page-settings">
   <div class="card">
     <div class="section-title">SMS matnini sozlash</div>
-    <div style="background:rgba(0,0,0,0.3);padding:12px;border-radius:10px;margin-bottom:14px;font-size:11px;line-height:2;color:var(--text-muted);">
-      <div><code style="color:#ef2d2d;">{familiya}</code>, <code style="color:#ef2d2d;">{ismi}</code>, <code style="color:#ef2d2d;">{maxsulot}</code>, <code style="color:#ef2d2d;">{summa}</code>, <code style="color:#ef2d2d;">{tolangan}</code>, <code style="color:#ef2d2d;">{qoldiq}</code>, <code style="color:#ef2d2d;">{muddat}</code>, <code style="color:#ef2d2d;">{yaratilgan}</code></div>
-    </div>
     <div class="form-group">
       <label>SMS matni</label>
-      <textarea id="smsTemplate" class="form-control" rows="10" style="font-size:13px;line-height:1.6;font-family:inherit;"></textarea>
+      <textarea id="smsTemplate" class="form-control" rows="10" style="font-size:13px;line-height:1.6;"></textarea>
     </div>
     <button class="btn btn-success" onclick="saveSmsTemplate()">💾 Saqlash</button>
     <button class="btn btn-primary" style="margin-top:10px;" onclick="resetSmsTemplate()">Standart matn</button>
@@ -1277,7 +1169,7 @@
     <div class="section-title">Ping eslatma</div>
     <div class="ping-toggle" id="pingToggle2" onclick="togglePing()">
       <div class="ping-icon">
-        <svg class="ico" viewBox="0 0 24 24" style="width:18px;height:18px;stroke-width:2.2;"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+        <svg class="ico" viewBox="0 0 24 24" style="width:18px;height:18px;"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/></svg>
       </div>
       <span id="pingLabel2">Ping eslatma: O'chiq</span>
       <div class="switch"></div>
@@ -1286,29 +1178,18 @@
   </div>
 
   <div class="card">
-    <div class="section-title">Ilova o'rnatish</div>
-    <p style="font-size:12px;color:var(--text-muted);line-height:1.6;margin-bottom:14px;">
-      <b style="color:#fff;">Kompyuterda:</b> Brauzer manzil qatoridagi ⊕ belgisini bosing yoki menyudan "Ilova o'rnatish" ni tanlang.<br><br>
-      <b style="color:#fff;">Telefonda:</b> Chrome menyusidan "Bosh ekranga qo'shish" ni tanlang.
-    </p>
-    <button class="btn btn-primary" onclick="installPWA()">📥 Ilovani o'rnatish</button>
-  </div>
-
-  <div class="card">
     <div class="section-title">Ilova haqida</div>
     <div style="font-size:12px;color:var(--text-muted);line-height:1.8;">
-      <div>📱 <b style="color:#fff;">PAM Nasiya</b> — v8.3</div>
+      <div>📱 <b style="color:#fff;">PAM Nasiya</b> — v10.0</div>
       <div>🏢 POP AUTO MAKON</div>
-      <div>💰 Kassa + Rasxodlar + Ta'minotchi + Qayta nasiya</div>
-      <div>💾 Ma'lumotlar: Supabase bulutda</div>
+      <div>💰 Kassa + Rasxod + Ta'minotchi qarz tarixi</div>
     </div>
   </div>
 </section>
 
-<!-- BOTTOM NAV -->
 <nav class="bottom-nav">
   <button class="nav-item active" data-page="dashboard">
-    <span class="nav-icon"><svg class="ico" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span>
+    <span class="nav-icon"><svg class="ico" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg></span>
     <span>Asosiy</span>
   </button>
   <button class="nav-item" data-page="qarzdorlar">
@@ -1317,7 +1198,7 @@
     <span class="nav-badge" id="navBadge" style="display:none;">0</span>
   </button>
   <button class="nav-item" data-page="kassa">
-    <span class="nav-icon"><svg class="ico" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg></span>
+    <span class="nav-icon"><svg class="ico" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/></svg></span>
     <span>Kassa</span>
   </button>
   <button class="nav-item" data-page="rasxodlar">
@@ -1325,21 +1206,21 @@
     <span>Rasxod</span>
   </button>
   <button class="nav-item" data-page="tolov">
-    <span class="nav-icon"><svg class="ico" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></span>
+    <span class="nav-icon"><svg class="ico" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/></svg></span>
     <span>To'lash</span>
   </button>
   <button class="nav-item" data-page="settings">
-    <span class="nav-icon"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/></svg></span>
+    <span class="nav-icon"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/></svg></span>
     <span>Sozlash</span>
   </button>
 </nav>
 
-<!-- MODALS -->
+<!-- MODAL: SMS -->
 <div class="modal-overlay" id="smsModal">
   <div class="modal-sheet">
     <div class="modal-handle"></div>
     <div class="modal-title">📱 SMS yuborish</div>
-    <textarea id="smsText" class="form-control" rows="12" style="font-size:13px;line-height:1.6;font-family:inherit;"></textarea>
+    <textarea id="smsText" class="form-control" rows="12" style="font-size:13px;"></textarea>
     <div class="modal-actions">
       <button class="btn btn-danger" onclick="closeModal('smsModal')">Bekor qilish</button>
       <button class="btn btn-success" onclick="sendSms()">📤 Yuborish</button>
@@ -1347,14 +1228,84 @@
   </div>
 </div>
 
+<!-- MODAL: QARZDORGA QARZ QO'SHISH -->
+<div class="modal-overlay" id="addDebtModal">
+  <div class="modal-sheet" style="border-top-color: #f97316;">
+    <div class="modal-handle"></div>
+    <div class="modal-title" style="color:#fdba74;">➕ Qarzga qarz qo'shish</div>
+    <div class="info-box orange" id="addDebtInfoBox"></div>
+    <div class="form-group">
+      <label>Yangi olingan maxsulot *</label>
+      <input type="text" class="form-control" id="addDebtMaxsulot" placeholder="Yangi maxsulot">
+    </div>
+    <div class="form-group">
+      <label>Qo'shilayotgan summa *</label>
+      <input type="number" class="form-control" id="addDebtSumma" placeholder="0">
+      <div class="input-hint" id="addDebtSummaHint"></div>
+    </div>
+    <div class="form-group">
+      <label>Yangi muddat (ixtiyoriy)</label>
+      <input type="date" class="form-control" id="addDebtMuddat">
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-danger" onclick="closeModal('addDebtModal')">Bekor qilish</button>
+      <button class="btn btn-orange" onclick="confirmAddDebt()" id="addDebtBtn">➕ Qarz qo'shish</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: TA'MINOTCHIGA QARZ QO'SHISH -->
+<div class="modal-overlay" id="addTaminotchiQarzModal">
+  <div class="modal-sheet" style="border-top-color: #f97316;">
+    <div class="modal-handle"></div>
+    <div class="modal-title" style="color:#fdba74;">➕ Ta'minotchiga yangi qarz</div>
+    <div class="info-box orange" id="addTCQarzInfoBox"></div>
+    <div class="form-group">
+      <label>Yangi olingan maxsulot *</label>
+      <input type="text" class="form-control" id="addTCQarzMaxsulot" placeholder="Masalan: Yangi shinalar partiyasi">
+    </div>
+    <div class="form-group">
+      <label>Jami summa *</label>
+      <input type="number" class="form-control" id="addTCQarzJami" placeholder="0">
+      <div class="input-hint" id="addTCQarzJamiHint"></div>
+    </div>
+    <div class="form-group">
+      <label>Berildi (hozir to'lagan pul)</label>
+      <input type="number" class="form-control" id="addTCQarzBerildi" placeholder="0">
+      <div class="input-hint" id="addTCQarzBerildiHint"></div>
+    </div>
+    <div class="form-group">
+      <label>Izoh (ixtiyoriy)</label>
+      <input type="text" class="form-control" id="addTCQarzIzoh" placeholder="Izoh...">
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-danger" onclick="closeModal('addTaminotchiQarzModal')">Bekor qilish</button>
+      <button class="btn btn-orange" onclick="confirmAddTCQarz()" id="addTCQarzBtn">➕ Qarz qo'shish</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: TA'MINOTCHI QARZLAR TARIXI -->
+<div class="modal-overlay" id="taminotchiQarzTarixModal">
+  <div class="modal-sheet" style="border-top-color: #f97316;">
+    <div class="modal-handle"></div>
+    <div class="modal-title" style="color:#fdba74;">📋 Qarzlar tarixi</div>
+    <div id="taminotchiQarzTarixContent"></div>
+    <div class="modal-actions">
+      <button class="btn btn-primary" onclick="closeModal('taminotchiQarzTarixModal')" style="grid-column: 1 / -1;">Yopish</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: TO'LOV -->
 <div class="modal-overlay" id="tolovModal">
   <div class="modal-sheet">
     <div class="modal-handle"></div>
     <div class="modal-title">💰 To'lovni qabul qilish</div>
     <div class="info-box" id="tolovInfoBox"></div>
     <div class="form-group">
-      <label>To'lanayotgan summa (so'm)</label>
-      <input type="number" class="form-control" id="tolovSumma" min="0" step="1">
+      <label>To'lanayotgan summa</label>
+      <input type="number" class="form-control" id="tolovSumma">
     </div>
     <div class="quick-pay">
       <button type="button" class="chip" onclick="setPayPercent(25)">25%</button>
@@ -1369,6 +1320,7 @@
   </div>
 </div>
 
+<!-- MODAL: TA'MINOTCHIGA PUL BERISH -->
 <div class="modal-overlay" id="taminotchiPulModal">
   <div class="modal-sheet">
     <div class="modal-handle"></div>
@@ -1376,7 +1328,7 @@
     <div class="info-box" id="taminotchiInfoBox"></div>
     <div class="form-group">
       <label>Beriladigan summa</label>
-      <input type="number" class="form-control" id="taminotchiPulSumma" min="0" step="0.01">
+      <input type="number" class="form-control" id="taminotchiPulSumma">
       <div class="input-hint" id="taminotchiPulHint"></div>
     </div>
     <div class="quick-pay">
@@ -1392,17 +1344,7 @@
   </div>
 </div>
 
-<div class="modal-overlay" id="taminotchiTarixModal">
-  <div class="modal-sheet">
-    <div class="modal-handle"></div>
-    <div class="modal-title">📋 To'lovlar tarixi</div>
-    <div id="taminotchiTarixContent"></div>
-    <div class="modal-actions">
-      <button class="btn btn-primary" onclick="closeModal('taminotchiTarixModal')" style="grid-column: 1 / -1;">Yopish</button>
-    </div>
-  </div>
-</div>
-
+<!-- MODAL: KASSA CHIQIM -->
 <div class="modal-overlay" id="kassaChiqimModalOverlay">
   <div class="modal-sheet">
     <div class="modal-handle"></div>
@@ -1419,51 +1361,29 @@
     </div>
     <div class="form-group">
       <label>Summa *</label>
-      <input type="number" class="form-control" id="chiqimSumma" placeholder="0" min="0" step="0.01">
+      <input type="number" class="form-control" id="chiqimSumma">
       <div class="input-hint" id="chiqimSummaHint"></div>
     </div>
     <div class="form-group">
       <label>Izoh</label>
-      <input type="text" class="form-control" id="chiqimIzoh" placeholder="Nima uchun?">
+      <input type="text" class="form-control" id="chiqimIzoh">
     </div>
     <div class="modal-actions">
       <button class="btn btn-danger" onclick="closeModal('kassaChiqimModalOverlay')">Bekor qilish</button>
-      <button class="btn btn-warning" onclick="confirmKassaChiqim()">📤 Chiqim qilish</button>
+      <button class="btn btn-warning" onclick="confirmKassaChiqim()">📤 Chiqim</button>
     </div>
   </div>
 </div>
 
+<!-- MODAL: O'CHIRISH -->
 <div class="modal-overlay" id="delModal">
   <div class="modal-sheet">
     <div class="modal-handle"></div>
-    <div class="modal-title">🗑 O'chirishni tasdiqlash</div>
+    <div class="modal-title">🗑 O'chirish</div>
     <p class="modal-desc" id="delText"></p>
     <div class="modal-actions">
       <button class="btn btn-primary" onclick="closeModal('delModal')">Yo'q</button>
       <button class="btn btn-danger" onclick="confirmDelete()">Ha, o'chirish</button>
-    </div>
-  </div>
-</div>
-
-<div class="modal-overlay" id="reminderModal">
-  <div class="modal-sheet">
-    <div class="modal-handle"></div>
-    <div class="modal-title" style="color:#ef2d2d;">🔔 Muddat eslatmasi</div>
-    <div id="reminderContent"></div>
-    <div class="modal-actions">
-      <button class="btn btn-primary" onclick="closeModal('reminderModal')">Yopish</button>
-      <button class="btn btn-success" onclick="reminderGoList()">Ro'yxat</button>
-    </div>
-  </div>
-</div>
-
-<div class="modal-overlay" id="historyModal">
-  <div class="modal-sheet" style="border-top-color: #8b5cf6;">
-    <div class="modal-handle"></div>
-    <div class="modal-title" style="color:#c4b5fd;">📋 Nasiya tarixi</div>
-    <div id="historyContent" class="history-list"></div>
-    <div class="modal-actions">
-      <button class="btn btn-primary" onclick="closeModal('historyModal')" style="grid-column: 1 / -1;">Yopish</button>
     </div>
   </div>
 </div>
@@ -1475,15 +1395,15 @@
 </button>
 
 <button id="pwaInstallBtn" onclick="installPWA()">
-  <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-  <span>Ilovani o'rnatish</span>
+  <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/></svg>
+  <span>O'rnatish</span>
 </button>
 
 <script>
 /* SERVICE WORKER */
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function() {
-    navigator.serviceWorker.register('./sw.js').then(function(r){ console.log('✅ SW:', r.scope); }).catch(function(e){ console.error('❌ SW:', e); });
+    navigator.serviceWorker.register('./sw.js').catch(function(e){});
   });
 }
 
@@ -1497,21 +1417,22 @@ var qarzdorlar = [];
 var taminotchilar = [];
 var ichkiRasxodlar = [];
 var kassaTarix = [];
+var taminotchiQarzTarix = []; // HAR BIR QARZ ALOHIDA
 var currentSmsId = null;
 var currentTolovId = null;
 var currentDeleteId = null;
 var currentDeleteType = 'qarzdor';
 var currentFilter = 'active';
 var currentTaminotchiId = null;
+var currentAddDebtId = null;
+var currentAddTCQarzId = null;
 var selectedKassaCurr = 'UZS';
 var selectedTashqiCurr = 'UZS';
 var selectedChiqimCurr = 'UZS';
 var pingEnabled = localStorage.getItem('pam_ping_enabled') === 'true';
-var pingAnnouncedToday = JSON.parse(localStorage.getItem('pam_ping_announced') || '{}');
 var deferredPrompt = null;
 var kassaBalanceUZS = 0;
 var kassaBalanceUSD = 0;
-var rlsWarned = false;
 var renewalClientData = null;
 
 var DEFAULT_SMS_TEMPLATE =
@@ -1593,8 +1514,6 @@ function getHolat(q) {
   if (kun <= 7) return { type: 'info', text: kun + " kun qoldi", badge: 'info', kun: kun };
   return { type: 'ok', text: kun + " kun qoldi", badge: 'info', kun: kun };
 }
-
-// Bir xil mijozning barcha nasiyalarini topish
 function getClientHistory(q) {
   return qarzdorlar.filter(function(x) {
     return x.ismi.toLowerCase() === q.ismi.toLowerCase() &&
@@ -1618,10 +1537,6 @@ function setSyncStatus(status, text) {
   badge.className = 'sync-badge ' + (status === 'error' ? 'error' : status === 'offline' ? 'offline' : '');
   txt.textContent = text;
 }
-function warnRLS() {
-  if (rlsWarned) return; rlsWarned = true;
-  setTimeout(function() { showToast('⚠️ Supabase RLS yoqilgan. SQL Editor\'da RLS\'ni o\'chiring!', 'warning'); }, 2000);
-}
 
 /* PING */
 function playPingSound() {
@@ -1641,21 +1556,6 @@ function playPingSound() {
     });
   } catch(e) {}
 }
-function playPingLong() { playPingSound(); setTimeout(playPingSound, 700); }
-function announcePingReminders() {
-  if (!pingEnabled) return;
-  var items = getReminderList();
-  if (items.length === 0) return;
-  var today = todayKey();
-  if (pingAnnouncedToday[today]) return;
-  setTimeout(function() {
-    playPingLong();
-    if (items.length === 1) showToast('🔔 ' + items[0].ismi + ' ' + items[0].familyasi + ' — ' + items[0].text, 'error');
-    else showToast('🔔 ' + items.length + ' ta qarzdorning muddati keldi!', 'error');
-    pingAnnouncedToday[today] = true;
-    localStorage.setItem('pam_ping_announced', JSON.stringify(pingAnnouncedToday));
-  }, 2000);
-}
 function togglePing() {
   pingEnabled = !pingEnabled;
   localStorage.setItem('pam_ping_enabled', pingEnabled ? 'true' : 'false');
@@ -1672,18 +1572,13 @@ function updatePingUI() {
   if (l1) l1.textContent = 'Ping eslatma: ' + (pingEnabled ? 'Yoqilgan' : 'O\'chiq');
   if (l2) l2.textContent = 'Ping eslatma: ' + (pingEnabled ? 'Yoqilgan' : 'O\'chiq');
 }
-function testPing() { playPingLong(); showToast('🔔 Ping sinov'); }
+function testPing() { playPingSound(); showToast('🔔 Ping sinov'); }
 
 /* SUPABASE FUNCTIONS */
 async function supabaseGetAll() {
   try {
-    setSyncStatus('loading', 'Yuklanmoqda...');
     var res = await supabaseClient.from('qarzdorlar').select('*').order('id', { ascending: false });
-    if (res.error) {
-      console.error('❌ qarzdorlar xato:', res.error.message);
-      if (res.error.code === '42501' || res.error.message.indexOf('permission') !== -1) warnRLS();
-      setSyncStatus('error', 'Xatolik'); return null;
-    }
+    if (res.error) { setSyncStatus('error', 'Xatolik'); return null; }
     setSyncStatus('ok', 'Bulut');
     return (res.data || []).map(function(d) {
       return {
@@ -1705,13 +1600,20 @@ async function supabaseInsert(q) {
       tolangan: q.tolangan || 0, qoldiq: q.qoldiq,
       muddat: q.muddat, yaratilgan: q.yaratilgan || new Date().toISOString()
     }]);
-    if (res.error) { console.error('❌ insert qarzdor:', res.error.message); if (res.error.message.indexOf('permission') !== -1) warnRLS(); return false; }
-    return true;
+    return !res.error;
   } catch (e) { return false; }
 }
 async function supabaseUpdateTolov(id, tolangan, qoldiq) {
   try {
     var res = await supabaseClient.from('qarzdorlar').update({ tolangan: tolangan, qoldiq: qoldiq }).eq('id', id);
+    return !res.error;
+  } catch (e) { return false; }
+}
+async function supabaseUpdateQarz(id, yangiSumma, yangiQoldiq, yangiMaxsulot, yangiMuddat) {
+  try {
+    var updateData = { summa: yangiSumma, qoldiq: yangiQoldiq, maxsulot: yangiMaxsulot };
+    if (yangiMuddat) updateData.muddat = yangiMuddat;
+    var res = await supabaseClient.from('qarzdorlar').update(updateData).eq('id', id);
     return !res.error;
   } catch (e) { return false; }
 }
@@ -1724,7 +1626,7 @@ async function supabaseDelete(id) {
 async function supabaseGetRasxodlar() {
   try {
     var res = await supabaseClient.from('rasxodlar').select('*').order('id', { ascending: false });
-    if (res.error) { console.error('❌ rasxodlar:', res.error.message); if (res.error.message.indexOf('permission') !== -1) warnRLS(); return []; }
+    if (res.error) return [];
     return (res.data || []).map(function(d) {
       return {
         id: d.id, kim: d.kim, nima_uchun: d.nima_uchun,
@@ -1742,8 +1644,7 @@ async function supabaseInsertRasxod(r) {
       jami_summa: r.jami_summa, berildi: r.berildi,
       qoldiq: r.qoldiq, valyuta: r.valyuta, izoh: r.izoh, sana: r.sana
     }]);
-    if (res.error) { console.error('❌ insert rasxod:', res.error.message); return false; }
-    return true;
+    return !res.error;
   } catch (e) { return false; }
 }
 async function supabaseUpdateRasxod(id, berildi, qoldiq) {
@@ -1758,10 +1659,54 @@ async function supabaseDeleteRasxod(id) {
     return !res.error;
   } catch (e) { return false; }
 }
+
+/* TA'MINOTCHI QARZLAR TARIXI - YANGI JADVAL */
+async function supabaseGetTaminotchiQarzTarix() {
+  try {
+    var res = await supabaseClient.from('taminotchi_qarzlar').select('*').order('id', { ascending: false });
+    if (res.error) {
+      console.warn('⚠️ taminotchi_qarzlar jadvali yo\'q. SQL bilan yarating:', res.error.message);
+      return [];
+    }
+    return (res.data || []).map(function(d) {
+      return {
+        id: d.id, taminotchi_id: d.taminotchi_id,
+        kim: d.kim, nima: d.nima, summa: Number(d.summa),
+        berildi: Number(d.berildi) || 0,
+        qoldiq: Number(d.qoldiq) || Number(d.summa),
+        valyuta: d.valyuta || 'UZS',
+        tur: d.tur || 'qarz', // 'qarz' yoki 'tolov'
+        izoh: d.izoh, sana: d.sana,
+        yaratilgan: d.yaratilgan
+      };
+    });
+  } catch (e) { return []; }
+}
+async function supabaseInsertTaminotchiQarz(q) {
+  try {
+    var res = await supabaseClient.from('taminotchi_qarzlar').insert([{
+      id: q.id, taminotchi_id: q.taminotchi_id,
+      kim: q.kim, nima: q.nima, summa: q.summa,
+      berildi: q.berildi || 0, qoldiq: q.qoldiq || q.summa,
+      valyuta: q.valyuta || 'UZS',
+      tur: q.tur || 'qarz',
+      izoh: q.izoh, sana: q.sana
+    }]);
+    if (res.error) { console.error('❌ insert taminotchi qarz:', res.error.message); return false; }
+    return true;
+  } catch (e) { return false; }
+}
+async function supabaseDeleteTaminotchiQarz(id) {
+  try {
+    var res = await supabaseClient.from('taminotchi_qarzlar').delete().eq('id', id);
+    return !res.error;
+  } catch (e) { return false; }
+}
+
 async function supabaseGetIchki() {
   try {
     var res = await supabaseClient.from('ichki_rasxodlar').select('*').order('id', { ascending: false });
-    if (res.error) { console.error('❌ ichki:', res.error.message); if (res.error.message.indexOf('permission') !== -1) warnRLS(); return []; }
+    if (res.error) return [];
     return (res.data || []).map(function(d) {
       return { id: d.id, nomi: d.nomi, summa: Number(d.summa), izoh: d.izoh, sana: d.sana, yaratilgan: d.yaratilgan };
     });
@@ -1784,7 +1729,7 @@ async function supabaseDeleteIchki(id) {
 async function supabaseGetKassa() {
   try {
     var res = await supabaseClient.from('kassa').select('*').order('id', { ascending: false });
-    if (res.error) { console.error('❌ kassa:', res.error.message); if (res.error.message.indexOf('permission') !== -1) warnRLS(); return []; }
+    if (res.error) return [];
     return (res.data || []).map(function(d) {
       return { id: d.id, tur: d.tur, summa: Number(d.summa), valyuta: d.valyuta || 'UZS', izoh: d.izoh, sana: d.sana, yaratilgan: d.yaratilgan };
     });
@@ -1820,40 +1765,10 @@ function goToPage(page) {
   if (page === 'kassa') renderKassa();
   if (page === 'rasxodlar') renderRasxodlarAll();
   if (page === 'dashboard') renderDashboard();
-  if (page === 'settings') renderSettings();
 }
 document.querySelectorAll('.nav-item').forEach(function(btn) {
   btn.addEventListener('click', function() { goToPage(btn.dataset.page); });
 });
-
-/* SOZLAMALAR */
-function renderSettings() {
-  document.getElementById('smsTemplate').value = smsTemplate;
-  updatePingUI();
-}
-function saveSmsTemplate() {
-  var val = document.getElementById('smsTemplate').value.trim();
-  if (!val) { showToast('Bo\'sh!', 'error'); return; }
-  smsTemplate = val;
-  localStorage.setItem('pam_sms_template', smsTemplate);
-  showToast('✅ Saqlandi!');
-}
-function resetSmsTemplate() {
-  if (!confirm('Standart matnga qaytarilsinmi?')) return;
-  smsTemplate = DEFAULT_SMS_TEMPLATE;
-  localStorage.setItem('pam_sms_template', smsTemplate);
-  document.getElementById('smsTemplate').value = smsTemplate;
-  showToast('✅ Tiklandi!');
-}
-function fillSmsTemplate(q) {
-  return smsTemplate
-    .replace(/{familiya}/g, q.familyasi).replace(/{ismi}/g, q.ismi)
-    .replace(/{maxsulot}/g, q.maxsulot).replace(/{summa}/g, formatSumma(q.summa))
-    .replace(/{tolangan}/g, formatSumma(q.tolangan || 0))
-    .replace(/{qoldiq}/g, formatSumma(q.qoldiq))
-    .replace(/{muddat}/g, formatDate(q.muddat))
-    .replace(/{yaratilgan}/g, formatDate(q.yaratilgan));
-}
 
 /* DASHBOARD */
 function renderDashboard() {
@@ -1877,11 +1792,17 @@ function renderDashboard() {
   document.getElementById('statRasxodNum').textContent = formatSummaShort(jamiRasxod);
 
   var elTQ = document.getElementById('statTaminotchiQarz');
+  var elTQSub = document.getElementById('statTaminotchiQarzSub');
   if (elTQ) {
     var parts = [];
     if (tQarzUZS > 0) parts.push(formatSumma(tQarzUZS));
     if (tQarzUSD > 0) parts.push(formatSumma(tQarzUSD, 'USD'));
-    elTQ.textContent = parts.length > 0 ? parts.join(' + ') : '0';
+    elTQ.textContent = parts.length > 0 ? parts.join(' + ') : '0 so\'m';
+    
+    var taminotchiSoni = taminotchilar.filter(function(t) { return t.qoldiq > 0.01; }).length;
+    if (elTQSub) {
+      elTQSub.textContent = taminotchiSoni > 0 ? taminotchiSoni + ' ta ta\'minotchiga qarzimiz bor' : 'Hech kimga qarz yo\'q ✅';
+    }
   }
 
   updateKassaBalanceUI();
@@ -1938,10 +1859,10 @@ function updateKassaBalanceUI() {
   if (el1) el1.textContent = balText;
   if (el2) el2.textContent = balText;
 
-  var k1 = document.getElementById('kassaKirim'); if (k1) k1.textContent = formatSummaShort(kirimUZS) + (kirimUSD > 0 ? ' + $' + kirimUSD.toFixed(2) : '');
-  var k2 = document.getElementById('kassaKirim2'); if (k2) k2.textContent = formatSummaShort(kirimUZS) + (kirimUSD > 0 ? ' + $' + kirimUSD.toFixed(2) : '');
-  var c1 = document.getElementById('kassaChiqim'); if (c1) c1.textContent = formatSummaShort(chiqimUZS) + (chiqimUSD > 0 ? ' + $' + chiqimUSD.toFixed(2) : '');
-  var c2 = document.getElementById('kassaChiqim2'); if (c2) c2.textContent = formatSummaShort(chiqimUZS) + (chiqimUSD > 0 ? ' + $' + chiqimUSD.toFixed(2) : '');
+  var k1 = document.getElementById('kassaKirim'); if (k1) k1.textContent = formatSummaShort(kirimUZS);
+  var k2 = document.getElementById('kassaKirim2'); if (k2) k2.textContent = formatSummaShort(kirimUZS);
+  var c1 = document.getElementById('kassaChiqim'); if (c1) c1.textContent = formatSummaShort(chiqimUZS);
+  var c2 = document.getElementById('kassaChiqim2'); if (c2) c2.textContent = formatSummaShort(chiqimUZS);
 }
 
 /* QARZDORLAR */
@@ -1950,20 +1871,15 @@ function renderQarzdorlar() {
   var list = document.getElementById('qarzdorlarList');
   var filtered = qarzdorlar.slice();
 
-  if (currentFilter === 'active') {
-    filtered = filtered.filter(function(q) { return q.qoldiq > 0.01; });
-  } else if (currentFilter === 'paid') {
-    filtered = filtered.filter(function(q) { return q.qoldiq <= 0.01; });
-  } else if (currentFilter !== 'all') {
-    filtered = filtered.filter(function(q) { return q.qoldiq > 0.01 && getHolat(q).type === currentFilter; });
-  }
+  if (currentFilter === 'active') filtered = filtered.filter(function(q) { return q.qoldiq > 0.01; });
+  else if (currentFilter === 'paid') filtered = filtered.filter(function(q) { return q.qoldiq <= 0.01; });
+  else if (currentFilter !== 'all') filtered = filtered.filter(function(q) { return q.qoldiq > 0.01 && getHolat(q).type === currentFilter; });
 
   if (search) {
     filtered = filtered.filter(function(q) {
       return q.ismi.toLowerCase().indexOf(search) !== -1 ||
         q.familyasi.toLowerCase().indexOf(search) !== -1 ||
-        q.telRaqami.indexOf(search) !== -1 ||
-        (q.maxsulot || '').toLowerCase().indexOf(search) !== -1;
+        q.telRaqami.indexOf(search) !== -1;
     });
   }
 
@@ -1971,11 +1887,7 @@ function renderQarzdorlar() {
   filtered.sort(function(a, b) { return priority[getHolat(a).type] - priority[getHolat(b).type]; });
 
   if (filtered.length === 0) {
-    var emptyMsg = '';
-    if (currentFilter === 'paid') emptyMsg = 'Hali to\'langan qarzlar yo\'q';
-    else if (currentFilter === 'active') emptyMsg = 'Faol qarzlar yo\'q — hammasi to\'langan! ✅';
-    else emptyMsg = 'Qarzdorlar topilmadi';
-    list.innerHTML = '<div class="empty-state"><h3>' + emptyMsg + '</h3><p>Filtrni o\'zgartirib ko\'ring</p></div>';
+    list.innerHTML = '<div class="empty-state"><h3>Qarzdorlar topilmadi</h3></div>';
     return;
   }
 
@@ -2007,16 +1919,18 @@ function renderQarzdorlar() {
         '<div><div class="m-label">Qoldiq</div><div class="m-value ' + (isPaid ? 'green' : 'red') + '">' + formatSumma(q.qoldiq) + '</div></div>' +
       '</div>' +
       '<div class="q-info" style="margin-top:8px;">📅 Muddat: <b style="color:#fff;">' + formatDate(q.muddat) + '</b></div>' +
-      '<div class="q-actions ' + (isPaid ? 'with-renewal' : '') + '">' +
+      '<div class="q-actions with-renewal">' +
         '<button class="qa-btn call" onclick="callClient(\'' + q.telRaqami + '\')">📞</button>' +
         '<button class="qa-btn sms" onclick="openSmsModal(' + q.id + ')">💬 SMS</button>' +
         (isPaid
-          ? '<button class="qa-btn renew" onclick="startRenewal(' + q.id + ')" title="Qayta nasiya berish">🔄 Qayta</button>'
+          ? '<button class="qa-btn renew" onclick="startRenewal(' + q.id + ')">🔄 Qayta</button>'
           : '<button class="qa-btn pay" onclick="openTolovModal(' + q.id + ')">💰 To\'lash</button>'
         ) +
-        (nasyaCount > 1
-          ? '<button class="qa-btn" style="background:rgba(139,92,246,0.2);color:#c4b5fd;border:1px solid rgba(139,92,246,0.3);" onclick="showHistory(\'' + q.telRaqami + '\',\'' + q.ismi + '\',\'' + q.familyasi + '\')">📋</button>'
-          : ''
+        (isPaid
+          ? (nasyaCount > 1
+              ? '<button class="qa-btn" style="background:rgba(139,92,246,0.2);color:#c4b5fd;" onclick="showHistory(\'' + q.telRaqami + '\',\'' + q.ismi + '\',\'' + q.familyasi + '\')">📋</button>'
+              : '')
+          : '<button class="qa-btn addmore" onclick="openAddDebtModal(' + q.id + ')">➕ Qarz</button>'
         ) +
         '<button class="qa-btn del" onclick="openDeleteModal(' + q.id + ', \'qarzdor\')">🗑</button>' +
       '</div>' +
@@ -2028,30 +1942,270 @@ document.getElementById('searchInput').addEventListener('input', renderQarzdorla
 document.querySelectorAll('.chip[data-filter]').forEach(function(chip) {
   chip.addEventListener('click', function() {
     document.querySelectorAll('.chip[data-filter]').forEach(function(c) {
-      c.classList.remove('active', 'blue', 'orange', 'purple', 'green');
+      c.classList.remove('active', 'green', 'purple');
     });
     chip.classList.add('active');
     if (chip.dataset.filter === 'paid') chip.classList.add('green');
-    if (chip.dataset.filter === 'today') chip.classList.add('orange');
     if (chip.dataset.filter === 'overdue') chip.classList.add('purple');
     currentFilter = chip.dataset.filter;
     renderQarzdorlar();
   });
 });
 
-function setFilter(f) {
-  document.querySelectorAll('.chip[data-filter]').forEach(function(c) {
-    c.classList.remove('active', 'blue', 'orange', 'purple', 'green');
-  });
-  var chip = document.querySelector('.chip[data-filter="' + f + '"]');
-  if (chip) {
-    chip.classList.add('active');
-    if (f === 'paid') chip.classList.add('green');
-    if (f === 'today') chip.classList.add('orange');
-    if (f === 'overdue') chip.classList.add('purple');
-  }
-  currentFilter = f;
+/* QARZDORGA QARZ QO'SHISH */
+function openAddDebtModal(id) {
+  currentAddDebtId = id;
+  var q = qarzdorlar.find(function(x) { return x.id === id; });
+  if (!q) return;
+
+  document.getElementById('addDebtInfoBox').innerHTML =
+    '<div class="info-row"><span class="lbl">Qarzdor</span><span class="val">' + q.ismi + ' ' + q.familyasi + '</span></div>' +
+    '<div class="info-row"><span class="lbl">Jami summa</span><span class="val">' + formatSumma(q.summa) + '</span></div>' +
+    '<div class="info-row"><span class="lbl">Qoldiq qarz</span><span class="val" style="color:#ef4444;">' + formatSumma(q.qoldiq) + '</span></div>';
+
+  document.getElementById('addDebtMaxsulot').value = '';
+  document.getElementById('addDebtSumma').value = '';
+  document.getElementById('addDebtSummaHint').innerHTML = '';
+  document.getElementById('addDebtMuddat').value = '';
+  openModal('addDebtModal');
+}
+
+document.getElementById('addDebtSumma').addEventListener('input', function() {
+  var val = this.value.replace(/[^\d]/g, '');
+  if (val) { this.value = val; document.getElementById('addDebtSummaHint').innerHTML = formatSumma(val); }
+  else { document.getElementById('addDebtSummaHint').innerHTML = ''; }
+});
+
+async function confirmAddDebt() {
+  var q = qarzdorlar.find(function(x) { return x.id === currentAddDebtId; });
+  if (!q) return;
+
+  var yangiMaxsulot = document.getElementById('addDebtMaxsulot').value.trim();
+  var qoshimchaSumma = Math.round(Number(document.getElementById('addDebtSumma').value));
+  var yangiMuddat = document.getElementById('addDebtMuddat').value;
+
+  if (!yangiMaxsulot) { showToast('Maxsulotni kiriting!', 'error'); return; }
+  if (!qoshimchaSumma || qoshimchaSumma <= 0) { showToast('Summani kiriting!', 'error'); return; }
+
+  var yangiSumma = q.summa + qoshimchaSumma;
+  var yangiQoldiq = q.qoldiq + qoshimchaSumma;
+  var yangiMaxsulotStr = q.maxsulot + ' + ' + yangiMaxsulot;
+  var muddatFinal = yangiMuddat || q.muddat;
+
+  var btn = document.getElementById('addDebtBtn');
+  btn.disabled = true;
+  btn.textContent = 'Saqlanmoqda...';
+
+  var ok = await supabaseUpdateQarz(q.id, yangiSumma, yangiQoldiq, yangiMaxsulotStr, muddatFinal);
+  btn.disabled = false;
+  btn.textContent = '➕ Qarz qo\'shish';
+
+  if (!ok) { showToast('Xatolik!', 'error'); return; }
+
+  q.summa = yangiSumma;
+  q.qoldiq = yangiQoldiq;
+  q.maxsulot = yangiMaxsulotStr;
+  if (yangiMuddat) q.muddat = muddatFinal;
+
+  closeModal('addDebtModal');
+  showToast('✅ ' + formatSumma(qoshimchaSumma) + ' qarz qo\'shildi!', 'orange');
+
   renderQarzdorlar();
+  renderTolovList();
+  renderDashboard();
+}
+
+/* ============================================================
+   TA'MINOTCHIGA QARZ QO'SHISH (YANGI TIZIM)
+   ============================================================ */
+function openAddTaminotchiQarzModal(id) {
+  currentAddTCQarzId = id;
+  var t = taminotchilar.find(function(x) { return x.id === id; });
+  if (!t) return;
+
+  document.getElementById('addTCQarzInfoBox').innerHTML =
+    '<div class="info-row"><span class="lbl">Ta\'minotchi</span><span class="val">' + t.kim + '</span></div>' +
+    '<div class="info-row"><span class="lbl">Hozirgi qarz</span><span class="val" style="color:#ef4444;">' + formatSumma(t.qoldiq, t.valyuta) + '</span></div>' +
+    '<div class="info-row"><span class="lbl">Valyuta</span><span class="val">' + t.valyuta + '</span></div>';
+
+  document.getElementById('addTCQarzMaxsulot').value = '';
+  document.getElementById('addTCQarzJami').value = '';
+  document.getElementById('addTCQarzBerildi').value = '';
+  document.getElementById('addTCQarzIzoh').value = '';
+  document.getElementById('addTCQarzJamiHint').innerHTML = '';
+  document.getElementById('addTCQarzBerildiHint').innerHTML = '';
+  openModal('addTaminotchiQarzModal');
+}
+
+document.getElementById('addTCQarzJami').addEventListener('input', function() {
+  var val = this.value.replace(/[^\d.]/g, '');
+  this.value = val;
+  var t = taminotchilar.find(function(x) { return x.id === currentAddTCQarzId; });
+  if (val && t) document.getElementById('addTCQarzJamiHint').innerHTML = formatSumma(val, t.valyuta);
+  else document.getElementById('addTCQarzJamiHint').innerHTML = '';
+});
+
+document.getElementById('addTCQarzBerildi').addEventListener('input', function() {
+  var val = this.value.replace(/[^\d.]/g, '');
+  this.value = val;
+  var t = taminotchilar.find(function(x) { return x.id === currentAddTCQarzId; });
+  if (val && t) document.getElementById('addTCQarzBerildiHint').innerHTML = formatSumma(val, t.valyuta);
+  else document.getElementById('addTCQarzBerildiHint').innerHTML = '';
+});
+
+async function confirmAddTCQarz() {
+  var t = taminotchilar.find(function(x) { return x.id === currentAddTCQarzId; });
+  if (!t) return;
+
+  var yangiMaxsulot = document.getElementById('addTCQarzMaxsulot').value.trim();
+  var qoshimchaJami = Number(document.getElementById('addTCQarzJami').value);
+  var qoshimchaBerildi = Number(document.getElementById('addTCQarzBerildi').value) || 0;
+  var izoh = document.getElementById('addTCQarzIzoh').value.trim();
+
+  if (!yangiMaxsulot) { showToast('Maxsulotni kiriting!', 'error'); return; }
+  if (!qoshimchaJami || qoshimchaJami <= 0) { showToast('Summani kiriting!', 'error'); return; }
+  if (qoshimchaBerildi > qoshimchaJami) { showToast('Berildi jamidan katta!', 'error'); return; }
+
+  // YANGI QARZNI TARIXGA YOZISH (alohida yozuv)
+  var sana = new Date().toISOString().slice(0, 10);
+  var yangiQarzTarix = {
+    id: Date.now(),
+    taminotchi_id: t.id,
+    kim: t.kim,
+    nima: yangiMaxsulot,
+    summa: qoshimchaJami,
+    berildi: qoshimchaBerildi,
+    qoldiq: qoshimchaJami - qoshimchaBerildi,
+    valyuta: t.valyuta,
+    tur: 'qarz',
+    izoh: izoh,
+    sana: sana
+  };
+
+  var btn = document.getElementById('addTCQarzBtn');
+  btn.disabled = true;
+  btn.textContent = 'Saqlanmoqda...';
+
+  // 1. Yangi qarz tarixiga yozish
+  var ok1 = await supabaseInsertTaminotchiQarz(yangiQarzTarix);
+  
+  // 2. Umumiy taminotchi jadvalini yangilash (jamlanma)
+  var yangiJami = t.jami_summa + qoshimchaJami;
+  var yangiBerildi = t.berildi + qoshimchaBerildi;
+  var yangiQoldiq = yangiJami - yangiBerildi;
+  var yangiNima = t.nima_uchun + ' + ' + yangiMaxsulot;
+
+  var ok2 = await supabaseClient.from('rasxodlar').update({
+    jami_summa: yangiJami,
+    berildi: yangiBerildi,
+    qoldiq: yangiQoldiq,
+    nima_uchun: yangiNima
+  }).eq('id', t.id);
+
+  btn.disabled = false;
+  btn.textContent = '➕ Qarz qo\'shish';
+
+  if (!ok1 || (ok2 && ok2.error)) {
+    showToast('Xatolik! Saqlanmadi', 'error');
+    return;
+  }
+
+  // Kassaga chiqim
+  if (qoshimchaBerildi > 0) {
+    var kassaYozuv = {
+      id: Date.now() + 10, tur: 'chiqim', summa: qoshimchaBerildi,
+      valyuta: t.valyuta,
+      izoh: 'Yangi maxsulot to\'lovi: ' + t.kim
+    };
+    await supabaseInsertKassa(kassaYozuv);
+    kassaTarix.push(kassaYozuv);
+  }
+
+  // Local state yangilash
+  t.jami_summa = yangiJami;
+  t.berildi = yangiBerildi;
+  t.qoldiq = yangiQoldiq;
+  t.nima_uchun = yangiNima;
+  taminotchiQarzTarix.unshift(yangiQarzTarix);
+
+  closeModal('addTaminotchiQarzModal');
+  showToast('✅ ' + formatSumma(qoshimchaJami, t.valyuta) + ' qarz qo\'shildi! Jami qarzimiz: ' + formatSumma(yangiQoldiq, t.valyuta), 'orange');
+
+  renderTaminotchilar();
+  renderKassa();
+  renderDashboard();
+}
+
+/* TA'MINOTCHI QARZLAR TARIXINI KO'RSATISH */
+function showTaminotchiQarzTarix(id) {
+  var t = taminotchilar.find(function(x) { return x.id === id; });
+  if (!t) return;
+
+  // Bu ta'minotchining barcha qarzlari
+  var uningQarzlar = taminotchiQarzTarix.filter(function(x) { return x.taminotchi_id === id; })
+    .sort(function(a, b) { return b.id - a.id; });
+  
+  var uningTolovlar = kassaTarix.filter(function(k) {
+    return k.tur === 'chiqim' && k.izoh && k.izoh.indexOf(t.kim) !== -1;
+  }).sort(function(a, b) { return b.id - a.id; });
+
+  var totalQarz = uningQarzlar.reduce(function(s, x) { return s + x.summa; }, 0);
+  var totalBerildi = uningQarzlar.reduce(function(s, x) { return s + (x.berildi || 0); }, 0);
+
+  var html = '<div class="overall-jami-box" style="margin-bottom:16px;">' +
+    '<div class="oj-label" style="color:#fdba74;">📦 ' + t.kim + '</div>' +
+    '<div class="oj-amount">' + formatSumma(t.qoldiq, t.valyuta) + '</div>' +
+    '<div class="oj-sub">Umumiy qarzimiz</div>' +
+  '</div>';
+
+  html += '<div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:16px;">' +
+    '<div style="padding:12px; background:rgba(245,158,11,0.15); border:1px solid rgba(245,158,11,0.3); border-radius:10px;">' +
+      '<div style="font-size:10px; color:#fcd34d; font-weight:700; text-transform:uppercase;">Jami olingan</div>' +
+      '<div style="font-size:16px; font-weight:800; color:#fcd34d; margin-top:5px;">' + formatSumma(t.jami_summa, t.valyuta) + '</div>' +
+    '</div>' +
+    '<div style="padding:12px; background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.3); border-radius:10px;">' +
+      '<div style="font-size:10px; color:#6ee7b7; font-weight:700; text-transform:uppercase;">Jami to\'langan</div>' +
+      '<div style="font-size:16px; font-weight:800; color:#6ee7b7; margin-top:5px;">' + formatSumma(t.berildi, t.valyuta) + '</div>' +
+    '</div>' +
+  '</div>';
+
+  if (uningQarzlar.length > 0) {
+    html += '<div style="font-size:12px; color:#fdba74; margin:16px 0 10px; font-weight:800;">📦 QARZLAR TARIXI (' + uningQarzlar.length + ' ta):</div>';
+    uningQarzlar.forEach(function(q) {
+      var isPaid = q.qoldiq <= 0.01;
+      html += '<div class="tarix-item">' +
+        '<div class="ti-header">' +
+          '<div class="ti-date">📅 ' + formatDate(q.sana || q.yaratilgan) + '</div>' +
+          '<div class="ti-badge qarz">QARZ</div>' +
+        '</div>' +
+        '<div class="ti-product">📦 ' + q.nima + '</div>' +
+        '<div class="ti-money">' + formatSumma(q.summa, q.valyuta) + '</div>' +
+        (q.berildi > 0 ? '<div style="font-size:11px; color:#6ee7b7; margin-top:5px;">Berildi: ' + formatSumma(q.berildi, q.valyuta) + '</div>' : '') +
+        (q.izoh ? '<div class="ti-note">💬 ' + q.izoh + '</div>' : '') +
+      '</div>';
+    });
+  }
+
+  if (uningTolovlar.length > 0) {
+    html += '<div style="font-size:12px; color:#6ee7b7; margin:16px 0 10px; font-weight:800;">💸 TO\'LOVLAR TARIXI (' + uningTolovlar.length + ' ta):</div>';
+    uningTolovlar.forEach(function(k) {
+      html += '<div class="tarix-item tolov">' +
+        '<div class="ti-header">' +
+          '<div class="ti-date">📅 ' + formatDate(k.sana || k.yaratilgan) + '</div>' +
+          '<div class="ti-badge tolov">TO\'LOV</div>' +
+        '</div>' +
+        '<div class="ti-money">' + formatSumma(k.summa, k.valyuta) + '</div>' +
+        (k.izoh ? '<div class="ti-note">💬 ' + k.izoh + '</div>' : '') +
+      '</div>';
+    });
+  }
+
+  if (uningQarzlar.length === 0 && uningTolovlar.length === 0) {
+    html += '<div style="text-align:center; padding:30px; color:#8b95b8;">Ma\'lumot yo\'q</div>';
+  }
+
+  document.getElementById('taminotchiQarzTarixContent').innerHTML = html;
+  openModal('taminotchiQarzTarixModal');
 }
 
 /* QAYTA NASIYA */
@@ -2059,10 +2213,7 @@ function startRenewal(id) {
   var q = qarzdorlar.find(function(x) { return x.id === id; });
   if (!q) return;
 
-  renewalClientData = {
-    ismi: q.ismi, familyasi: q.familyasi,
-    yashashJoyi: q.yashashJoyi, telRaqami: q.telRaqami
-  };
+  renewalClientData = { ismi: q.ismi, familyasi: q.familyasi, yashashJoyi: q.yashashJoyi, telRaqami: q.telRaqami };
 
   document.getElementById('ismi').value = q.ismi;
   document.getElementById('familyasi').value = q.familyasi;
@@ -2079,42 +2230,29 @@ function startRenewal(id) {
   document.getElementById('telRaqami').setAttribute('readonly', true);
 
   document.getElementById('formTitle').textContent = '🔄 Qayta nasiya berish';
-  document.getElementById('formTitle').classList.add('purple');
-
   document.getElementById('renewBannerContainer').innerHTML =
-    '<div class="renew-banner">' +
-      '<div class="rb-icon">🔄</div>' +
-      '<div class="rb-text"><h4>Qayta nasiya: ' + q.ismi + ' ' + q.familyasi + '</h4><p>Mijoz avvalgi qarzini to\'lagan. Yangi nasiya bering.</p></div>' +
-      '<button class="rb-close" onclick="cancelRenew()">✕</button>' +
+    '<div class="renew-banner" style="background: linear-gradient(135deg, rgba(139,92,246,0.25), rgba(139,92,246,0.05)); border: 1px solid rgba(139,92,246,0.5); border-radius: 14px; padding: 14px; margin-bottom: 14px; display: flex; align-items: center; gap: 12px;">' +
+      '<div style="width: 40px; height: 40px; border-radius: 10px; background: linear-gradient(135deg, #8b5cf6, #6d28d9); display: flex; align-items: center; justify-content: center; color: white; font-size: 20px;">🔄</div>' +
+      '<div style="flex:1;"><h4 style="font-size:13px; font-weight:800; margin-bottom:3px; color:#c4b5fd;">Qayta nasiya: ' + q.ismi + ' ' + q.familyasi + '</h4><p style="font-size:11px; color:#8b95b8;">Yangi nasiya bering</p></div>' +
+      '<button style="width:32px;height:32px;border-radius:8px;background:rgba(139,92,246,0.2);color:#c4b5fd;border:1px solid rgba(139,92,246,0.4);cursor:pointer;" onclick="cancelRenew()">✕</button>' +
     '</div>';
 
-  var btn = document.getElementById('saqlashBtn');
-  btn.className = 'btn btn-purple';
-  btn.innerHTML = '🔄 Qayta nasiyani saqlash';
-
+  document.getElementById('saqlashBtn').innerHTML = '🔄 Qayta nasiyani saqlash';
   document.getElementById('cancelRenewBtn').style.display = 'flex';
-
   goToPage('add');
-  showToast('🔄 Qayta nasiya rejimi', 'purple');
+  showToast('🔄 Qayta nasiya rejimi');
 }
 
 function cancelRenew() {
   renewalClientData = null;
   document.getElementById('renewBannerContainer').innerHTML = '';
   document.getElementById('formTitle').textContent = 'Yangi qarzdor qo\'shish';
-  document.getElementById('formTitle').classList.remove('purple');
-
   ['ismi','familyasi','yashashJoyi','telRaqami'].forEach(function(id) {
     document.getElementById(id).removeAttribute('readonly');
   });
-
   document.getElementById('qarzdorForm').reset();
   document.getElementById('summaHint').innerHTML = '';
-
-  var btn = document.getElementById('saqlashBtn');
-  btn.className = 'btn btn-primary';
-  btn.innerHTML = '💾 Qarzdorni saqlash';
-
+  document.getElementById('saqlashBtn').innerHTML = '💾 Saqlash';
   document.getElementById('cancelRenewBtn').style.display = 'none';
 }
 
@@ -2132,27 +2270,15 @@ function showHistory(tel, ismi, familyasi) {
 
   var html = '<div style="margin-bottom:12px;padding:12px;background:rgba(139,92,246,0.1);border-radius:10px;border:1px solid rgba(139,92,246,0.3);">' +
     '<div style="font-size:13px;font-weight:800;color:#c4b5fd;margin-bottom:6px;">' + ismi + ' ' + familyasi + '</div>' +
-    '<div style="font-size:11px;color:#8b95b8;line-height:1.8;">' +
-      '📞 ' + tel + '<br>' +
-      '📊 Jami nasiyalar: <b style="color:#fff;">' + history.length + ' ta</b><br>' +
-      '💰 Umumiy summa: <b style="color:#fff;">' + formatSumma(totalSum) + '</b><br>' +
-      '✅ To\'langan: <b style="color:#10b981;">' + formatSumma(totalPaid) + '</b>' +
-    '</div></div>';
+    '<div style="font-size:11px;color:#8b95b8;line-height:1.8;">📞 ' + tel + '<br>📊 Jami: <b>' + history.length + ' ta</b><br>💰 Summa: <b>' + formatSumma(totalSum) + '</b></div></div>';
 
   history.forEach(function(h) {
     var isPaid = h.qoldiq <= 0;
-    html += '<div class="history-item">' +
-      '<div class="hi-header">' +
-        '<div class="hi-date">' + formatDate(h.yaratilgan) + '</div>' +
-        '<div class="hi-status ' + (isPaid ? 'paid' : 'active') + '">' + (isPaid ? 'To\'langan' : 'Faol') + '</div>' +
-      '</div>' +
-      '<div class="hi-product">📦 ' + h.maxsulot + '</div>' +
-      '<div class="hi-money">' +
-        '<span>Jami: <b>' + formatSumma(h.summa) + '</b></span>' +
-        '<span style="color:#10b981;">To\'landi: <b>' + formatSumma(h.tolangan || 0) + '</b></span>' +
-        '<span style="color:#ef4444;">Qoldiq: <b>' + formatSumma(h.qoldiq) + '</b></span>' +
-      '</div>' +
-      '<div style="font-size:10px;color:#8b95b8;margin-top:6px;">📅 Muddat: ' + formatDate(h.muddat) + '</div>' +
+    html += '<div class="tarix-item">' +
+      '<div class="ti-header"><div class="ti-date">📅 ' + formatDate(h.yaratilgan) + '</div><div class="ti-badge qarz">' + (isPaid ? 'TO\'LANGAN' : 'FAOL') + '</div></div>' +
+      '<div class="ti-product">📦 ' + h.maxsulot + '</div>' +
+      '<div class="ti-money">' + formatSumma(h.summa) + '</div>' +
+      '<div style="font-size:11px;color:#8b95b8;margin-top:6px;">To\'landi: ' + formatSumma(h.tolangan || 0) + ' • Qoldiq: ' + formatSumma(h.qoldiq) + '</div>' +
     '</div>';
   });
 
@@ -2176,7 +2302,7 @@ function renderTolovList() {
   filtered.sort(function(a, b) { return priority[getHolat(a).type] - priority[getHolat(b).type]; });
 
   if (filtered.length === 0) {
-    list.innerHTML = '<div class="empty-state"><h3>Qarz yo\'q</h3><p>Barcha qarzlar to\'langan! ✅</p></div>';
+    list.innerHTML = '<div class="empty-state"><h3>Qarz yo\'q</h3></div>';
     return;
   }
 
@@ -2191,40 +2317,25 @@ function renderTolovList() {
 document.getElementById('tolovSearch').addEventListener('input', renderTolovList);
 
 /* KASSA */
-function setKassaCurr(c) {
-  selectedKassaCurr = c;
-  document.querySelectorAll('#kassaCurrToggle button').forEach(function(b) { b.classList.toggle('active', b.dataset.curr === c); });
-}
-function setTashqiCurr(c) {
-  selectedTashqiCurr = c;
-  document.querySelectorAll('#tashqiCurrToggle button').forEach(function(b) { b.classList.toggle('active', b.dataset.curr === c); });
-}
-function setChiqimCurr(c) {
-  selectedChiqimCurr = c;
-  document.querySelectorAll('#chiqimCurrToggle button').forEach(function(b) { b.classList.toggle('active', b.dataset.curr === c); });
-}
+function setKassaCurr(c) { selectedKassaCurr = c; document.querySelectorAll('#kassaCurrToggle button').forEach(function(b) { b.classList.toggle('active', b.dataset.curr === c); }); }
+function setTashqiCurr(c) { selectedTashqiCurr = c; document.querySelectorAll('#tashqiCurrToggle button').forEach(function(b) { b.classList.toggle('active', b.dataset.curr === c); }); }
+function setChiqimCurr(c) { selectedChiqimCurr = c; document.querySelectorAll('#chiqimCurrToggle button').forEach(function(b) { b.classList.toggle('active', b.dataset.curr === c); }); }
 
 function renderKassa() {
   updateKassaBalanceUI();
   var list = document.getElementById('kassaList');
   if (!list) return;
-
   if (kassaTarix.length === 0) {
-    list.innerHTML = '<div class="empty-state"><h3>Kassa bo\'sh</h3><p>Birinchi kirimni qiling</p></div>';
+    list.innerHTML = '<div class="empty-state"><h3>Kassa bo\'sh</h3></div>';
     return;
   }
-
   var sorted = kassaTarix.slice().sort(function(a, b) { return b.id - a.id; });
-
   list.innerHTML = sorted.slice(0, 100).map(function(k, i) {
-    return '<div class="kassa-item ' + k.tur + '" style="animation-delay:' + (i * 0.03) + 's">' +
+    return '<div class="kassa-item ' + k.tur + '">' +
       '<div class="k-icon">' + (k.tur === 'kirim' ? '📥' : '📤') + '</div>' +
-      '<div class="k-info">' +
-        '<h4>' + (k.tur === 'kirim' ? 'Kirim' : 'Chiqim') + ' ' + (k.valyuta === 'USD' ? '(USD)' : '') + '</h4>' +
-        '<p>' + (k.izoh || 'Izohsiz') + ' • ' + formatDate(k.sana || k.yaratilgan) + '</p>' +
-      '</div>' +
+      '<div class="k-info"><h4>' + (k.tur === 'kirim' ? 'Kirim' : 'Chiqim') + '</h4><p>' + (k.izoh || '') + ' • ' + formatDate(k.sana || k.yaratilgan) + '</p></div>' +
       '<div class="k-summa">' + (k.tur === 'kirim' ? '+' : '-') + formatSummaShort(k.summa, k.valyuta) + '</div>' +
-      '<button class="i-del" onclick="openDeleteModal(' + k.id + ', \'kassa\')" style="margin-left:8px;">🗑</button>' +
+      '<button style="padding:8px;border-radius:8px;background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.3);color:#fca5a5;cursor:pointer;margin-left:8px;" onclick="openDeleteModal(' + k.id + ', \'kassa\')">🗑</button>' +
     '</div>';
   }).join('');
 }
@@ -2232,17 +2343,15 @@ function renderKassa() {
 async function kassaKirim() {
   var summa = Number(document.getElementById('kassaSumma').value);
   var izoh = document.getElementById('kassaIzoh').value.trim() || 'Kassa kirimi';
-  if (!summa || summa <= 0) { showToast('To\'g\'ri summa!', 'error'); return; }
-
+  if (!summa || summa <= 0) { showToast('Summa!', 'error'); return; }
   var yangi = { id: Date.now(), tur: 'kirim', summa: summa, valyuta: selectedKassaCurr, izoh: izoh };
   var ok = await supabaseInsertKassa(yangi);
-  if (!ok) { showToast('Xatolik! Supabase\'ga saqlanmadi', 'error'); return; }
-
+  if (!ok) { showToast('Xatolik!', 'error'); return; }
   kassaTarix.push(yangi);
   document.getElementById('kassaSumma').value = '';
   document.getElementById('kassaIzoh').value = '';
   document.getElementById('kassaSummaHint').innerHTML = '';
-  showToast('✅ ' + formatSumma(summa, selectedKassaCurr) + ' kiritildi!');
+  showToast('✅ ' + formatSumma(summa, selectedKassaCurr));
   renderKassa();
   renderDashboard();
 }
@@ -2261,18 +2370,15 @@ function kassaChiqimModal() {
 async function confirmKassaChiqim() {
   var summa = Number(document.getElementById('chiqimSumma').value);
   var izoh = document.getElementById('chiqimIzoh').value.trim() || 'Kassa chiqimi';
-  if (!summa || summa <= 0) { showToast('To\'g\'ri summa!', 'error'); return; }
-
+  if (!summa || summa <= 0) { showToast('Summa!', 'error'); return; }
   var bal = selectedChiqimCurr === 'USD' ? kassaBalanceUSD : kassaBalanceUZS;
   if (summa > bal) { showToast('Kassada buncha pul yo\'q!', 'error'); return; }
-
   var yangi = { id: Date.now(), tur: 'chiqim', summa: summa, valyuta: selectedChiqimCurr, izoh: izoh };
   var ok = await supabaseInsertKassa(yangi);
   if (!ok) { showToast('Xatolik!', 'error'); return; }
-
   kassaTarix.push(yangi);
   closeModal('kassaChiqimModalOverlay');
-  showToast('✅ ' + formatSumma(summa, selectedChiqimCurr) + ' chiqarildi!');
+  showToast('✅ Chiqim qabul qilindi!');
   renderKassa();
   renderDashboard();
 }
@@ -2304,6 +2410,7 @@ function renderRasxodlarAll() {
   renderIchki();
 }
 
+/* TA'MINOTCHILAR - YANGILANGAN */
 function renderTaminotchilar() {
   var list = document.getElementById('taminotchiList');
   if (!list) return;
@@ -2338,34 +2445,42 @@ function renderTaminotchilar() {
   if (elQ) elQ.textContent = qparts.length > 0 ? qparts.join(' + ') : '0';
 
   if (filtered.length === 0) {
-    list.innerHTML = '<div class="empty-state"><h3>Ta\'minotchilar yo\'q</h3><p>Yangi ta\'minotchi qo\'shing</p></div>';
+    list.innerHTML = '<div class="empty-state"><h3>Ta\'minotchilar yo\'q</h3></div>';
     return;
   }
 
   list.innerHTML = filtered.map(function(t, i) {
-    var percent = t.jami_summa > 0 ? Math.min(100, (t.berildi / t.jami_summa) * 100) : 0;
     var isQarzli = t.qoldiq > 0.01;
-    var cardClass = isQarzli ? 'qarzli' : 'tolangan';
-    var badgeClass = isQarzli ? 'qarzli' : 'tolangan';
-    var badgeText = isQarzli ? 'QARZ: ' + formatSummaShort(t.qoldiq, t.valyuta) : 'TO\'LANGAN';
+    var percent = t.jami_summa > 0 ? Math.min(100, (t.berildi / t.jami_summa) * 100) : 0;
+    
+    // Tarixdagi qarzlar soni
+    var uningQarzlar = taminotchiQarzTarix.filter(function(x) { return x.taminotchi_id === t.id && x.tur === 'qarz'; });
+    var qarzSoni = uningQarzlar.length;
 
-    return '<div class="taminotchi-card ' + cardClass + '" style="animation-delay:' + (i * 0.04) + 's">' +
+    return '<div class="taminotchi-card ' + (isQarzli ? 'qarzli' : 'tolangan') + '" style="animation-delay:' + (i * 0.04) + 's">' +
       '<div class="tc-header">' +
         '<div style="flex:1;min-width:0;">' +
           '<div class="tc-name">' + t.kim + '</div>' +
           '<div class="tc-nima">📦 ' + t.nima_uchun + '</div>' +
         '</div>' +
-        '<div class="tc-badge ' + badgeClass + '">' + badgeText + '</div>' +
+        '<div style="display:flex;flex-direction:column;gap:4px;align-items:flex-end;">' +
+          (qarzSoni > 0 ? '<div class="q-badge orange">' + qarzSoni + ' ta qarz</div>' : '') +
+        '</div>' +
       '</div>' +
+      
+      // JAMI QARZ - KATTA
+      '<div class="tc-total-box ' + (isQarzli ? '' : 'paid') + '">' +
+        '<div class="tc-label">' + (isQarzli ? '💰 JAMI QARZIMIZ' : '✅ TO\'LANGAN') + '</div>' +
+        '<div class="tc-amount">' + formatSumma(t.qoldiq, t.valyuta) + '</div>' +
+        '<div class="tc-sub">Jami: ' + formatSumma(t.jami_summa, t.valyuta) + ' • Berildi: ' + formatSumma(t.berildi, t.valyuta) + '</div>' +
+      '</div>' +
+      
       '<div class="progress-bar"><div class="progress-fill ' + (isQarzli ? 'warning' : '') + '" style="width:' + percent + '%"></div></div>' +
-      '<div class="tc-money">' +
-        '<div><div class="m-label">Jami</div><div class="m-value">' + formatSumma(t.jami_summa, t.valyuta) + '</div></div>' +
-        '<div><div class="m-label">Berildi</div><div class="m-value green">' + formatSumma(t.berildi, t.valyuta) + '</div></div>' +
-        '<div><div class="m-label">Qoldiq</div><div class="m-value ' + (isQarzli ? 'red' : 'green') + '">' + formatSumma(t.qoldiq, t.valyuta) + '</div></div>' +
-      '</div>' +
+      
       '<div class="tc-actions">' +
         '<button class="tc-btn pay" onclick="openTaminotchiPulModal(' + t.id + ')">💸 Pul berish</button>' +
-        '<button class="tc-btn detail" onclick="showTaminotchiTarix(' + t.id + ')">📋 Tarix</button>' +
+        '<button class="tc-btn addmore" onclick="openAddTaminotchiQarzModal(' + t.id + ')" title="Yana maxsulot olib qarz qo\'shish">➕ Qarz</button>' +
+        '<button class="tc-btn detail" onclick="showTaminotchiQarzTarix(' + t.id + ')">📋 Tarix</button>' +
         '<button class="tc-btn del" onclick="openDeleteModal(' + t.id + ', \'tashqi\')">🗑</button>' +
       '</div>' +
     '</div>';
@@ -2391,10 +2506,9 @@ async function addTashqi() {
   var berildi = Number(document.getElementById('tashqiBerildi').value) || 0;
   var izoh = document.getElementById('tashqiIzoh').value.trim();
 
-  if (!kim) { showToast('Kim ekanligini yozing!', 'error'); return; }
-  if (!nima) { showToast('Nima uchun ekanligini yozing!', 'error'); return; }
-  if (!jami || jami <= 0) { showToast('Jami summa kiriting!', 'error'); return; }
-  if (berildi < 0) { showToast('Berildi 0 dan kichik!', 'error'); return; }
+  if (!kim) { showToast('Kim?', 'error'); return; }
+  if (!nima) { showToast('Nima uchun?', 'error'); return; }
+  if (!jami || jami <= 0) { showToast('Summa!', 'error'); return; }
   if (berildi > jami) { showToast('Berildi jamidan katta!', 'error'); return; }
 
   var qoldiq = jami - berildi;
@@ -2406,11 +2520,24 @@ async function addTashqi() {
   };
 
   var ok = await supabaseInsertRasxod(yangi);
-  if (!ok) { showToast('Xatolik! Saqlanmadi', 'error'); return; }
+  if (!ok) { showToast('Xatolik!', 'error'); return; }
+
+  // BIRINCHI QARZNI TARIXGA YOZISH
+  var birinchiQarz = {
+    id: Date.now() + 1,
+    taminotchi_id: yangi.id,
+    kim: kim, nima: nima, summa: jami,
+    berildi: berildi, qoldiq: qoldiq,
+    valyuta: selectedTashqiCurr,
+    tur: 'qarz', izoh: izoh,
+    sana: yangi.sana
+  };
+  await supabaseInsertTaminotchiQarz(birinchiQarz);
+  taminotchiQarzTarix.unshift(birinchiQarz);
 
   if (berildi > 0) {
     var kassaYozuv = {
-      id: Date.now() + 1, tur: 'chiqim', summa: berildi,
+      id: Date.now() + 2, tur: 'chiqim', summa: berildi,
       valyuta: selectedTashqiCurr,
       izoh: 'Ta\'minotchi: ' + kim
     };
@@ -2440,10 +2567,7 @@ function openTaminotchiPulModal(id) {
 
   document.getElementById('taminotchiInfoBox').innerHTML =
     '<div class="info-row"><span class="lbl">Kim</span><span class="val">' + t.kim + '</span></div>' +
-    '<div class="info-row"><span class="lbl">Nima uchun</span><span class="val">' + t.nima_uchun + '</span></div>' +
-    '<div class="info-row"><span class="lbl">Jami</span><span class="val">' + formatSumma(t.jami_summa, t.valyuta) + '</span></div>' +
-    '<div class="info-row"><span class="lbl">Berildi</span><span class="val" style="color:#10b981;">' + formatSumma(t.berildi, t.valyuta) + '</span></div>' +
-    '<div class="info-row"><span class="lbl">Qoldiq</span><span class="val" style="color:#ef4444;">' + formatSumma(t.qoldiq, t.valyuta) + '</span></div>';
+    '<div class="info-row"><span class="lbl">Jami qarz</span><span class="val" style="color:#ef4444;">' + formatSumma(t.qoldiq, t.valyuta) + '</span></div>';
 
   document.getElementById('taminotchiPulSumma').value = '';
   document.getElementById('taminotchiPulHint').innerHTML = '';
@@ -2454,7 +2578,6 @@ function setTaminotchiPulPercent(p) {
   var t = taminotchilar.find(function(x) { return x.id === currentTaminotchiId; });
   if (!t) return;
   document.getElementById('taminotchiPulSumma').value = (t.qoldiq * (p / 100)).toFixed(2);
-  document.getElementById('taminotchiPulHint').innerHTML = formatSumma(t.qoldiq * (p / 100), t.valyuta);
 }
 
 document.getElementById('taminotchiPulSumma').addEventListener('input', function() {
@@ -2469,8 +2592,8 @@ async function confirmTaminotchiPul() {
   if (!t) return;
 
   var summa = Number(document.getElementById('taminotchiPulSumma').value);
-  if (!summa || summa <= 0) { showToast('To\'g\'ri summa!', 'error'); return; }
-  if (summa > t.qoldiq) { showToast('Summa qoldiqdan katta!', 'error'); return; }
+  if (!summa || summa <= 0) { showToast('Summa!', 'error'); return; }
+  if (summa > t.qoldiq) { showToast('Qoldiqdan katta!', 'error'); return; }
 
   var yangiBerildi = t.berildi + summa;
   var yangiQoldiq = t.jami_summa - yangiBerildi;
@@ -2480,11 +2603,26 @@ async function confirmTaminotchiPul() {
 
   var ok = await supabaseUpdateRasxod(t.id, yangiBerildi, yangiQoldiq);
   btn.disabled = false;
-
   if (!ok) { showToast('Xatolik!', 'error'); return; }
 
+  // TO'LOVNI TARIXGA YOZISH
+  var tolovYozuv = {
+    id: Date.now() + 3,
+    taminotchi_id: t.id,
+    kim: t.kim,
+    nima: 'To\'lov',
+    summa: summa, berildi: summa, qoldiq: 0,
+    valyuta: t.valyuta,
+    tur: 'tolov',
+    izoh: 'Qarz to\'lovi',
+    sana: new Date().toISOString().slice(0, 10)
+  };
+  await supabaseInsertTaminotchiQarz(tolovYozuv);
+  taminotchiQarzTarix.unshift(tolovYozuv);
+
+  // Kassaga chiqim
   var kassaYozuv = {
-    id: Date.now() + 3, tur: 'chiqim', summa: summa,
+    id: Date.now() + 4, tur: 'chiqim', summa: summa,
     valyuta: t.valyuta,
     izoh: 'Ta\'minotchi to\'lovi: ' + t.kim
   };
@@ -2501,49 +2639,15 @@ async function confirmTaminotchiPul() {
   renderDashboard();
 }
 
-function showTaminotchiTarix(id) {
-  var t = taminotchilar.find(function(x) { return x.id === id; });
-  if (!t) return;
-
-  var tolovlar = kassaTarix.filter(function(k) {
-    return k.tur === 'chiqim' && k.izoh && k.izoh.indexOf(t.kim) !== -1;
-  });
-
-  var html = '<div class="info-box">' +
-    '<div class="info-row"><span class="lbl">Kim</span><span class="val">' + t.kim + '</span></div>' +
-    '<div class="info-row"><span class="lbl">Nima uchun</span><span class="val">' + t.nima_uchun + '</span></div>' +
-    '<div class="info-row"><span class="lbl">Jami summa</span><span class="val">' + formatSumma(t.jami_summa, t.valyuta) + '</span></div>' +
-    '<div class="info-row"><span class="lbl">Berildi</span><span class="val" style="color:#10b981;">' + formatSumma(t.berildi, t.valyuta) + '</span></div>' +
-    '<div class="info-row"><span class="lbl">Qoldiq</span><span class="val" style="color:#ef4444;">' + formatSumma(t.qoldiq, t.valyuta) + '</span></div>' +
-    '<div class="info-row"><span class="lbl">Sana</span><span class="val">' + formatDate(t.sana) + '</span></div>' +
-    (t.izoh ? '<div class="info-row"><span class="lbl">Izoh</span><span class="val">' + t.izoh + '</span></div>' : '') +
-    '</div>';
-
-  if (tolovlar.length > 0) {
-    html += '<div style="font-size:12px;color:var(--text-muted);margin:14px 0 8px;font-weight:700;">TO\'LOVLAR TARIXI:</div>';
-    tolovlar.sort(function(a, b) { return b.id - a.id; }).forEach(function(k) {
-      html += '<div style="padding:10px;margin-bottom:6px;background:rgba(16,185,129,0.1);border-left:3px solid #10b981;border-radius:8px;">' +
-        '<div style="font-size:13px;font-weight:800;color:#6ee7b7;">' + formatSumma(k.summa, k.valyuta) + '</div>' +
-        '<div style="font-size:11px;color:var(--text-muted);margin-top:3px;">' + formatDate(k.sana || k.yaratilgan) + ' • ' + (k.izoh || '') + '</div>' +
-      '</div>';
-    });
-  }
-
-  document.getElementById('taminotchiTarixContent').innerHTML = html;
-  openModal('taminotchiTarixModal');
-}
-
 /* ICHKI RASXOD */
 function renderIchki() {
   var list = document.getElementById('ichkiList');
   if (!list) return;
-
   var search = (document.getElementById('ichkiSearch').value || '').toLowerCase().trim();
   var filtered = ichkiRasxodlar.slice();
   if (search) {
     filtered = filtered.filter(function(r) {
-      return (r.nomi || '').toLowerCase().indexOf(search) !== -1 ||
-        (r.izoh || '').toLowerCase().indexOf(search) !== -1;
+      return (r.nomi || '').toLowerCase().indexOf(search) !== -1;
     });
   }
   filtered.sort(function(a, b) { return b.id - a.id; });
@@ -2553,17 +2657,14 @@ function renderIchki() {
   if (el) el.textContent = formatSumma(jami);
 
   if (filtered.length === 0) {
-    list.innerHTML = '<div class="empty-state"><h3>Ichki rasxodlar yo\'q</h3><p>Yangi qo\'shing</p></div>';
+    list.innerHTML = '<div class="empty-state"><h3>Ichki rasxodlar yo\'q</h3></div>';
     return;
   }
 
   list.innerHTML = filtered.map(function(r, i) {
-    return '<div class="ichki-item" style="animation-delay:' + (i * 0.04) + 's">' +
+    return '<div class="ichki-item">' +
       '<div class="i-icon">🏢</div>' +
-      '<div class="i-info">' +
-        '<h4>' + r.nomi + '</h4>' +
-        '<p>' + (r.izoh || 'Izohsiz') + ' • ' + formatDate(r.sana || r.yaratilgan) + '</p>' +
-      '</div>' +
+      '<div class="i-info"><h4>' + r.nomi + '</h4><p>' + (r.izoh || '') + ' • ' + formatDate(r.sana || r.yaratilgan) + '</p></div>' +
       '<div class="i-summa">' + formatSumma(r.summa) + '</div>' +
       '<button class="i-del" onclick="openDeleteModal(' + r.id + ', \'ichki\')">🗑</button>' +
     '</div>';
@@ -2583,15 +2684,15 @@ async function addIchki() {
   var izoh = document.getElementById('ichkiIzoh').value.trim();
   var sana = document.getElementById('ichkiSana').value || new Date().toISOString().slice(0, 10);
 
-  if (!nomi) { showToast('Nomini yozing!', 'error'); return; }
-  if (!summa || summa <= 0) { showToast('Summa kiriting!', 'error'); return; }
+  if (!nomi) { showToast('Nomi!', 'error'); return; }
+  if (!summa || summa <= 0) { showToast('Summa!', 'error'); return; }
 
   var yangi = { id: Date.now(), nomi: nomi, summa: summa, izoh: izoh, sana: sana };
   var ok = await supabaseInsertIchki(yangi);
-  if (!ok) { showToast('Xatolik! Saqlanmadi', 'error'); return; }
+  if (!ok) { showToast('Xatolik!', 'error'); return; }
 
   var kassaYozuv = {
-    id: Date.now() + 4, tur: 'chiqim', summa: summa,
+    id: Date.now() + 5, tur: 'chiqim', summa: summa,
     valyuta: 'UZS', izoh: 'Ichki rasxod: ' + nomi
   };
   await supabaseInsertKassa(kassaYozuv);
@@ -2603,7 +2704,7 @@ async function addIchki() {
   document.getElementById('ichkiIzoh').value = '';
   document.getElementById('ichkiSummaHint').innerHTML = '';
 
-  showToast('✅ Ichki rasxod qo\'shildi!');
+  showToast('✅ Qo\'shildi!');
   renderIchki();
   renderKassa();
   renderDashboard();
@@ -2619,7 +2720,7 @@ document.getElementById('tolovSumma').addEventListener('input', function() {
   this.value = this.value.replace(/[^\d]/g, '');
 });
 
-/* YANGI QARZDOR + QAYTA NASIYA */
+/* YANGI QARZDOR */
 document.getElementById('qarzdorForm').addEventListener('submit', async function(e) {
   e.preventDefault();
   var inputs = ['ismi','familyasi','yashashJoyi','telRaqami','maxsulot','summa','muddat'];
@@ -2628,15 +2729,15 @@ document.getElementById('qarzdorForm').addEventListener('submit', async function
     var el = document.getElementById(id);
     if (!el.value.trim()) { el.classList.add('error'); valid = false; setTimeout(function() { el.classList.remove('error'); }, 1500); }
   });
-  if (!valid) { showToast('Barcha maydonlarni to\'ldiring!', 'error'); return; }
+  if (!valid) { showToast('Hamma maydonlarni to\'ldiring!', 'error'); return; }
 
   var summa = Math.round(Number(document.getElementById('summa').value));
-  if (!summa || summa <= 0) { showToast('Summa 0 dan katta!', 'error'); return; }
+  if (!summa || summa <= 0) { showToast('Summa!', 'error'); return; }
 
   var btn = document.getElementById('saqlashBtn');
   var isRenewal = renewalClientData !== null;
   btn.disabled = true;
-  btn.textContent = isRenewal ? 'Qayta nasiya saqlanmoqda...' : 'Saqlanmoqda...';
+  btn.textContent = 'Saqlanmoqda...';
 
   var yangi = {
     id: Date.now(),
@@ -2654,15 +2755,15 @@ document.getElementById('qarzdorForm').addEventListener('submit', async function
   btn.disabled = false;
 
   if (!ok) {
-    btn.innerHTML = isRenewal ? '🔄 Qayta nasiyani saqlash' : '💾 Qarzdorni saqlash';
-    showToast('Xatolik! Supabase\'ga saqlanmadi', 'error');
+    btn.innerHTML = isRenewal ? '🔄 Saqlash' : '💾 Saqlash';
+    showToast('Xatolik!', 'error');
     return;
   }
 
   qarzdorlar.unshift(yangi);
 
   if (isRenewal) {
-    showToast('🎉 Qayta nasiya saqlandi: ' + yangi.ismi + ' ' + yangi.familyasi, 'purple');
+    showToast('🎉 Qayta nasiya saqlandi!');
     cancelRenew();
     setTimeout(function() { goToPage('qarzdorlar'); }, 700);
   } else {
@@ -2685,7 +2786,13 @@ function openSmsModal(id) {
   currentSmsId = id;
   var q = qarzdorlar.find(function(x) { return x.id === id; });
   if (!q) return;
-  document.getElementById('smsText').value = fillSmsTemplate(q);
+  document.getElementById('smsText').value = smsTemplate
+    .replace(/{familiya}/g, q.familyasi).replace(/{ismi}/g, q.ismi)
+    .replace(/{maxsulot}/g, q.maxsulot).replace(/{summa}/g, formatSumma(q.summa))
+    .replace(/{tolangan}/g, formatSumma(q.tolangan || 0))
+    .replace(/{qoldiq}/g, formatSumma(q.qoldiq))
+    .replace(/{muddat}/g, formatDate(q.muddat))
+    .replace(/{yaratilgan}/g, formatDate(q.yaratilgan));
   openModal('smsModal');
 }
 function sendSms() {
@@ -2695,7 +2802,6 @@ function sendSms() {
   var tel = q.telRaqami.replace(/\s+/g, '').replace(/[^\d+]/g, '');
   window.location.href = 'sms:' + tel + '?body=' + encodeURIComponent(text);
   closeModal('smsModal');
-  showToast('📲 SMS ochilmoqda...');
 }
 
 /* TO'LOV */
@@ -2703,55 +2809,43 @@ function openTolovModal(id) {
   currentTolovId = id;
   var q = qarzdorlar.find(function(x) { return x.id === id; });
   if (!q) return;
-
   document.getElementById('tolovInfoBox').innerHTML =
     '<div class="info-row"><span class="lbl">Qarzdor</span><span class="val">' + q.ismi + ' ' + q.familyasi + '</span></div>' +
     '<div class="info-row"><span class="lbl">Jami</span><span class="val">' + formatSumma(q.summa) + '</span></div>' +
-    '<div class="info-row"><span class="lbl">To\'langan</span><span class="val" style="color:#10b981;">' + formatSumma(q.tolangan || 0) + '</span></div>' +
     '<div class="info-row"><span class="lbl">Qoldiq</span><span class="val" style="color:#ef4444;">' + formatSumma(q.qoldiq) + '</span></div>';
   document.getElementById('tolovSumma').value = '';
   openModal('tolovModal');
 }
-
 function setPayPercent(p) {
   var q = qarzdorlar.find(function(x) { return x.id === currentTolovId; });
   if (!q) return;
   document.getElementById('tolovSumma').value = Math.round(q.qoldiq * (p / 100));
 }
-
 async function confirmTolov() {
   var q = qarzdorlar.find(function(x) { return x.id === currentTolovId; });
   if (!q) return;
   var summa = Math.round(Number(document.getElementById('tolovSumma').value));
-  if (!summa || summa <= 0) { showToast('To\'g\'ri summa!', 'error'); return; }
-  if (summa > q.qoldiq) { showToast('Summa qoldiqdan katta!', 'error'); return; }
-
-  var btn = document.getElementById('tolovBtn');
-  btn.disabled = true;
+  if (!summa || summa <= 0) { showToast('Summa!', 'error'); return; }
+  if (summa > q.qoldiq) { showToast('Qoldiqdan katta!', 'error'); return; }
 
   var yangiTolangan = (q.tolangan || 0) + summa;
   var yangiQoldiq = q.summa - yangiTolangan;
 
   var ok = await supabaseUpdateTolov(q.id, yangiTolangan, yangiQoldiq);
-  btn.disabled = false;
-  if (!ok) { showToast('Xatolik! Saqlanmadi', 'error'); return; }
+  if (!ok) { showToast('Xatolik!', 'error'); return; }
 
   q.tolangan = yangiTolangan;
   q.qoldiq = yangiQoldiq;
 
   var kassaYozuv = {
-    id: Date.now() + 5, tur: 'kirim', summa: summa, valyuta: 'UZS',
+    id: Date.now() + 6, tur: 'kirim', summa: summa, valyuta: 'UZS',
     izoh: 'Qarz to\'lovi: ' + q.ismi + ' ' + q.familyasi
   };
   await supabaseInsertKassa(kassaYozuv);
   kassaTarix.push(kassaYozuv);
 
   closeModal('tolovModal');
-  if (yangiQoldiq <= 0.01) {
-    showToast('🎉 ' + q.ismi + ' qarzini to\'liq to\'ladi! "To\'langan" bo\'limida', 'purple');
-  } else {
-    showToast('✅ ' + formatSumma(summa) + ' qabul qilindi!');
-  }
+  showToast(yangiQoldiq <= 0.01 ? '🎉 To\'liq to\'landi!' : '✅ ' + formatSumma(summa));
   renderQarzdorlar();
   renderTolovList();
   renderKassa();
@@ -2762,26 +2856,24 @@ async function confirmTolov() {
 function openDeleteModal(id, type) {
   currentDeleteId = id;
   currentDeleteType = type || 'qarzdor';
-
   var text = '';
   if (type === 'tashqi') {
     var t = taminotchilar.find(function(x) { return x.id === id; });
     if (!t) return;
-    text = '<b>' + t.kim + '</b> ni o\'chirmoqchimisiz?<br><small style="color:#8b95b8;">' + t.nima_uchun + ' • ' + formatSumma(t.jami_summa, t.valyuta) + '</small>';
+    text = '<b>' + t.kim + '</b> ni o\'chirish?';
   } else if (type === 'ichki') {
     var r = ichkiRasxodlar.find(function(x) { return x.id === id; });
     if (!r) return;
-    text = '<b>' + r.nomi + '</b> rasxodini o\'chirmoqchimisiz?<br><small style="color:#8b95b8;">' + formatSumma(r.summa) + '</small>';
+    text = '<b>' + r.nomi + '</b> ni o\'chirish?';
   } else if (type === 'kassa') {
     var k = kassaTarix.find(function(x) { return x.id === id; });
     if (!k) return;
-    text = '<b>' + (k.tur === 'kirim' ? 'Kirim' : 'Chiqim') + '</b> yozuvini o\'chirmoqchimisiz?<br><small style="color:#8b95b8;">' + formatSumma(k.summa, k.valyuta) + '</small>';
+    text = 'Yozuvni o\'chirish?';
   } else {
     var q = qarzdorlar.find(function(x) { return x.id === id; });
     if (!q) return;
-    text = '<b>' + q.ismi + ' ' + q.familyasi + '</b> ni o\'chirmoqchimisiz?';
+    text = '<b>' + q.ismi + ' ' + q.familyasi + '</b> ni o\'chirish?';
   }
-
   document.getElementById('delText').innerHTML = text;
   openModal('delModal');
 }
@@ -2789,10 +2881,12 @@ function openDeleteModal(id, type) {
 async function confirmDelete() {
   if (!currentDeleteId) return;
   var ok = false;
-
   if (currentDeleteType === 'tashqi') {
     ok = await supabaseDeleteRasxod(currentDeleteId);
-    if (ok) taminotchilar = taminotchilar.filter(function(x) { return x.id !== currentDeleteId; });
+    if (ok) {
+      taminotchilar = taminotchilar.filter(function(x) { return x.id !== currentDeleteId; });
+      taminotchiQarzTarix = taminotchiQarzTarix.filter(function(x) { return x.taminotchi_id !== currentDeleteId; });
+    }
   } else if (currentDeleteType === 'ichki') {
     ok = await supabaseDeleteIchki(currentDeleteId);
     if (ok) ichkiRasxodlar = ichkiRasxodlar.filter(function(x) { return x.id !== currentDeleteId; });
@@ -2803,7 +2897,6 @@ async function confirmDelete() {
     ok = await supabaseDelete(currentDeleteId);
     if (ok) qarzdorlar = qarzdorlar.filter(function(x) { return x.id !== currentDeleteId; });
   }
-
   if (!ok) { showToast('Xatolik!', 'error'); return; }
   closeModal('delModal');
   showToast('🗑 O\'chirildi');
@@ -2814,159 +2907,28 @@ async function confirmDelete() {
   renderDashboard();
 }
 
-/* ESLATMALAR */
-function todayKey() {
-  var d = new Date();
-  return d.getFullYear() + '-' + (d.getMonth()+1) + '-' + d.getDate();
-}
-function getReminderList() {
-  return qarzdorlar.filter(function(q) {
-    if (q.qoldiq <= 0) return false;
-    return daysDiff(q.muddat) <= 0;
-  }).map(function(q) {
-    var kun = daysDiff(q.muddat);
-    var text = '';
-    if (kun === 0) text = 'BUGUN to\'lash kuni!';
-    else if (kun === -1) text = 'Kechagi muddat o\'tdi!';
-    else text = 'Muddat ' + Math.abs(kun) + ' kun o\'tgan!';
-    return { id: q.id, ismi: q.ismi, familyasi: q.familyasi, tel: q.telRaqami, qoldiq: formatSumma(q.qoldiq), text: text, kun: kun, maxsulot: q.maxsulot };
-  });
-}
-function showReminderModal() {
-  var items = getReminderList();
-  if (items.length === 0) { showToast('Eslatma yo\'q!'); return; }
-  playPingSound();
-  var html = '<div style="max-height:50vh;overflow-y:auto;">';
-  items.forEach(function(q) {
-    var color = q.kun === 0 ? '#ef2d2d' : '#ef4444';
-    html += '<div style="padding:12px;margin-bottom:10px;background:rgba(0,0,0,0.3);border-radius:10px;border-left:3px solid ' + color + ';">' +
-      '<div style="font-weight:800;font-size:14px;margin-bottom:4px;">' + q.ismi + ' ' + q.familyasi + '</div>' +
-      '<div style="font-size:11px;color:' + color + ';font-weight:700;margin-bottom:6px;">' + q.text + '</div>' +
-      '<div style="font-size:11px;color:#8b95b8;margin-bottom:8px;">' + q.maxsulot + '<br>Qoldiq: <b style="color:#ef4444;">' + q.qoldiq + '</b></div>' +
-      '<a href="tel:' + q.tel + '" style="display:block;padding:8px;text-align:center;background:rgba(239,45,45,0.2);border:1px solid rgba(239,45,45,0.4);border-radius:8px;color:#ff8a8a;font-size:11px;font-weight:800;text-decoration:none;">📞 Qo\'ng\'iroq</a>' +
-    '</div>';
-  });
-  html += '</div>';
-  document.getElementById('reminderContent').innerHTML = html;
-  openModal('reminderModal');
-}
-function reminderGoList() {
-  closeModal('reminderModal');
-  goToPage('qarzdorlar');
-  setTimeout(function() { setFilter('today'); }, 300);
-}
-
-/* NOTIFICATION */
-function sendNotification(items) {
-  if (items.length === 0) return;
-  if (!('Notification' in window) || Notification.permission !== 'granted') return;
-  playPingSound();
-  if (items.length === 1) {
-    var q = items[0];
-    new Notification('🔔 PAM Nasiya', {
-      body: q.ismi + ' ' + q.familyasi + '\n' + q.text + '\nQoldiq: ' + q.qoldiq,
-      icon: 'icon-192.png', tag: 'pam-' + q.id, requireInteraction: true
-    });
-  } else {
-    new Notification('🔔 PAM Nasiya - ' + items.length, {
-      body: items.slice(0, 3).map(function(q) { return '• ' + q.ismi + ' ' + q.familyasi; }).join('\n'),
-      icon: 'icon-192.png', tag: 'pam-batch', requireInteraction: true
-    });
-  }
-}
-function requestNotifPermission() {
-  if (!('Notification' in window)) { showToast('Qo\'llab-quvvatlanmaydi', 'error'); return; }
-  if (Notification.permission === 'granted') { showToast('Allaqachon yoqilgan!'); return; }
-  Notification.requestPermission().then(function(perm) {
-    if (perm === 'granted') { showToast('✅ Yoqildi!'); renderNotifBanner(); }
-  });
-}
-function renderNotifBanner() {
-  var banner = document.getElementById('notifBanner');
-  if (!('Notification' in window)) { banner.innerHTML = ''; return; }
-  if (Notification.permission === 'granted') { banner.innerHTML = ''; return; }
-  banner.innerHTML = '<div class="notif-banner">' +
-    '<div class="nb-icon">🔔</div>' +
-    '<div class="nb-text"><h4>Eslatmalarni yoqing</h4><p>Ping ovozi bilan notification</p></div>' +
-    '<button class="nb-btn" onclick="requestNotifPermission()">Yoqish</button></div>';
-}
-
-/* PWA O'RNATISH */
-window.addEventListener('beforeinstallprompt', function(e) {
-  e.preventDefault();
-  deferredPrompt = e;
-  console.log('✅ PWA o\'rnatishga tayyor');
-  setTimeout(function() {
-    var btn = document.getElementById('pwaInstallBtn');
-    if (btn) btn.style.display = 'flex';
-  }, 3000);
-});
-async function installPWA() {
-  var btn = document.getElementById('pwaInstallBtn');
-
-  if (!deferredPrompt) {
-    var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-    var isAndroid = /Android/.test(navigator.userAgent);
-    var isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
-
-    if (isStandalone) { showToast('✅ Ilova allaqachon o\'rnatilgan!'); return; }
-
-    if (isIOS) {
-      alert("📱 iPhone/iPad ga o'rnatish:\n\n1. Pastdagi 'Ulashish' (⬆️) tugmasini bosing\n2. 'Bosh ekranga qo'shish' ni tanlang\n3. 'Qo'shish' tugmasini bosing");
-    } else if (isAndroid) {
-      alert("📱 Android ga o'rnatish:\n\n1. Chrome menyusini oching (⋮)\n2. 'Ilova o'rnatish' yoki 'Bosh ekranga qo'shish' ni tanlang\n3. Tasdiqlang");
-    } else {
-      alert("💻 Kompyuterga o'rnatish:\n\nBrauzer manzil qatoridagi ⊕ belgisini bosing.\n\nYoki brauzer menyusidan 'Ilova o'rnatish' ni tanlang.");
-    }
-    return;
-  }
-
-  deferredPrompt.prompt();
-  var choiceResult = await deferredPrompt.userChoice;
-
-  if (choiceResult.outcome === 'accepted') {
-    showToast('🎉 Ilova o\'rnatildi!');
-    if (btn) btn.style.display = 'none';
-  } else {
-    showToast('O\'rnatish bekor qilindi', 'warning');
-  }
-  deferredPrompt = null;
-}
-window.addEventListener('appinstalled', function() {
-  showToast('🎉 PAM Nasiya ilovasi o\'rnatildi!');
-  var btn = document.getElementById('pwaInstallBtn');
-  if (btn) btn.style.display = 'none';
-  deferredPrompt = null;
-});
-
 /* INIT */
 async function init() {
   updatePingUI();
-  renderNotifBanner();
   renderDashboard();
 
   var sanaEl = document.getElementById('ichkiSana');
   if (sanaEl) sanaEl.value = new Date().toISOString().slice(0, 10);
 
   var data = await supabaseGetAll();
-  if (data === null) {
-    showToast('Ma\'lumot yuklanmadi — konsolni tekshiring!', 'warning');
-  } else {
+  if (data) {
     qarzdorlar = data;
     renderQarzdorlar();
     renderTolovList();
-    if (qarzdorlar.length > 0) {
-      setTimeout(function() { showToast('✅ ' + qarzdorlar.length + ' ta qarzdor'); }, 300);
-    }
-    setTimeout(function() {
-      var items = getReminderList();
-      if (items.length > 0) sendNotification(items);
-    }, 3000);
-    setTimeout(announcePingReminders, 4500);
   }
 
   var rData = await supabaseGetRasxodlar();
   taminotchilar = rData || [];
+  
+  // TA'MINOTCHI QARZLAR TARIXINI YUKLASH
+  var tqData = await supabaseGetTaminotchiQarzTarix();
+  taminotchiQarzTarix = tqData || [];
+  
   renderTaminotchilar();
 
   var iData = await supabaseGetIchki();
@@ -2979,44 +2941,24 @@ async function init() {
   renderDashboard();
 
   var isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
-  var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-  var isAndroid = /Android/.test(navigator.userAgent);
   if (!isStandalone) {
     document.getElementById('installBanner').style.display = 'flex';
-    if (isIOS) {
-      document.getElementById('installTitle').textContent = 'iPhone/iPad ga o\'rnatish';
-      document.getElementById('installDesc').textContent = 'Share → Bosh ekranga qo\'shish';
-    } else if (isAndroid) {
-      document.getElementById('installTitle').textContent = 'Android ga o\'rnatish';
-      document.getElementById('installDesc').textContent = 'Yuklab olish uchun bosing';
-    } else {
-      document.getElementById('installTitle').textContent = 'Kompyuterga o\'rnatish';
-      document.getElementById('installDesc').textContent = 'Ish stoliga ikonka qo\'yish';
-    }
   }
 
-  document.getElementById('bellBtn').onclick = showReminderModal;
-
-  setInterval(function() {
-    var items = getReminderList();
-    if (items.length > 0) sendNotification(items);
-  }, 5 * 60 * 1000);
+  document.getElementById('bellBtn').onclick = function() {
+    var items = qarzdorlar.filter(function(q) { return q.qoldiq > 0 && daysDiff(q.muddat) <= 0; });
+    if (items.length === 0) { showToast('Eslatma yo\'q'); return; }
+    playPingSound();
+    var html = '';
+    items.forEach(function(q) {
+      html += '<div class="tarix-item"><div class="ti-product">' + q.ismi + ' ' + q.familyasi + '</div><div class="ti-money">' + formatSumma(q.qoldiq) + '</div></div>';
+    });
+    document.getElementById('taminotchiQarzTarixContent').innerHTML = html;
+    openModal('taminotchiQarzTarixModal');
+  };
 }
 
 window.addEventListener('load', init);
-
-document.querySelectorAll('.form-control').forEach(function(el) {
-  el.addEventListener('focus', function() {
-    if (el.parentElement) el.parentElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  });
-});
-
-var lastTouch = 0;
-document.addEventListener('touchend', function(e) {
-  var now = Date.now();
-  if (now - lastTouch <= 300) e.preventDefault();
-  lastTouch = now;
-}, { passive: false });
 </script>
 </body>
 </html>
