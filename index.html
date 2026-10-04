@@ -18,14 +18,14 @@
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; }
   :root {
-    --blue: #2563eb; --blue-dark: #1d4ed8; --blue-light: #3b82f6;
-    --blue-bg: #eff6ff; --blue-bg-2: #dbeafe; --blue-glow: rgba(37,99,235,0.25);
+    --blue: #2563eb; --blue-dark: #1d4ed8;
+    --blue-bg: #eff6ff; --blue-glow: rgba(37,99,235,0.25);
     --success: #10b981; --success-bg: #ecfdf5;
     --danger: #ef4444; --danger-bg: #fef2f2;
     --warning: #f59e0b; --warning-bg: #fffbeb;
     --purple: #8b5cf6; --purple-bg: #f5f3ff;
     --orange: #f97316; --orange-bg: #fff7ed;
-    --indigo: #6366f1; --indigo-bg: #eef2ff;
+    --indigo: #6366f1;
     --bg: #f1f5f9; --card: #ffffff;
     --text: #0f172a; --text-muted: #64748b; --text-light: #94a3b8;
     --border: #e2e8f0; --border-dark: #cbd5e1;
@@ -33,12 +33,10 @@
     --shadow-sm: 0 1px 2px rgba(15,23,42,0.04);
     --shadow-md: 0 4px 12px rgba(15,23,42,0.06);
     --shadow-lg: 0 10px 30px rgba(15,23,42,0.08);
-    --shadow-xl: 0 20px 50px rgba(15,23,42,0.12);
   }
   html, body { min-height: 100vh; overscroll-behavior-y: none; }
   body { background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; padding-bottom: calc(90px + var(--safe-bottom)); position: relative; }
 
-  /* HEADER */
   .app-header { position: sticky; top: 0; z-index: 100; background: #fff; border-bottom: 1px solid var(--border); padding: 12px 16px; padding-top: calc(12px + var(--safe-top)); display: flex; align-items: center; justify-content: space-between; gap: 10px; box-shadow: var(--shadow-sm); }
   .pam-logo { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
   .pam-logo-box { background: linear-gradient(135deg, #2563eb, #1d4ed8); border-radius: 12px; padding: 8px 12px; box-shadow: 0 4px 12px var(--blue-glow); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 900; font-size: 18px; letter-spacing: -0.5px; }
@@ -56,15 +54,11 @@
   @keyframes bellShake { 0%,100% { transform: rotate(0); } 20% { transform: rotate(-15deg); } 40% { transform: rotate(15deg); } 60% { transform: rotate(-10deg); } 80% { transform: rotate(10deg); } }
   .bell-badge { position: absolute; top: -6px; right: -6px; background: var(--danger); color: white; font-size: 10px; font-weight: 800; min-width: 19px; height: 19px; border-radius: 10px; display: flex; align-items: center; justify-content: center; padding: 0 5px; box-shadow: 0 2px 6px rgba(239,68,68,0.4); }
 
-  /* PAGE */
   .page { display: none; padding: 16px; animation: fadeIn 0.3s; }
   .page.active { display: block; }
   @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-
   .ico { width: 18px; height: 18px; stroke: currentColor; stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; display: inline-block; vertical-align: middle; }
-  .ico-lg { width: 22px; height: 22px; }
 
-  /* BOTTOM NAV */
   .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 8px 4px calc(8px + var(--safe-bottom)); z-index: 1000; box-shadow: 0 -4px 20px rgba(15,23,42,0.06); }
   .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 8px 2px; border-radius: 12px; cursor: pointer; transition: all 0.25s; color: var(--text-light); position: relative; background: transparent; border: none; font-size: 10px; font-weight: 700; font-family: inherit; }
   .nav-item .nav-icon { display: flex; align-items: center; justify-content: center; transition: transform 0.25s; }
@@ -75,10 +69,8 @@
   .nav-item:active .nav-icon { transform: scale(0.85); }
   .nav-badge { position: absolute; top: 2px; right: calc(50% - 24px); background: var(--danger); color: white; font-size: 9px; font-weight: 800; min-width: 17px; height: 17px; border-radius: 9px; display: flex; align-items: center; justify-content: center; padding: 0 5px; box-shadow: 0 2px 6px rgba(239,68,68,0.4); }
 
-  /* CARD */
   .card { background: var(--card); border: 1px solid var(--border); border-radius: 18px; padding: 18px; margin-bottom: 14px; box-shadow: var(--shadow-md); animation: cardIn 0.35s backwards; }
   @keyframes cardIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
   .section-title { font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; color: var(--blue); margin-bottom: 14px; display: flex; align-items: center; gap: 10px; padding-bottom: 10px; border-bottom: 2px solid var(--blue-bg); }
   .section-title .st-icon { width: 28px; height: 28px; border-radius: 8px; background: linear-gradient(135deg, #2563eb, #1d4ed8); display: flex; align-items: center; justify-content: center; color: #fff; flex-shrink: 0; }
   .section-title .st-icon .ico { width: 15px; height: 15px; stroke-width: 2.2; }
@@ -89,15 +81,12 @@
   .section-title.green { color: var(--success); border-color: var(--success-bg); }
   .section-title.green .st-icon { background: linear-gradient(135deg, #10b981, #059669); }
 
-  /* WELCOME */
   .welcome-box { background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 60%, #1e40af 100%); border-radius: 20px; padding: 22px; color: #fff; margin-bottom: 16px; position: relative; overflow: hidden; box-shadow: 0 12px 30px rgba(37,99,235,0.3); }
   .welcome-box::before { content: ''; position: absolute; top: -40%; right: -20%; width: 220px; height: 220px; border-radius: 50%; background: radial-gradient(circle, rgba(255,255,255,0.18), transparent 70%); }
-  .welcome-box::after { content: ''; position: absolute; bottom: -50%; left: -10%; width: 180px; height: 180px; border-radius: 50%; background: radial-gradient(circle, rgba(255,255,255,0.08), transparent 70%); }
   .welcome-box h2 { font-size: 19px; font-weight: 800; margin-bottom: 5px; position: relative; }
   .welcome-box h2 span { color: #fbbf24; }
   .welcome-box p { font-size: 12px; opacity: 0.9; position: relative; font-weight: 500; }
 
-  /* STATS */
   .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; }
   .stat-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 16px; position: relative; overflow: hidden; transition: transform 0.2s; box-shadow: var(--shadow-sm); }
   .stat-card:active { transform: scale(0.97); }
@@ -114,7 +103,6 @@
   .stat-card.money .stat-num { color: var(--success); font-size: 15px; }
   .stat-card.kassa .stat-num { color: var(--indigo); font-size: 15px; }
 
-  /* BALANCE BOXES */
   .balance-box { border-radius: 18px; padding: 20px; text-align: center; margin-bottom: 14px; position: relative; overflow: hidden; box-shadow: var(--shadow-md); }
   .balance-box .bb-icon { width: 44px; height: 44px; border-radius: 13px; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px; }
   .balance-box .bb-icon .ico { width: 22px; height: 22px; }
@@ -126,28 +114,19 @@
   .balance-box.blue .label { color: #1e40af; }
   .balance-box.blue .amount { color: #1e3a8a; }
   .balance-box.blue .sub { color: #3730a3; }
-  .balance-box.red { background: linear-gradient(135deg, #fee2e2, #fecaca); border: 1px solid #fca5a5; }
-  .balance-box.red .bb-icon { background: #ef4444; color: #fff; }
-  .balance-box.red .label { color: #991b1b; }
-  .balance-box.red .amount { color: #7f1d1d; }
-  .balance-box.red .sub { color: #991b1b; }
   .balance-box.orange { background: linear-gradient(135deg, #fed7aa, #fdba74); border: 1px solid #fb923c; }
   .balance-box.orange .bb-icon { background: #f97316; color: #fff; }
   .balance-box.orange .label { color: #9a3412; }
   .balance-box.orange .amount { color: #7c2d12; }
-  .balance-box.orange .sub { color: #9a3412; }
   .balance-box.purple { background: linear-gradient(135deg, #ede9fe, #ddd6fe); border: 1px solid #c4b5fd; }
   .balance-box.purple .bb-icon { background: #8b5cf6; color: #fff; }
   .balance-box.purple .label { color: #5b21b6; }
   .balance-box.purple .amount { color: #4c1d95; }
-  .balance-box.purple .sub { color: #5b21b6; }
   .balance-box.green { background: linear-gradient(135deg, #d1fae5, #a7f3d0); border: 1px solid #6ee7b7; }
   .balance-box.green .bb-icon { background: #10b981; color: #fff; }
   .balance-box.green .label { color: #065f46; }
   .balance-box.green .amount { color: #064e3b; }
-  .balance-box.green .sub { color: #065f46; }
 
-  /* QUICK ACTIONS */
   .quick-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px; }
   .quick-btn { padding: 16px; border-radius: 16px; border: none; font-size: 13px; font-weight: 800; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; cursor: pointer; transition: all 0.2s; color: white; font-family: inherit; box-shadow: var(--shadow-md); }
   .quick-btn .qb-icon { width: 36px; height: 36px; border-radius: 11px; background: rgba(255,255,255,0.25); display: flex; align-items: center; justify-content: center; }
@@ -159,7 +138,6 @@
   .quick-btn.rasxod { background: linear-gradient(135deg, #f59e0b, #d97706); box-shadow: 0 6px 16px rgba(245,158,11,0.35); }
   .quick-btn.moy { background: linear-gradient(135deg, #8b5cf6, #7c3aed); box-shadow: 0 6px 16px rgba(139,92,246,0.35); }
 
-  /* FORM */
   .form-group { margin-bottom: 14px; }
   .form-group label { display: block; font-size: 11px; font-weight: 800; color: var(--text-muted); margin-bottom: 7px; text-transform: uppercase; letter-spacing: 0.4px; }
   .form-control { width: 100%; padding: 13px 15px; background: #fff; border: 2px solid var(--border); border-radius: 12px; color: var(--text); font-size: 14px; font-weight: 500; transition: all 0.2s; outline: none; font-family: inherit; -webkit-appearance: none; appearance: none; }
@@ -173,7 +151,6 @@
   .input-hint { font-size: 10px; color: var(--text-muted); margin-top: 6px; font-weight: 600; min-height: 14px; }
   .input-hint b { color: var(--blue); font-weight: 800; }
 
-  /* BUTTONS */
   .btn { width: 100%; padding: 14px; border: none; border-radius: 13px; font-size: 14px; font-weight: 800; cursor: pointer; transition: all 0.2s; color: white; font-family: inherit; display: flex; align-items: center; justify-content: center; gap: 8px; }
   .btn:active { transform: scale(0.97); }
   .btn-primary { background: linear-gradient(135deg, #2563eb, #1d4ed8); box-shadow: 0 6px 16px var(--blue-glow); }
@@ -185,57 +162,50 @@
   .btn-orange { background: linear-gradient(135deg, #f97316, #ea580c); box-shadow: 0 6px 16px rgba(249,115,22,0.3); }
   .btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-  /* CARDS - QARZDOR */
-  .qarzdor-card { background: var(--card); border: 2px solid var(--border); border-radius: 16px; padding: 16px; margin-bottom: 12px; position: relative; animation: cardIn 0.3s backwards; box-shadow: var(--shadow-md); transition: all 0.25s; }
+  .qarzdor-card { background: var(--card); border: 2px solid var(--border); border-radius: 16px; padding: 16px; margin-bottom: 12px; position: relative; animation: cardIn 0.3s backwards; box-shadow: var(--shadow-md); }
   .qarzdor-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; border-radius: 16px 16px 0 0; background: var(--blue); }
   .qarzdor-card.overdue { border-color: #fecaca; background: linear-gradient(180deg, #fef2f2, #fff); }
   .qarzdor-card.overdue::before { background: linear-gradient(90deg, #ef4444, #dc2626); }
   .qarzdor-card.today { border-color: #fde68a; background: linear-gradient(180deg, #fffbeb, #fff); }
   .qarzdor-card.today::before { background: linear-gradient(90deg, #f59e0b, #d97706); }
-  .qarzdor-card.soon { border-color: var(--border-blue); }
+  .qarzdor-card.soon { border-color: #bfdbfe; }
   .qarzdor-card.soon::before { background: linear-gradient(90deg, #3b82f6, #2563eb); }
   .qarzdor-card.paid { border-color: #a7f3d0; background: linear-gradient(180deg, #f0fdf4, #fff); opacity: 0.9; }
   .qarzdor-card.paid::before { background: linear-gradient(90deg, #10b981, #059669); }
 
   .q-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; gap: 10px; }
-  .q-name { font-size: 15px; font-weight: 800; margin-bottom: 4px; color: var(--text); letter-spacing: -0.2px; }
+  .q-name { font-size: 15px; font-weight: 800; margin-bottom: 4px; color: var(--text); }
   .q-phone { font-size: 11px; color: var(--text-muted); display: flex; align-items: center; gap: 4px; font-weight: 600; }
   .q-phone a { color: var(--blue); text-decoration: none; font-weight: 800; }
   .q-info { font-size: 12px; color: var(--text-muted); margin-bottom: 6px; display: flex; align-items: center; gap: 6px; font-weight: 500; }
   .q-info b { color: var(--text); font-weight: 700; }
-
   .q-badge { padding: 5px 11px; border-radius: 20px; font-size: 10px; font-weight: 800; white-space: nowrap; text-transform: uppercase; letter-spacing: 0.4px; display: inline-flex; align-items: center; gap: 4px; }
   .q-badge.danger { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
   .q-badge.today { background: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
   .q-badge.warning { background: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
   .q-badge.success { background: #d1fae5; color: #065f46; border: 1px solid #a7f3d0; }
-  .q-badge.info { background: var(--blue-bg); color: var(--blue); border: 1px solid var(--border-blue); }
+  .q-badge.info { background: var(--blue-bg); color: var(--blue); border: 1px solid #bfdbfe; }
   .q-badge.purple { background: #ede9fe; color: #6d28d9; border: 1px solid #ddd6fe; }
-
   .q-money { display: flex; justify-content: space-between; padding: 10px 12px; margin: 10px 0; background: var(--bg); border-radius: 12px; border: 1px solid var(--border); }
   .q-money > div { text-align: center; flex: 1; }
-  .q-money .m-label { color: var(--text-muted); font-size: 10px; margin-bottom: 3px; text-transform: uppercase; font-weight: 800; letter-spacing: 0.3px; }
+  .q-money .m-label { color: var(--text-muted); font-size: 10px; margin-bottom: 3px; text-transform: uppercase; font-weight: 800; }
   .q-money .m-value { font-weight: 800; font-size: 13px; color: var(--text); }
   .q-money .m-value.green { color: var(--success); }
   .q-money .m-value.red { color: var(--danger); }
-
   .q-actions { display: grid; grid-template-columns: 1fr 1fr 1fr 44px; gap: 6px; margin-top: 10px; }
   .q-actions.with-renewal { grid-template-columns: 1fr 1fr 1fr 1fr 44px; }
   .qa-btn { padding: 10px 4px; border-radius: 10px; border: none; font-size: 11px; font-weight: 800; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 4px; color: white; font-family: inherit; }
   .qa-btn:active { transform: scale(0.92); }
-  .qa-btn.call { background: var(--blue-bg); color: var(--blue); border: 1px solid var(--border-blue); }
+  .qa-btn.call { background: var(--blue-bg); color: var(--blue); border: 1px solid #bfdbfe; }
   .qa-btn.sms { background: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
   .qa-btn.pay { background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 3px 10px rgba(16,185,129,0.3); }
   .qa-btn.renew { background: linear-gradient(135deg, #8b5cf6, #7c3aed); box-shadow: 0 3px 10px rgba(139,92,246,0.3); }
   .qa-btn.addmore { background: linear-gradient(135deg, #f97316, #ea580c); box-shadow: 0 3px 10px rgba(249,115,22,0.3); }
   .qa-btn.del { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; padding: 10px; }
 
-  /* SEARCH */
   .search-box { position: relative; margin-bottom: 14px; }
   .search-box input { padding-left: 44px; }
   .search-box .search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted); pointer-events: none; }
-
-  /* CHIPS */
   .filter-chips { display: flex; gap: 8px; margin-bottom: 14px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
   .filter-chips::-webkit-scrollbar { display: none; }
   .chip { padding: 8px 15px; border-radius: 22px; background: #fff; border: 2px solid var(--border); font-size: 12px; font-weight: 800; color: var(--text-muted); cursor: pointer; white-space: nowrap; transition: all 0.2s; font-family: inherit; }
@@ -243,25 +213,22 @@
   .chip.active.green { background: var(--success); border-color: var(--success); box-shadow: 0 4px 12px rgba(16,185,129,0.3); }
   .chip:active { transform: scale(0.95); }
 
-  /* EMPTY */
   .empty-state { text-align: center; padding: 50px 20px; color: var(--text-muted); }
   .empty-state .em-icon { width: 70px; height: 70px; border-radius: 20px; background: var(--bg); display: flex; align-items: center; justify-content: center; margin: 0 auto 14px; font-size: 32px; }
   .empty-state h3 { font-size: 14px; margin-bottom: 6px; color: var(--text); font-weight: 700; }
   .empty-state p { font-size: 12px; }
 
-  /* MODAL */
   .modal-overlay { position: fixed; inset: 0; background: rgba(15,23,42,0.55); backdrop-filter: blur(6px); z-index: 2000; display: none; align-items: flex-end; justify-content: center; }
   .modal-overlay.active { display: flex; }
   .modal-sheet { background: #fff; border-radius: 24px 24px 0 0; padding: 20px; padding-bottom: calc(20px + var(--safe-bottom)); width: 100%; max-width: 500px; max-height: 92vh; overflow-y: auto; animation: slideUp 0.3s cubic-bezier(0.16,1,0.3,1); box-shadow: 0 -20px 60px rgba(15,23,42,0.2); }
   @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
   .modal-handle { width: 40px; height: 4px; border-radius: 2px; background: var(--border-dark); margin: 0 auto 16px; }
   .modal-title { font-size: 17px; font-weight: 800; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; color: var(--text); }
-  .modal-title .mt-icon { width: 36px; height: 36px; border-radius: 11px; background: var(--blue-bg); display: flex; align-items: center; justify-content: center; color: var(--blue); }
+  .modal-title .mt-icon { width: 36px; height: 36px; border-radius: 11px; background: var(--blue-bg); display: flex; align-items: center; justify-content: center; color: var(--blue); flex-shrink: 0; }
   .modal-title .mt-icon .ico { width: 20px; height: 20px; }
   .modal-desc { font-size: 12px; color: var(--text-muted); margin-bottom: 12px; line-height: 1.6; }
-
   .info-box { padding: 14px; border-radius: 14px; background: var(--bg); border: 1px solid var(--border); margin-bottom: 14px; }
-  .info-box.blue { background: var(--blue-bg); border-color: var(--border-blue); }
+  .info-box.blue { background: var(--blue-bg); border-color: #bfdbfe; }
   .info-box.orange { background: var(--orange-bg); border-color: #fed7aa; }
   .info-box.green { background: var(--success-bg); border-color: #bbf7d0; }
   .info-box.purple { background: var(--purple-bg); border-color: #ddd6fe; }
@@ -271,25 +238,22 @@
   .info-box .info-row .val { font-weight: 800; text-align: right; color: var(--text); }
   .modal-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px; }
 
-  /* TOAST */
   .toast { position: fixed; top: calc(80px + var(--safe-top)); left: 50%; transform: translateX(-50%) translateY(-20px); background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 14px 22px; border-radius: 14px; font-size: 13px; font-weight: 700; box-shadow: 0 12px 28px rgba(16,185,129,0.35); z-index: 3000; opacity: 0; transition: all 0.3s; pointer-events: none; max-width: 90vw; text-align: center; }
   .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-  .toast.error { background: linear-gradient(135deg, #ef4444, #dc2626); box-shadow: 0 12px 28px rgba(239,68,68,0.35); }
-  .toast.warning { background: linear-gradient(135deg, #f59e0b, #d97706); box-shadow: 0 12px 28px rgba(245,158,11,0.35); }
-  .toast.info { background: linear-gradient(135deg, #3b82f6, #2563eb); box-shadow: 0 12px 28px var(--blue-glow); }
-  .toast.purple { background: linear-gradient(135deg, #8b5cf6, #7c3aed); box-shadow: 0 12px 28px rgba(139,92,246,0.35); }
-  .toast.orange { background: linear-gradient(135deg, #f97316, #ea580c); box-shadow: 0 12px 28px rgba(249,115,22,0.35); }
+  .toast.error { background: linear-gradient(135deg, #ef4444, #dc2626); }
+  .toast.warning { background: linear-gradient(135deg, #f59e0b, #d97706); }
+  .toast.info { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+  .toast.purple { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+  .toast.orange { background: linear-gradient(135deg, #f97316, #ea580c); }
 
-  /* TOLOV ITEM */
   .tolov-item { display: flex; align-items: center; gap: 12px; padding: 14px; border-radius: 14px; background: var(--card); border: 2px solid var(--border); margin-bottom: 10px; animation: cardIn 0.3s backwards; box-shadow: var(--shadow-sm); }
-  .tolov-item .avatar { width: 46px; height: 46px; border-radius: 13px; background: linear-gradient(135deg, #2563eb, #1d4ed8); display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 800; flex-shrink: 0; color: white; box-shadow: 0 4px 12px var(--blue-glow); }
+  .tolov-item .avatar { width: 46px; height: 46px; border-radius: 13px; background: linear-gradient(135deg, #2563eb, #1d4ed8); display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 800; flex-shrink: 0; color: white; }
   .tolov-item .info { flex: 1; min-width: 0; }
   .tolov-item .info h4 { font-size: 14px; font-weight: 800; margin-bottom: 4px; }
   .tolov-item .info p { font-size: 11px; color: var(--text-muted); margin-bottom: 2px; font-weight: 600; }
   .tolov-item .info p b { color: var(--danger); }
-  .tolov-item .pay-btn { padding: 10px 14px; border-radius: 11px; background: linear-gradient(135deg, #10b981, #059669); border: none; color: white; font-size: 12px; font-weight: 800; cursor: pointer; font-family: inherit; white-space: nowrap; box-shadow: 0 4px 12px rgba(16,185,129,0.3); }
+  .tolov-item .pay-btn { padding: 10px 14px; border-radius: 11px; background: linear-gradient(135deg, #10b981, #059669); border: none; color: white; font-size: 12px; font-weight: 800; cursor: pointer; font-family: inherit; white-space: nowrap; }
 
-  /* TAMINOTCHI CARD */
   .taminotchi-card { background: var(--card); border: 2px solid var(--border); border-radius: 16px; padding: 16px; margin-bottom: 12px; position: relative; animation: cardIn 0.3s backwards; box-shadow: var(--shadow-md); }
   .taminotchi-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; border-radius: 16px 16px 0 0; background: var(--orange); }
   .taminotchi-card.qarzli { border-color: #fecaca; background: linear-gradient(180deg, #fef2f2, #fff); }
@@ -304,27 +268,25 @@
   .tc-badge.tolangan { background: #d1fae5; color: #065f46; border: 1px solid #a7f3d0; }
   .tc-money { display: flex; justify-content: space-between; padding: 10px 12px; margin: 10px 0; background: var(--bg); border-radius: 12px; border: 1px solid var(--border); }
   .tc-money > div { text-align: center; flex: 1; }
-  .tc-money .m-label { color: var(--text-muted); font-size: 10px; margin-bottom: 3px; text-transform: uppercase; font-weight: 800; letter-spacing: 0.3px; }
+  .tc-money .m-label { color: var(--text-muted); font-size: 10px; margin-bottom: 3px; text-transform: uppercase; font-weight: 800; }
   .tc-money .m-value { font-weight: 800; font-size: 13px; }
   .tc-money .m-value.green { color: var(--success); }
   .tc-money .m-value.red { color: var(--danger); }
   .tc-actions { display: grid; grid-template-columns: 1fr 1fr 1fr 44px; gap: 6px; margin-top: 10px; }
   .tc-btn { padding: 10px 4px; border-radius: 10px; border: none; font-size: 11px; font-weight: 800; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 4px; color: white; font-family: inherit; }
   .tc-btn:active { transform: scale(0.92); }
-  .tc-btn.pay { background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 3px 10px rgba(16,185,129,0.3); }
-  .tc-btn.detail { background: var(--blue-bg); color: var(--blue); border: 1px solid var(--border-blue); }
-  .tc-btn.addmore { background: linear-gradient(135deg, #f97316, #ea580c); box-shadow: 0 3px 10px rgba(249,115,22,0.3); }
+  .tc-btn.pay { background: linear-gradient(135deg, #10b981, #059669); }
+  .tc-btn.detail { background: var(--blue-bg); color: var(--blue); border: 1px solid #bfdbfe; }
+  .tc-btn.addmore { background: linear-gradient(135deg, #f97316, #ea580c); }
   .tc-btn.del { background: #fee2e2; color: #991b1b; padding: 10px; border: 1px solid #fecaca; }
 
-  /* TC TABS */
   .tc-tabs { display: flex; gap: 6px; background: #fff; border: 2px solid var(--border); border-radius: 14px; padding: 5px; margin-bottom: 14px; }
   .tc-tabs button { flex: 1; padding: 11px 6px; border: none; border-radius: 10px; background: transparent; color: var(--text-muted); font-size: 12px; font-weight: 800; cursor: pointer; font-family: inherit; display: flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s; }
-  .tc-tabs button.active.qarzli-tab { background: linear-gradient(135deg, #ef4444, #dc2626); color: white; box-shadow: 0 4px 12px rgba(239,68,68,0.3); }
-  .tc-tabs button.active.tolangan-tab { background: linear-gradient(135deg, #10b981, #059669); color: white; box-shadow: 0 4px 12px rgba(16,185,129,0.3); }
+  .tc-tabs button.active.qarzli-tab { background: linear-gradient(135deg, #ef4444, #dc2626); color: white; }
+  .tc-tabs button.active.tolangan-tab { background: linear-gradient(135deg, #10b981, #059669); color: white; }
   .tc-tabs .tab-count { background: rgba(255,255,255,0.3); padding: 2px 8px; border-radius: 9px; font-size: 11px; font-weight: 800; }
   .tc-tabs button:not(.active) .tab-count { background: var(--border); color: var(--text-muted); }
 
-  /* ICHKI */
   .ichki-item { display: flex; align-items: center; gap: 12px; padding: 14px; border-radius: 14px; background: #fff; border: 2px solid var(--border); margin-bottom: 10px; box-shadow: var(--shadow-sm); position: relative; overflow: hidden; }
   .ichki-item::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--indigo); }
   .ichki-item .i-icon { width: 44px; height: 44px; border-radius: 12px; background: linear-gradient(135deg, #e0e7ff, #c7d2fe); display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
@@ -334,7 +296,6 @@
   .ichki-item .i-summa { font-size: 15px; font-weight: 800; color: var(--indigo); white-space: nowrap; }
   .ichki-item .i-del { padding: 8px; border-radius: 9px; background: #fee2e2; border: 1px solid #fecaca; color: #991b1b; cursor: pointer; }
 
-  /* KASSA */
   .kassa-item { display: flex; align-items: center; gap: 12px; padding: 13px 14px; border-radius: 13px; background: #fff; border: 2px solid var(--border); margin-bottom: 9px; box-shadow: var(--shadow-sm); position: relative; overflow: hidden; }
   .kassa-item::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; }
   .kassa-item.kirim::before { background: var(--success); }
@@ -349,13 +310,11 @@
   .kassa-item.kirim .k-summa { color: var(--success); }
   .kassa-item.chiqim .k-summa { color: var(--danger); }
 
-  /* PROGRESS */
   .progress-bar { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; margin: 10px 0; }
   .progress-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, #3b82f6, #2563eb); transition: width 0.5s; }
   .progress-fill.warning { background: linear-gradient(90deg, #f59e0b, #d97706); }
   .progress-fill.danger { background: linear-gradient(90deg, #ef4444, #dc2626); }
 
-  /* ALERT BANNER */
   .alert-banner { border-radius: 14px; padding: 14px 16px; display: flex; align-items: center; gap: 12px; margin-bottom: 14px; box-shadow: var(--shadow-sm); }
   .alert-banner .ab-icon { width: 38px; height: 38px; border-radius: 11px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 18px; }
   .alert-banner.danger { background: linear-gradient(135deg, #fef2f2, #fee2e2); border: 1px solid #fecaca; }
@@ -365,7 +324,6 @@
   .alert-banner .text { font-size: 12px; font-weight: 700; color: var(--text); flex: 1; }
   .alert-banner .text b { color: var(--danger); }
 
-  /* MOY CARD */
   .moy-card { background: var(--card); border: 2px solid var(--border); border-radius: 16px; padding: 16px; margin-bottom: 12px; position: relative; animation: cardIn 0.3s backwards; box-shadow: var(--shadow-md); }
   .moy-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; border-radius: 16px 16px 0 0; background: var(--purple); }
   .moy-card.overdue { border-color: #fecaca; background: linear-gradient(180deg, #fef2f2, #fff); }
@@ -377,17 +335,14 @@
   .moy-card.ok { border-color: #a7f3d0; background: linear-gradient(180deg, #f0fdf4, #fff); }
   .moy-card.ok::before { background: linear-gradient(90deg, #10b981, #059669); }
 
-  /* CURRENCY TOGGLE */
   .curr-toggle { display: inline-flex; background: var(--bg); border: 2px solid var(--border); border-radius: 12px; padding: 4px; gap: 4px; width: 100%; }
   .curr-toggle button { flex: 1; padding: 10px 12px; border: none; border-radius: 9px; background: transparent; color: var(--text-muted); font-size: 12px; font-weight: 800; cursor: pointer; font-family: inherit; transition: all 0.2s; }
   .curr-toggle button.active { background: linear-gradient(135deg, #2563eb, #1d4ed8); color: white; box-shadow: 0 3px 10px var(--blue-glow); }
 
-  /* SEGMENT */
   .segment { display: flex; background: #fff; border: 2px solid var(--border); border-radius: 14px; padding: 5px; margin-bottom: 14px; gap: 5px; }
   .segment button { flex: 1; padding: 11px 8px; border: none; border-radius: 10px; background: transparent; color: var(--text-muted); font-size: 12px; font-weight: 800; cursor: pointer; font-family: inherit; display: flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s; }
   .segment button.active { background: linear-gradient(135deg, #2563eb, #1d4ed8); color: white; box-shadow: 0 4px 12px var(--blue-glow); }
 
-  /* PING */
   .ping-toggle { display: flex; align-items: center; gap: 12px; padding: 14px 16px; background: #fff; border: 2px solid var(--border); border-radius: 14px; font-size: 13px; font-weight: 700; color: var(--text-muted); cursor: pointer; transition: all 0.2s; margin-bottom: 12px; box-shadow: var(--shadow-sm); }
   .ping-toggle.on { background: linear-gradient(135deg, #f0fdf4, #dcfce7); border-color: #a7f3d0; color: #065f46; }
   .ping-toggle .ping-icon { width: 40px; height: 40px; border-radius: 12px; background: var(--blue-bg); display: flex; align-items: center; justify-content: center; color: var(--blue); flex-shrink: 0; }
@@ -397,12 +352,10 @@
   .ping-toggle .switch::after { content: ''; position: absolute; top: 2px; left: 2px; width: 20px; height: 20px; border-radius: 50%; background: white; transition: all 0.3s; box-shadow: 0 2px 4px rgba(0,0,0,0.15); }
   .ping-toggle.on .switch::after { left: 22px; }
 
-  /* FAB */
   .fab { position: fixed; bottom: calc(95px + var(--safe-bottom)); right: 18px; width: 60px; height: 60px; border-radius: 20px; background: linear-gradient(135deg, #2563eb, #1d4ed8); border: none; color: white; cursor: pointer; box-shadow: 0 10px 30px rgba(37,99,235,0.4); z-index: 500; display: flex; align-items: center; justify-content: center; transition: all 0.25s; }
   .fab:active { transform: scale(0.88) rotate(90deg); }
   .fab svg { width: 26px; height: 26px; stroke: white; stroke-width: 2.5; }
 
-  /* NOTIF */
   .notif-banner { background: linear-gradient(135deg, #fffbeb, #fef3c7); border: 2px solid #fde68a; border-radius: 14px; padding: 14px; margin-bottom: 14px; display: flex; align-items: center; gap: 12px; box-shadow: var(--shadow-sm); }
   .notif-banner .nb-icon { width: 42px; height: 42px; border-radius: 12px; background: linear-gradient(135deg, #f59e0b, #d97706); display: flex; align-items: center; justify-content: center; color: white; flex-shrink: 0; font-size: 20px; }
   .notif-banner .nb-text { flex: 1; }
@@ -429,7 +382,6 @@
 </head>
 <body>
 
-<!-- HEADER -->
 <header class="app-header">
   <div class="pam-logo">
     <div class="pam-logo-box">P<span>A</span>M</div>
@@ -448,24 +400,19 @@
   </div>
 </header>
 
-<!-- DASHBOARD -->
 <section class="page active" id="page-dashboard">
   <div id="notifBanner"></div>
-
   <div class="welcome-box">
     <h2>Xush kelibsiz, <span>POP AUTO MAKON</span>da!</h2>
     <p>Nasiya, Kassa, Rasxod va Moy Almashtirish</p>
   </div>
-
   <div id="alertBanner"></div>
-
   <div class="balance-box blue">
     <div class="bb-icon"><svg class="ico" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg></div>
     <div class="label">💰 KASSA BALANSI</div>
     <div class="amount" id="kassaBalance">0 so'm</div>
     <div class="sub">Kirim: <span id="kassaKirim" style="color:#059669;">0</span> | Chiqim: <span id="kassaChiqim" style="color:#dc2626;">0</span></div>
   </div>
-
   <div class="stats-grid">
     <div class="stat-card total">
       <div class="stat-icon"><svg class="ico" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
@@ -488,62 +435,41 @@
       <div class="stat-label">Rasxod</div>
     </div>
   </div>
-
   <div class="balance-box green">
     <div class="bb-icon"><svg class="ico" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
     <div class="label">📊 UMUMIY QOLDIQ QARZ</div>
     <div class="amount" id="statQarzSumma">0 so'm</div>
   </div>
-
   <div class="balance-box orange">
     <div class="bb-icon"><svg class="ico" viewBox="0 0 24 24"><path d="M1 3h15v13H1z"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></div>
     <div class="label">🚚 TA'MINOTCHILARGA QARZIMIZ</div>
     <div class="amount" id="statTaminotchiQarz">0</div>
   </div>
-
   <div class="balance-box purple">
     <div class="bb-icon"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 10v6M4.22 4.22l4.24 4.24m7.08 7.08l4.24 4.24M1 12h6m10 0h6"/></svg></div>
     <div class="label">🛢 MOY ALMASHTIRISH KUTAYOTGANLAR</div>
     <div class="amount" id="statMoy">0 ta</div>
   </div>
-
   <div class="ping-toggle" id="pingToggle" onclick="togglePing()">
     <div class="ping-icon"><svg class="ico" viewBox="0 0 24 24" style="width:18px;height:18px;stroke-width:2.2;"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/></svg></div>
     <span id="pingLabel">Ping eslatma: O'chiq</span>
     <div class="switch"></div>
   </div>
-
   <div class="card">
     <div class="section-title">
       <span class="st-icon"><svg class="ico" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>
       Tezkor amallar
     </div>
     <div class="quick-actions">
-      <button class="quick-btn add" onclick="goToPage('add')">
-        <div class="qb-icon"><svg class="ico" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
-        Qarzdor
-      </button>
-      <button class="quick-btn pay" onclick="goToPage('tolov')">
-        <div class="qb-icon"><svg class="ico" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/></svg></div>
-        To'lash
-      </button>
-      <button class="quick-btn kassa" onclick="goToPage('kassa')">
-        <div class="qb-icon"><svg class="ico" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/></svg></div>
-        Kassa
-      </button>
-      <button class="quick-btn rasxod" onclick="goToPage('rasxodlar')">
-        <div class="qb-icon"><svg class="ico" viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
-        Rasxod
-      </button>
-      <button class="quick-btn moy" onclick="goToPage('moy')">
-        <div class="qb-icon"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 10v6M4.22 4.22l4.24 4.24m7.08 7.08l4.24 4.24M1 12h6m10 0h6"/></svg></div>
-        Moy
-      </button>
+      <button class="quick-btn add" onclick="goToPage('add')"><div class="qb-icon"><svg class="ico" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>Qarzdor</button>
+      <button class="quick-btn pay" onclick="goToPage('tolov')"><div class="qb-icon"><svg class="ico" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/></svg></div>To'lash</button>
+      <button class="quick-btn kassa" onclick="goToPage('kassa')"><div class="qb-icon"><svg class="ico" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/></svg></div>Kassa</button>
+      <button class="quick-btn rasxod" onclick="goToPage('rasxodlar')"><div class="qb-icon"><svg class="ico" viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>Rasxod</button>
+      <button class="quick-btn moy" onclick="goToPage('moy')"><div class="qb-icon"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 10v6M4.22 4.22l4.24 4.24m7.08 7.08l4.24 4.24M1 12h6m10 0h6"/></svg></div>Moy</button>
     </div>
   </div>
 </section>
 
-<!-- QARZDORLAR -->
 <section class="page" id="page-qarzdorlar">
   <div class="search-box">
     <svg class="ico search-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
@@ -559,7 +485,6 @@
   <div id="qarzdorlarList"></div>
 </section>
 
-<!-- TO'LOV -->
 <section class="page" id="page-tolov">
   <div class="card">
     <div class="section-title">
@@ -575,19 +500,17 @@
   <div id="tolovList"></div>
 </section>
 
-<!-- MOY -->
 <section class="page" id="page-moy">
   <div class="segment" id="moySegment">
     <button class="active" data-moy-tab="kutayotgan" onclick="switchMoyTab('kutayotgan')">🔔 Kutayotgan</button>
     <button data-moy-tab="barchasi" onclick="switchMoyTab('barchasi')">📋 Barchasi</button>
   </div>
-
   <div class="card">
     <div class="section-title purple" id="moyFormTitle">
-      <span class="st-icon"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 10v6"/></svg></span>
+      <span class="st-icon" style="background:linear-gradient(135deg,#8b5cf6,#7c3aed);"><svg class="ico" viewBox="0 0 24 24" style="width:15px;height:15px;stroke-width:2.2;"><circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 10v6"/></svg></span>
       Yangi moy mijozi
     </div>
-    <p style="font-size:12px;color:var(--text-muted);margin-bottom:14px;">Mijoz mashinasiga moy quyilgan vaqtni kiriting. Tizim keyingi almashtirish sanasini avtomatik eslatadi.</p>
+    <p style="font-size:12px;color:var(--text-muted);margin-bottom:14px;">Mijoz mashinasiga moy quyilgan vaqtni kiriting.</p>
     <div class="form-group"><label>Mijoz ismi *</label><input type="text" class="form-control" id="moyIsm" placeholder="Aziz aka"></div>
     <div class="form-group"><label>Telefon raqami *</label><input type="tel" class="form-control" id="moyTel" placeholder="+998 90 123 45 67"></div>
     <div class="moy-grid">
@@ -613,7 +536,6 @@
     <button class="btn btn-purple" id="moySaveBtn" onclick="addMoyClient()">🛢 Mijozni qo'shish</button>
     <button type="button" class="btn btn-danger" style="margin-top:10px;display:none;" id="moyCancelEditBtn" onclick="cancelMoyEdit()">Bekor qilish</button>
   </div>
-
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;">
     <div class="stat-card" style="border-left:4px solid #8b5cf6;">
       <div style="font-size:10px;color:var(--text-muted);font-weight:800;text-transform:uppercase;margin-bottom:6px;">Jami mijoz</div>
@@ -624,7 +546,6 @@
       <div id="statMoyKut" style="font-size:22px;font-weight:800;color:#dc2626;">0</div>
     </div>
   </div>
-
   <div class="search-box">
     <svg class="ico search-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
     <input type="text" class="form-control" id="moySearch" placeholder="Ism, mashina yoki raqam...">
@@ -632,7 +553,6 @@
   <div id="moyList"></div>
 </section>
 
-<!-- KASSA -->
 <section class="page" id="page-kassa">
   <div class="balance-box blue">
     <div class="bb-icon"><svg class="ico" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/></svg></div>
@@ -652,7 +572,7 @@
         <button type="button" data-curr="USD" onclick="setKassaCurr('USD')">USD $</button>
       </div>
     </div>
-    <div class="form-group"><label>Summa *</label><input type="number" class="form-control" id="kassaSumma" placeholder="0"><div class="input-hint" id="kassaSummaHint"></div></div>
+    <div class="form-group"><label>Summa *</label><input type="text" inputmode="decimal" class="form-control" id="kassaSumma" placeholder="0"><div class="input-hint" id="kassaSummaHint"></div></div>
     <div class="form-group"><label>Izoh</label><input type="text" class="form-control" id="kassaIzoh" placeholder="Bugungi savdo"></div>
     <div class="quick-actions" style="grid-template-columns:1fr 1fr;">
       <button class="btn btn-success" onclick="kassaKirim()">➕ Kirim</button>
@@ -668,22 +588,19 @@
   </div>
 </section>
 
-<!-- RASXODLAR -->
 <section class="page" id="page-rasxodlar">
   <div class="segment" id="rasxodSegment">
     <button class="active" data-rasxod-tab="tashqi" onclick="switchRasxodTab('tashqi')">🚚 Ta'minotchi</button>
     <button data-rasxod-tab="ichki" onclick="switchRasxodTab('ichki')">🏢 Ichki</button>
   </div>
-
   <div id="tab-tashqi">
     <div class="tc-tabs" id="tcTabs">
       <button class="active qarzli-tab" data-tctab="qarzli" onclick="switchTCTab('qarzli')">📦 Qarzli <span class="tab-count" id="tcCountQarzli">0</span></button>
       <button data-tctab="tolangan" class="tolangan-tab" onclick="switchTCTab('tolangan')">✅ To'langan <span class="tab-count" id="tcCountTolangan">0</span></button>
     </div>
-
     <div class="card">
       <div class="section-title orange">
-        <span class="st-icon"><svg class="ico" viewBox="0 0 24 24"><path d="M1 3h15v13H1z"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></span>
+        <span class="st-icon" style="background:linear-gradient(135deg,#f97316,#ea580c);"><svg class="ico" viewBox="0 0 24 24" style="width:15px;height:15px;stroke-width:2.2;"><path d="M1 3h15v13H1z"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></span>
         Yangi ta'minotchi
       </div>
       <div class="form-group"><label>Kim *</label><input type="text" class="form-control" id="tashqiKim" placeholder="Akmal aka"></div>
@@ -695,12 +612,11 @@
           <button type="button" data-curr="USD" onclick="setTashqiCurr('USD')">USD $</button>
         </div>
       </div>
-      <div class="form-group"><label>Jami summa *</label><input type="number" class="form-control" id="tashqiJami" placeholder="0" step="0.01"><div class="input-hint" id="tashqiJamiHint"></div></div>
-      <div class="form-group"><label>Berildi</label><input type="number" class="form-control" id="tashqiBerildi" placeholder="0" step="0.01"><div class="input-hint" id="tashqiBerildiHint"></div></div>
+      <div class="form-group"><label>Jami summa *</label><input type="text" inputmode="decimal" class="form-control" id="tashqiJami" placeholder="0"><div class="input-hint" id="tashqiJamiHint"></div></div>
+      <div class="form-group"><label>Berildi</label><input type="text" inputmode="decimal" class="form-control" id="tashqiBerildi" placeholder="0"><div class="input-hint" id="tashqiBerildiHint"></div></div>
       <div class="form-group"><label>Izoh</label><input type="text" class="form-control" id="tashqiIzoh"></div>
       <button class="btn btn-warning" onclick="addTashqi()">📥 Qo'shish</button>
     </div>
-
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;">
       <div class="stat-card" style="border-left:4px solid #f59e0b;">
         <div style="font-size:10px;color:var(--text-muted);font-weight:800;text-transform:uppercase;margin-bottom:6px;">Jami tashqi</div>
@@ -711,22 +627,20 @@
         <div id="statTashqiQarz" style="font-size:15px;font-weight:800;color:#dc2626;">0</div>
       </div>
     </div>
-
     <div class="search-box">
       <svg class="ico search-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
       <input type="text" class="form-control" id="tashqiSearch" placeholder="Qidirish...">
     </div>
     <div id="taminotchiList"></div>
   </div>
-
   <div id="tab-ichki" style="display:none;">
     <div class="card">
       <div class="section-title">
-        <span class="st-icon"><svg class="ico" viewBox="0 0 24 24"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 9h.01M9 13h.01M9 17h.01"/></svg></span>
+        <span class="st-icon"><svg class="ico" viewBox="0 0 24 24"><path d="M3 21h18M5 21V7l7-4 7 4v14"/></svg></span>
         Yangi ichki rasxod
       </div>
       <div class="form-group"><label>Nomi *</label><input type="text" class="form-control" id="ichkiNomi" placeholder="Oylik"></div>
-      <div class="form-group"><label>Summa *</label><input type="number" class="form-control" id="ichkiSumma" placeholder="0"><div class="input-hint" id="ichkiSummaHint"></div></div>
+      <div class="form-group"><label>Summa *</label><input type="text" inputmode="numeric" class="form-control" id="ichkiSumma" placeholder="0"><div class="input-hint" id="ichkiSummaHint"></div></div>
       <div class="form-group"><label>Izoh</label><input type="text" class="form-control" id="ichkiIzoh"></div>
       <div class="form-group"><label>Sana</label><input type="date" class="form-control" id="ichkiSana"></div>
       <button class="btn btn-info" onclick="addIchki()">📥 Qo'shish</button>
@@ -743,12 +657,11 @@
   </div>
 </section>
 
-<!-- QO'SHISH -->
 <section class="page" id="page-add">
   <div id="renewBannerContainer"></div>
   <div class="card">
     <div class="section-title" id="formTitle">
-      <span class="st-icon"><svg class="ico" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg></span>
+      <span class="st-icon"><svg class="ico" viewBox="0 0 24 24" style="width:15px;height:15px;stroke-width:2.2;"><path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg></span>
       Yangi qarzdor qo'shish
     </div>
     <form id="qarzdorForm" autocomplete="off">
@@ -757,7 +670,7 @@
       <div class="form-group"><label>Yashash joyi *</label><input type="text" class="form-control" id="yashashJoyi" required></div>
       <div class="form-group"><label>Telefon raqami *</label><input type="tel" class="form-control" id="telRaqami" required></div>
       <div class="form-group"><label>Olingan maxsulot *</label><input type="text" class="form-control" id="maxsulot" required></div>
-      <div class="form-group"><label>Qarz summasi (so'm) *</label><input type="number" class="form-control" id="summa" min="0" required><div class="input-hint" id="summaHint"></div></div>
+      <div class="form-group"><label>Qarz summasi (so'm) *</label><input type="text" inputmode="numeric" class="form-control" id="summa" required><div class="input-hint" id="summaHint"></div></div>
       <div class="form-group"><label>Qaytarish muddati *</label><input type="date" class="form-control" id="muddat" required></div>
       <button type="submit" class="btn btn-primary" id="saqlashBtn">💾 Saqlash</button>
       <button type="button" class="btn btn-danger" style="margin-top:10px;display:none;" id="cancelRenewBtn" onclick="cancelRenew()">Bekor qilish</button>
@@ -765,7 +678,6 @@
   </div>
 </section>
 
-<!-- SOZLAMALAR -->
 <section class="page" id="page-settings">
   <div class="card">
     <div class="section-title">
@@ -773,24 +685,22 @@
       Nasiya SMS matni
     </div>
     <div style="background:var(--bg);padding:12px;border-radius:10px;margin-bottom:14px;font-size:11px;line-height:2;color:var(--text-muted);">
-      <div><code style="color:var(--blue);font-weight:700;">{familiya}</code> <code style="color:var(--blue);font-weight:700;">{ismi}</code> <code style="color:var(--blue);font-weight:700;">{maxsulot}</code> <code style="color:var(--blue);font-weight:700;">{summa}</code> <code style="color:var(--blue);font-weight:700;">{tolangan}</code> <code style="color:var(--blue);font-weight:700;">{qoldiq}</code> <code style="color:var(--blue);font-weight:700;">{muddat}</code></div>
+      <code style="color:var(--blue);font-weight:700;">{familiya}</code> <code style="color:var(--blue);font-weight:700;">{ismi}</code> <code style="color:var(--blue);font-weight:700;">{maxsulot}</code> <code style="color:var(--blue);font-weight:700;">{summa}</code> <code style="color:var(--blue);font-weight:700;">{tolangan}</code> <code style="color:var(--blue);font-weight:700;">{qoldiq}</code> <code style="color:var(--blue);font-weight:700;">{muddat}</code>
     </div>
     <div class="form-group"><label>SMS matni</label><textarea id="smsTemplate" class="form-control" rows="6" style="font-size:13px;line-height:1.6;"></textarea></div>
     <button class="btn btn-success" onclick="saveSmsTemplate()">💾 Saqlash</button>
   </div>
-
   <div class="card">
     <div class="section-title purple">
-      <span class="st-icon"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 10v6"/></svg></span>
+      <span class="st-icon" style="background:linear-gradient(135deg,#8b5cf6,#7c3aed);"><svg class="ico" viewBox="0 0 24 24" style="width:15px;height:15px;stroke-width:2.2;"><circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 10v6"/></svg></span>
       Moy SMS matni
     </div>
     <div style="background:var(--bg);padding:12px;border-radius:10px;margin-bottom:14px;font-size:11px;line-height:2;color:var(--text-muted);">
-      <div><code style="color:var(--purple);font-weight:700;">{ism}</code> <code style="color:var(--purple);font-weight:700;">{marka}</code> <code style="color:var(--purple);font-weight:700;">{raqam}</code> <code style="color:var(--purple);font-weight:700;">{muddat}</code> <code style="color:var(--purple);font-weight:700;">{kun}</code></div>
+      <code style="color:var(--purple);font-weight:700;">{ism}</code> <code style="color:var(--purple);font-weight:700;">{marka}</code> <code style="color:var(--purple);font-weight:700;">{raqam}</code> <code style="color:var(--purple);font-weight:700;">{muddat}</code> <code style="color:var(--purple);font-weight:700;">{kun}</code>
     </div>
     <div class="form-group"><label>SMS matni</label><textarea id="moySmsTemplate" class="form-control" rows="5" style="font-size:13px;line-height:1.6;"></textarea></div>
     <button class="btn btn-purple" onclick="saveMoySmsTemplate()">💾 Saqlash</button>
   </div>
-
   <div class="card">
     <div class="section-title">
       <span class="st-icon"><svg class="ico" viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/></svg></span>
@@ -803,22 +713,21 @@
     </div>
     <button class="btn btn-primary" style="margin-top:10px;" onclick="testPing()">🔔 Sinash</button>
   </div>
-
   <div class="card">
     <div class="section-title">
       <span class="st-icon"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></span>
       Ilova haqida
     </div>
     <div style="font-size:12px;color:var(--text-muted);line-height:2;">
-      <div>📱 <b style="color:var(--text);">PAM Nasiya</b> — v12.0</div>
+      <div>📱 <b style="color:var(--text);">PAM Nasiya</b> — v13.0</div>
       <div>🏢 POP AUTO MAKON</div>
       <div>🛢 Moy almashtirish eslatmalari</div>
       <div>💰 Nasiya, Kassa, Rasxod</div>
+      <div>💵 UZS + USD aralash to'lov</div>
     </div>
   </div>
 </section>
 
-<!-- NAV -->
 <nav class="bottom-nav">
   <button class="nav-item active" data-page="dashboard">
     <span class="nav-icon"><svg class="ico" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg></span>
@@ -853,17 +762,17 @@
 
 <div class="modal-overlay" id="moySmsModal"><div class="modal-sheet"><div class="modal-handle"></div><div class="modal-title"><div class="mt-icon" style="background:#f3e8ff;color:#8b5cf6;"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 10v6"/></svg></div>Moy SMS</div><textarea id="moySmsText" class="form-control" rows="8" style="font-size:13px;line-height:1.6;"></textarea><div class="modal-actions"><button class="btn btn-danger" onclick="closeModal('moySmsModal')">Bekor</button><button class="btn btn-success" onclick="sendMoySms()">📤 Yuborish</button></div></div></div>
 
-<div class="modal-overlay" id="addDebtModal"><div class="modal-sheet"><div class="modal-handle"></div><div class="modal-title" style="color:var(--orange);"><div class="mt-icon" style="background:#fff7ed;color:#f97316;"><svg class="ico" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>Qarzga qarz qo'shish</div><div class="info-box orange" id="addDebtInfoBox"></div><div class="form-group"><label>Yangi maxsulot *</label><input type="text" class="form-control" id="addDebtMaxsulot"></div><div class="form-group"><label>Summa *</label><input type="number" class="form-control" id="addDebtSumma"><div class="input-hint" id="addDebtSummaHint"></div></div><div class="form-group"><label>Yangi muddat</label><input type="date" class="form-control" id="addDebtMuddat"></div><div class="modal-actions"><button class="btn btn-danger" onclick="closeModal('addDebtModal')">Bekor</button><button class="btn btn-orange" id="addDebtBtn" onclick="confirmAddDebt()">➕ Qo'shish</button></div></div></div>
+<div class="modal-overlay" id="addDebtModal"><div class="modal-sheet"><div class="modal-handle"></div><div class="modal-title" style="color:var(--orange);"><div class="mt-icon" style="background:#fff7ed;color:#f97316;"><svg class="ico" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/></svg></div>Qarzga qarz qo'shish</div><div class="info-box orange" id="addDebtInfoBox"></div><div class="form-group"><label>Yangi maxsulot *</label><input type="text" class="form-control" id="addDebtMaxsulot"></div><div class="form-group"><label>Summa *</label><input type="text" inputmode="numeric" class="form-control" id="addDebtSumma"><div class="input-hint" id="addDebtSummaHint"></div></div><div class="form-group"><label>Yangi muddat</label><input type="date" class="form-control" id="addDebtMuddat"></div><div class="modal-actions"><button class="btn btn-danger" onclick="closeModal('addDebtModal')">Bekor</button><button class="btn btn-orange" id="addDebtBtn" onclick="confirmAddDebt()">➕ Qo'shish</button></div></div></div>
 
-<div class="modal-overlay" id="addTaminotchiQarzModal"><div class="modal-sheet"><div class="modal-handle"></div><div class="modal-title" style="color:var(--orange);"><div class="mt-icon" style="background:#fff7ed;color:#f97316;"><svg class="ico" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/></svg></div>Ta'minotchiga qarz qo'shish</div><div class="info-box orange" id="addTCQarzInfoBox"></div><div class="form-group"><label>Yangi maxsulot *</label><input type="text" class="form-control" id="addTCQarzMaxsulot"></div><div class="form-group"><label>Jami summa *</label><input type="number" class="form-control" id="addTCQarzJami" step="0.01"><div class="input-hint" id="addTCQarzJamiHint"></div></div><div class="form-group"><label>Berildi</label><input type="number" class="form-control" id="addTCQarzBerildi" step="0.01"><div class="input-hint" id="addTCQarzBerildiHint"></div></div><div class="form-group"><label>Izoh</label><input type="text" class="form-control" id="addTCQarzIzoh"></div><div class="modal-actions"><button class="btn btn-danger" onclick="closeModal('addTaminotchiQarzModal')">Bekor</button><button class="btn btn-orange" id="addTCQarzBtn" onclick="confirmAddTCQarz()">➕ Qo'shish</button></div></div></div>
+<div class="modal-overlay" id="addTaminotchiQarzModal"><div class="modal-sheet"><div class="modal-handle"></div><div class="modal-title" style="color:var(--orange);"><div class="mt-icon" style="background:#fff7ed;color:#f97316;"><svg class="ico" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/></svg></div>Ta'minotchiga qarz qo'shish</div><div class="info-box orange" id="addTCQarzInfoBox"></div><div class="form-group"><label>Yangi maxsulot *</label><input type="text" class="form-control" id="addTCQarzMaxsulot"></div><div class="form-group"><label>Jami summa *</label><input type="text" inputmode="decimal" class="form-control" id="addTCQarzJami"><div class="input-hint" id="addTCQarzJamiHint"></div></div><div class="form-group"><label>Berildi</label><input type="text" inputmode="decimal" class="form-control" id="addTCQarzBerildi"><div class="input-hint" id="addTCQarzBerildiHint"></div></div><div class="form-group"><label>Izoh</label><input type="text" class="form-control" id="addTCQarzIzoh"></div><div class="modal-actions"><button class="btn btn-danger" onclick="closeModal('addTaminotchiQarzModal')">Bekor</button><button class="btn btn-orange" id="addTCQarzBtn" onclick="confirmAddTCQarz()">➕ Qo'shish</button></div></div></div>
 
-<div class="modal-overlay" id="tolovModal"><div class="modal-sheet"><div class="modal-handle"></div><div class="modal-title"><div class="mt-icon" style="background:#ecfdf5;color:#10b981;"><svg class="ico" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/></svg></div>To'lovni qabul qilish</div><div class="info-box" id="tolovInfoBox"></div><div class="form-group"><label>To'lanayotgan summa</label><input type="number" class="form-control" id="tolovSumma"></div><div class="modal-actions"><button class="btn btn-danger" onclick="closeModal('tolovModal')">Bekor</button><button class="btn btn-success" id="tolovBtn" onclick="confirmTolov()">✅ Tasdiqlash</button></div></div></div>
+<div class="modal-overlay" id="tolovModal"><div class="modal-sheet"><div class="modal-handle"></div><div class="modal-title"><div class="mt-icon" style="background:#ecfdf5;color:#10b981;"><svg class="ico" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/></svg></div>To'lovni qabul qilish</div><div class="info-box" id="tolovInfoBox"></div><div class="form-group"><label>To'lanayotgan summa</label><input type="text" inputmode="numeric" class="form-control" id="tolovSumma"></div><div class="modal-actions"><button class="btn btn-danger" onclick="closeModal('tolovModal')">Bekor</button><button class="btn btn-success" id="tolovBtn" onclick="confirmTolov()">✅ Tasdiqlash</button></div></div></div>
 
-<div class="modal-overlay" id="taminotchiPulModal"><div class="modal-sheet"><div class="modal-handle"></div><div class="modal-title" style="color:var(--success);"><div class="mt-icon" style="background:#ecfdf5;color:#10b981;"><svg class="ico" viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>Ta'minotchiga pul berish</div><div class="info-box" id="taminotchiInfoBox"></div><div class="form-group"><label>💵 UZS summasi</label><input type="number" class="form-control" id="taminotchiPulSummaUZS" placeholder="0"><div class="input-hint" id="taminotchiPulHintUZS"></div></div><div class="form-group"><label>💵 USD summasi ($)</label><input type="number" class="form-control" id="taminotchiPulSummaUSD" step="0.01" placeholder="0"><div class="input-hint" id="taminotchiPulHintUSD"></div></div><div class="form-group" id="kursGroup" style="display:none;"><label>💱 USD kursi</label><input type="number" class="form-control" id="taminotchiPulKurs" placeholder="12500"><div class="input-hint" id="taminotchiPulKursHint"></div></div><div class="info-box green" id="taminotchiJamiBox" style="display:none;"><div class="info-row"><span class="lbl">Jami (so'mda)</span><span class="val" id="taminotchiJamiSumma" style="color:var(--success);"></span></div><div class="info-row"><span class="lbl">Qoldiq</span><span class="val" id="taminotchiYangiQoldiq" style="color:var(--danger);"></span></div></div><div class="modal-actions"><button class="btn btn-danger" onclick="closeModal('taminotchiPulModal')">Bekor</button><button class="btn btn-success" id="taminotchiPulBtn" onclick="confirmTaminotchiPul()">💸 Berish</button></div></div></div>
+<div class="modal-overlay" id="taminotchiPulModal"><div class="modal-sheet"><div class="modal-handle"></div><div class="modal-title" style="color:var(--success);"><div class="mt-icon" style="background:#ecfdf5;color:#10b981;"><svg class="ico" viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>Ta'minotchiga pul berish</div><div class="info-box" id="taminotchiInfoBox"></div><div class="form-group"><label>💵 UZS summasi</label><input type="text" inputmode="decimal" class="form-control" id="taminotchiPulSummaUZS" placeholder="0"><div class="input-hint" id="taminotchiPulHintUZS"></div></div><div class="form-group"><label>💵 USD summasi ($)</label><input type="text" inputmode="decimal" class="form-control" id="taminotchiPulSummaUSD" placeholder="0"><div class="input-hint" id="taminotchiPulHintUSD"></div></div><div class="form-group" id="kursGroup" style="display:none;"><label>💱 USD kursi</label><input type="text" inputmode="numeric" class="form-control" id="taminotchiPulKurs" placeholder="12500"><div class="input-hint" id="taminotchiPulKursHint"></div></div><div class="info-box green" id="taminotchiJamiBox" style="display:none;"><div class="info-row"><span class="lbl">Jami (so'mda)</span><span class="val" id="taminotchiJamiSumma" style="color:var(--success);"></span></div><div class="info-row"><span class="lbl">Qoldiq</span><span class="val" id="taminotchiYangiQoldiq" style="color:var(--danger);"></span></div></div><div class="modal-actions"><button class="btn btn-danger" onclick="closeModal('taminotchiPulModal')">Bekor</button><button class="btn btn-success" id="taminotchiPulBtn" onclick="confirmTaminotchiPul()">💸 Berish</button></div></div></div>
 
 <div class="modal-overlay" id="taminotchiTarixModal"><div class="modal-sheet"><div class="modal-handle"></div><div class="modal-title"><div class="mt-icon"><svg class="ico" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/></svg></div>Ta'minotchi tarixi</div><div id="taminotchiTarixContent"></div><div class="modal-actions"><button class="btn btn-primary" onclick="closeModal('taminotchiTarixModal')" style="grid-column:1/-1;">Yopish</button></div></div></div>
 
-<div class="modal-overlay" id="kassaChiqimModalOverlay"><div class="modal-sheet"><div class="modal-handle"></div><div class="modal-title" style="color:var(--danger);"><div class="mt-icon" style="background:#fef2f2;color:#ef4444;"><svg class="ico" viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg></div>Kassadan chiqim</div><div class="info-box"><div class="info-row"><span class="lbl">Balans</span><span class="val" id="chiqimBalans"></span></div></div><div class="form-group"><label>Valyuta</label><div class="curr-toggle" id="chiqimCurrToggle"><button type="button" class="active" data-curr="UZS" onclick="setChiqimCurr('UZS')">UZS</button><button type="button" data-curr="USD" onclick="setChiqimCurr('USD')">USD $</button></div></div><div class="form-group"><label>Summa *</label><input type="number" class="form-control" id="chiqimSumma" step="0.01"><div class="input-hint" id="chiqimSummaHint"></div></div><div class="form-group"><label>Izoh</label><input type="text" class="form-control" id="chiqimIzoh"></div><div class="modal-actions"><button class="btn btn-danger" onclick="closeModal('kassaChiqimModalOverlay')">Bekor</button><button class="btn btn-warning" onclick="confirmKassaChiqim()">📤 Chiqim</button></div></div></div>
+<div class="modal-overlay" id="kassaChiqimModalOverlay"><div class="modal-sheet"><div class="modal-handle"></div><div class="modal-title" style="color:var(--danger);"><div class="mt-icon" style="background:#fef2f2;color:#ef4444;"><svg class="ico" viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg></div>Kassadan chiqim</div><div class="info-box"><div class="info-row"><span class="lbl">Balans</span><span class="val" id="chiqimBalans"></span></div></div><div class="form-group"><label>Valyuta</label><div class="curr-toggle" id="chiqimCurrToggle"><button type="button" class="active" data-curr="UZS" onclick="setChiqimCurr('UZS')">UZS</button><button type="button" data-curr="USD" onclick="setChiqimCurr('USD')">USD $</button></div></div><div class="form-group"><label>Summa *</label><input type="text" inputmode="decimal" class="form-control" id="chiqimSumma"><div class="input-hint" id="chiqimSummaHint"></div></div><div class="form-group"><label>Izoh</label><input type="text" class="form-control" id="chiqimIzoh"></div><div class="modal-actions"><button class="btn btn-danger" onclick="closeModal('kassaChiqimModalOverlay')">Bekor</button><button class="btn btn-warning" onclick="confirmKassaChiqim()">📤 Chiqim</button></div></div></div>
 
 <div class="modal-overlay" id="delModal"><div class="modal-sheet"><div class="modal-handle"></div><div class="modal-title"><div class="mt-icon" style="background:#fef2f2;color:#ef4444;"><svg class="ico" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6"/></svg></div>O'chirishni tasdiqlash</div><p class="modal-desc" id="delText"></p><div class="modal-actions"><button class="btn btn-primary" onclick="closeModal('delModal')">Yo'q</button><button class="btn btn-danger" onclick="confirmDelete()">Ha, o'chirish</button></div></div></div>
 
@@ -872,7 +781,6 @@
 <div class="modal-overlay" id="historyModal"><div class="modal-sheet"><div class="modal-handle"></div><div class="modal-title" style="color:var(--purple);"><div class="mt-icon" style="background:#f3e8ff;color:#8b5cf6;"><svg class="ico" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/></svg></div>Nasiya tarixi</div><div id="historyContent"></div><div class="modal-actions"><button class="btn btn-primary" onclick="closeModal('historyModal')" style="grid-column:1/-1;">Yopish</button></div></div></div>
 
 <div class="toast" id="toast"></div>
-
 <button class="fab" id="fab" onclick="goToPage('add')"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button><script>
 /* ============================================
    SERVICE WORKER (PWA)
@@ -884,7 +792,7 @@ if ('serviceWorker' in navigator) {
 }
 
 /* ============================================
-   SUPABASE SOZLAMASI
+   SUPABASE
    ============================================ */
 var SUPABASE_URL = 'https://ozigkdzfelsmadzdhukz.supabase.co';
 var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im96aWdrZHpmZWxzbWFkemRodWt6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAxODczNDgsImV4cCI6MjEwNTc2MzM0OH0.SQw38xVrmm7FBcUCSLIGJTaAgVQAxg6n-xla_cGpSW0';
@@ -1003,8 +911,8 @@ function getMoyHolat(m) {
   var kun = daysDiff(m.next_date);
   if (kun < 0) return { type: 'overdue', text: "MUDDATI O'TGAN", badge: 'danger', kun: kun };
   if (kun === 0) return { type: 'today', text: "BUGUN", badge: 'today', kun: 0 };
-  if (kun <= 7) return { type: 'soon', text: kun + " kun qoldi", badge: 'warning', kun: kun };
-  return { type: 'ok', text: kun + " kun qoldi", badge: 'success', kun: kun };
+  if (kun <= 7) return { type: 'soon', text: kun + " kun", badge: 'warning', kun: kun };
+  return { type: 'ok', text: kun + " kun", badge: 'success', kun: kun };
 }
 function getClientHistory(q) {
   return qarzdorlar.filter(function(x) {
@@ -1035,7 +943,131 @@ function warnRLS() {
 }
 
 /* ============================================
-   PING OVOZ
+   ⭐ DECIMAL INPUT (NUQTA MUAMMOSI HAL)
+   ============================================ */
+function attachDecimalInput(elementId, hintId, currency) {
+  var el = document.getElementById(elementId);
+  if (!el) return;
+  el.setAttribute('inputmode', 'decimal');
+  el.setAttribute('type', 'text');
+  el.setAttribute('autocomplete', 'off');
+
+  el.addEventListener('input', function() {
+    var val = this.value;
+    // Vergulni nuqtaga
+    val = val.replace(/,/g, '.');
+    // Faqat raqam va bitta nuqta
+    val = val.replace(/[^\d.]/g, '');
+    // 2 ta nuqta bo'lsa, ortiqchasini olib tashlash
+    var firstDot = val.indexOf('.');
+    if (firstDot !== -1) {
+      val = val.substring(0, firstDot + 1) + val.substring(firstDot + 1).replace(/\./g, '');
+    }
+    // Kasr qismi 2 xonadan oshmasin
+    var dotIdx = val.indexOf('.');
+    if (dotIdx !== -1) {
+      var intPart = val.substring(0, dotIdx);
+      var decPart = val.substring(dotIdx + 1, dotIdx + 3);
+      val = intPart + '.' + decPart;
+    }
+    // Boshidagi 0 larni olib tashlash (0.5 qolsin, 00.5 -> 0.5)
+    if (val.length > 1 && val[0] === '0' && val[1] !== '.' && val[1] !== '') {
+      val = val.replace(/^0+/, '');
+      if (val[0] === '.') val = '0' + val;
+    }
+    this.value = val;
+
+    // Hint yangilash
+    if (hintId) {
+      var hintEl = document.getElementById(hintId);
+      if (hintEl) {
+        if (val && !isNaN(Number(val)) && val !== '.') {
+          hintEl.innerHTML = formatSumma(Number(val), currency || 'UZS');
+        } else {
+          hintEl.innerHTML = '';
+        }
+      }
+    }
+    // Qo'shimcha callback
+    var cb = window['onDecimal_' + elementId];
+    if (typeof cb === 'function') cb();
+  });
+
+  // Nuqta va vergulga ruxsat (klaviaturadan)
+  el.addEventListener('keypress', function(e) {
+    var ch = String.fromCharCode(e.which);
+    if (ch === ',' || ch === '.') {
+      if (this.value.indexOf('.') !== -1 && this.value.indexOf(',') !== -1) {
+        e.preventDefault();
+      }
+    }
+  });
+}
+
+function attachIntegerInput(elementId, hintId, currency) {
+  var el = document.getElementById(elementId);
+  if (!el) return;
+  el.setAttribute('inputmode', 'numeric');
+  el.setAttribute('type', 'text');
+  el.setAttribute('autocomplete', 'off');
+
+  el.addEventListener('input', function() {
+    var val = this.value.replace(/[^\d]/g, '');
+    // Boshidagi 0 larni olib tashlash
+    if (val.length > 1 && val[0] === '0') val = val.replace(/^0+/, '');
+    this.value = val;
+    if (hintId) {
+      var hintEl = document.getElementById(hintId);
+      if (hintEl) {
+        if (val) hintEl.innerHTML = formatSumma(val, currency || 'UZS');
+        else hintEl.innerHTML = '';
+      }
+    }
+    var cb = window['onDecimal_' + elementId];
+    if (typeof cb === 'function') cb();
+  });
+}
+
+/* ============================================
+   INPUT'LARNI SOZLASH
+   ============================================ */
+function setupAllInputs() {
+  // QARZDOR FORMASI
+  attachIntegerInput('summa', 'summaHint', 'UZS');
+  attachIntegerInput('tolovSumma', null, 'UZS');
+  attachIntegerInput('addDebtSumma', 'addDebtSummaHint', 'UZS');
+  attachIntegerInput('ichkiSumma', 'ichkiSummaHint', 'UZS');
+  attachIntegerInput('kassaSumma', 'kassaSummaHint', selectedKassaCurr);
+
+  // TA'MINOTCHI
+  attachDecimalInput('tashqiJami', 'tashqiJamiHint', selectedTashqiCurr);
+  attachDecimalInput('tashqiBerildi', 'tashqiBerildiHint', selectedTashqiCurr);
+
+  // TA'MINOTCHIGA PUL (UZS + USD + KURS)
+  attachDecimalInput('taminotchiPulSummaUZS', 'taminotchiPulHintUZS', 'UZS');
+  attachDecimalInput('taminotchiPulSummaUSD', 'taminotchiPulHintUSD', 'USD');
+  attachIntegerInput('taminotchiPulKurs', 'taminotchiPulKursHint', 'UZS');
+
+  window.onDecimal_taminotchiPulSummaUZS = recalcTaminotchiPul;
+  window.onDecimal_taminotchiPulSummaUSD = recalcTaminotchiPul;
+  window.onDecimal_taminotchiPulKurs = function() {
+    var v = document.getElementById('taminotchiPulKurs').value;
+    var hint = document.getElementById('taminotchiPulKursHint');
+    if (hint && v) hint.innerHTML = '1$ = ' + formatSumma(v);
+    else if (hint) hint.innerHTML = '';
+    recalcTaminotchiPul();
+  };
+
+  // TA'MINOTCHIGA QARZ QO'SHISH
+  attachDecimalInput('addTCQarzJami', 'addTCQarzJamiHint', selectedTashqiCurr);
+  attachDecimalInput('addTCQarzBerildi', 'addTCQarzBerildiHint', selectedTashqiCurr);
+
+  // CHIQIM
+  attachDecimalInput('chiqimSumma', 'chiqimSummaHint', selectedChiqimCurr);
+}
+
+/* ============================================
+   PING
    ============================================ */
 function playPingSound() {
   try {
@@ -1074,7 +1106,7 @@ function updatePingUI() {
 function testPing() { playPingLong(); showToast('🔔 Ping sinov'); }
 
 /* ============================================
-   SUPABASE CRUD — QARZDORLAR
+   SUPABASE CRUD
    ============================================ */
 async function supabaseGetAll() {
   try {
@@ -1130,10 +1162,6 @@ async function supabaseDelete(id) {
     return !res.error;
   } catch (e) { return false; }
 }
-
-/* ============================================
-   SUPABASE CRUD — RASXODLAR
-   ============================================ */
 async function supabaseGetRasxodlar() {
   try {
     var res = await supabaseClient.from('rasxodlar').select('*').order('id', { ascending: false });
@@ -1188,10 +1216,6 @@ async function supabaseDeleteRasxod(id) {
     return !res.error;
   } catch (e) { return false; }
 }
-
-/* ============================================
-   SUPABASE CRUD — ICHKI
-   ============================================ */
 async function supabaseGetIchki() {
   try {
     var res = await supabaseClient.from('ichki_rasxodlar').select('*').order('id', { ascending: false });
@@ -1213,10 +1237,6 @@ async function supabaseDeleteIchki(id) {
     return !res.error;
   } catch (e) { return false; }
 }
-
-/* ============================================
-   SUPABASE CRUD — KASSA
-   ============================================ */
 async function supabaseGetKassa() {
   try {
     var res = await supabaseClient.from('kassa').select('*').order('id', { ascending: false });
@@ -1238,10 +1258,6 @@ async function supabaseDeleteKassa(id) {
     return !res.error;
   } catch (e) { return false; }
 }
-
-/* ============================================
-   SUPABASE CRUD — MOY
-   ============================================ */
 async function supabaseGetMoy() {
   try {
     var res = await supabaseClient.from('moy_mijozlar').select('*').order('id', { ascending: false });
@@ -1686,7 +1702,7 @@ function editMoy(id) {
   document.getElementById('moyOraliq').value = m.interval || 90;
   document.getElementById('moyNext').value = m.next_date;
   document.getElementById('moyIzoh').value = m.izoh || '';
-  document.getElementById('moyFormTitle').innerHTML = '<span class="st-icon" style="background:linear-gradient(135deg,#8b5cf6,#7c3aed);"><svg class="ico" viewBox="0 0 24 24" style="width:15px;height:15px;stroke-width:2.2;stroke:#fff;fill:none;stroke-linecap:round;stroke-linejoin:round;"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 013 3L12 15l-4 1 1-4z"/></svg></span> Moy mijozini tahrirlash';
+  document.getElementById('moyFormTitle').innerHTML = '<span class="st-icon" style="background:linear-gradient(135deg,#8b5cf6,#7c3aed);"><svg class="ico" viewBox="0 0 24 24" style="width:15px;height:15px;stroke:#fff;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 013 3L12 15l-4 1 1-4z"/></svg></span> Moy mijozini tahrirlash';
   document.getElementById('moySaveBtn').textContent = '💾 Yangilash';
   document.getElementById('moyCancelEditBtn').style.display = 'flex';
   calcMoyNext();
@@ -1696,7 +1712,7 @@ function editMoy(id) {
 function cancelMoyEdit() {
   moyEditId = null;
   clearMoyForm();
-  document.getElementById('moyFormTitle').innerHTML = '<span class="st-icon" style="background:linear-gradient(135deg,#8b5cf6,#7c3aed);"><svg class="ico" viewBox="0 0 24 24" style="width:15px;height:15px;stroke-width:2.2;stroke:#fff;fill:none;"><circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 10v6"/></svg></span> Yangi moy mijozi';
+  document.getElementById('moyFormTitle').innerHTML = '<span class="st-icon" style="background:linear-gradient(135deg,#8b5cf6,#7c3aed);"><svg class="ico" viewBox="0 0 24 24" style="width:15px;height:15px;stroke:#fff;fill:none;stroke-width:2.2;"><circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 10v6"/></svg></span> Yangi moy mijozi';
   document.getElementById('moySaveBtn').textContent = '🛢 Mijozni qo\'shish';
   document.getElementById('moyCancelEditBtn').style.display = 'none';
 }
@@ -1768,14 +1784,22 @@ document.getElementById('tolovSearch').addEventListener('input', renderTolovList
 function setKassaCurr(c) {
   selectedKassaCurr = c;
   document.querySelectorAll('#kassaCurrToggle button').forEach(function(b) { b.classList.toggle('active', b.dataset.curr === c); });
+  var el = document.getElementById('kassaSumma');
+  if (el) { var n = el.cloneNode(true); el.parentNode.replaceChild(n, el); n.value = ''; attachDecimalInput('kassaSumma', 'kassaSummaHint', c); }
 }
 function setTashqiCurr(c) {
   selectedTashqiCurr = c;
   document.querySelectorAll('#tashqiCurrToggle button').forEach(function(b) { b.classList.toggle('active', b.dataset.curr === c); });
+  ['tashqiJami', 'tashqiBerildi'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) { var n = el.cloneNode(true); el.parentNode.replaceChild(n, el); n.value = ''; attachDecimalInput(id, id + 'Hint', c); }
+  });
 }
 function setChiqimCurr(c) {
   selectedChiqimCurr = c;
   document.querySelectorAll('#chiqimCurrToggle button').forEach(function(b) { b.classList.toggle('active', b.dataset.curr === c); });
+  var el = document.getElementById('chiqimSumma');
+  if (el) { var n = el.cloneNode(true); el.parentNode.replaceChild(n, el); n.value = ''; attachDecimalInput('chiqimSumma', 'chiqimSummaHint', c); }
 }
 function renderKassa() {
   updateKassaBalanceUI();
@@ -1833,16 +1857,6 @@ async function confirmKassaChiqim() {
   showToast('✅ ' + formatSumma(summa, selectedChiqimCurr) + ' chiqarildi!');
   renderKassa(); renderDashboard();
 }
-document.getElementById('kassaSumma').addEventListener('input', function() {
-  this.value = this.value.replace(/[^\d.]/g, '');
-  if (this.value) document.getElementById('kassaSummaHint').innerHTML = formatSumma(this.value, selectedKassaCurr);
-  else document.getElementById('kassaSummaHint').innerHTML = '';
-});
-document.getElementById('chiqimSumma').addEventListener('input', function() {
-  this.value = this.value.replace(/[^\d.]/g, '');
-  if (this.value) document.getElementById('chiqimSummaHint').innerHTML = formatSumma(this.value, selectedChiqimCurr);
-  else document.getElementById('chiqimSummaHint').innerHTML = '';
-});
 
 /* ============================================
    RASXODLAR
@@ -1869,7 +1883,6 @@ function renderTaminotchilar() {
   var list = document.getElementById('taminotchiList');
   if (!list) return;
   var search = (document.getElementById('tashqiSearch').value || '').toLowerCase().trim();
-
   var qarzliAll = taminotchilar.filter(function(t) { return t.qoldiq > 0.01; });
   var tolanganAll = taminotchilar.filter(function(t) { return t.qoldiq <= 0.01; });
 
@@ -1879,7 +1892,6 @@ function renderTaminotchilar() {
   if (elCT) elCT.textContent = tolanganAll.length;
 
   var activeList = currentTCTab === 'tolangan' ? tolanganAll : qarzliAll;
-
   if (search) {
     activeList = activeList.filter(function(t) {
       return (t.kim || '').toLowerCase().indexOf(search) !== -1 ||
@@ -1915,7 +1927,6 @@ function renderTaminotchilar() {
     var percent = t.jami_summa > 0 ? Math.min(100, (t.berildi / t.jami_summa) * 100) : 0;
     var isQarzli = t.qoldiq > 0.01;
     var cardClass = isQarzli ? 'qarzli' : 'tolangan';
-    var badgeClass = isQarzli ? 'qarzli' : 'tolangan';
     var badgeText = isQarzli ? 'QARZ: ' + formatSummaShort(t.qoldiq, t.valyuta) : '✅ TO\'LANGAN';
 
     return '<div class="taminotchi-card ' + cardClass + '" style="animation-delay:' + (i * 0.03) + 's">' +
@@ -1924,7 +1935,7 @@ function renderTaminotchilar() {
           '<div class="tc-name">' + t.kim + '</div>' +
           '<div class="tc-nima">📦 ' + t.nima_uchun + '</div>' +
         '</div>' +
-        '<div class="tc-badge ' + badgeClass + '">' + badgeText + '</div>' +
+        '<div class="tc-badge ' + cardClass + '">' + badgeText + '</div>' +
       '</div>' +
       '<div class="progress-bar"><div class="progress-fill' + (isQarzli ? ' warning' : '') + '" style="width:' + percent + '%"></div></div>' +
       '<div class="tc-money">' +
@@ -1942,16 +1953,6 @@ function renderTaminotchilar() {
   }).join('');
 }
 document.getElementById('tashqiSearch').addEventListener('input', renderTaminotchilar);
-document.getElementById('tashqiJami').addEventListener('input', function() {
-  this.value = this.value.replace(/[^\d.]/g, '');
-  if (this.value) document.getElementById('tashqiJamiHint').innerHTML = formatSumma(this.value, selectedTashqiCurr);
-  else document.getElementById('tashqiJamiHint').innerHTML = '';
-});
-document.getElementById('tashqiBerildi').addEventListener('input', function() {
-  this.value = this.value.replace(/[^\d.]/g, '');
-  if (this.value) document.getElementById('tashqiBerildiHint').innerHTML = formatSumma(this.value, selectedTashqiCurr);
-  else document.getElementById('tashqiBerildiHint').innerHTML = '';
-});
 
 async function addTashqi() {
   var kim = document.getElementById('tashqiKim').value.trim();
@@ -2005,20 +2006,10 @@ function openAddTaminotchiQarzModal(id) {
   document.getElementById('addTCQarzIzoh').value = '';
   document.getElementById('addTCQarzJamiHint').innerHTML = '';
   document.getElementById('addTCQarzBerildiHint').innerHTML = '';
+  attachDecimalInput('addTCQarzJami', 'addTCQarzJamiHint', t.valyuta);
+  attachDecimalInput('addTCQarzBerildi', 'addTCQarzBerildiHint', t.valyuta);
   openModal('addTaminotchiQarzModal');
 }
-document.getElementById('addTCQarzJami').addEventListener('input', function() {
-  this.value = this.value.replace(/[^\d.]/g, '');
-  var t = taminotchilar.find(function(x) { return x.id === currentAddTCQarzId; });
-  if (this.value && t) document.getElementById('addTCQarzJamiHint').innerHTML = formatSumma(this.value, t.valyuta);
-  else document.getElementById('addTCQarzJamiHint').innerHTML = '';
-});
-document.getElementById('addTCQarzBerildi').addEventListener('input', function() {
-  this.value = this.value.replace(/[^\d.]/g, '');
-  var t = taminotchilar.find(function(x) { return x.id === currentAddTCQarzId; });
-  if (this.value && t) document.getElementById('addTCQarzBerildiHint').innerHTML = formatSumma(this.value, t.valyuta);
-  else document.getElementById('addTCQarzBerildiHint').innerHTML = '';
-});
 async function confirmAddTCQarz() {
   var t = taminotchilar.find(function(x) { return x.id === currentAddTCQarzId; });
   if (!t) return;
@@ -2095,24 +2086,6 @@ function recalcTaminotchiPul() {
     document.getElementById('taminotchiJamiBox').style.display = 'none';
   }
 }
-document.getElementById('taminotchiPulSummaUZS').addEventListener('input', function() {
-  this.value = this.value.replace(/[^\d]/g, '');
-  if (this.value) document.getElementById('taminotchiPulHintUZS').innerHTML = formatSumma(this.value);
-  else document.getElementById('taminotchiPulHintUZS').innerHTML = '';
-  recalcTaminotchiPul();
-});
-document.getElementById('taminotchiPulSummaUSD').addEventListener('input', function() {
-  this.value = this.value.replace(/[^\d.]/g, '');
-  if (this.value) document.getElementById('taminotchiPulHintUSD').innerHTML = formatSumma(this.value, 'USD');
-  else document.getElementById('taminotchiPulHintUSD').innerHTML = '';
-  recalcTaminotchiPul();
-});
-document.getElementById('taminotchiPulKurs').addEventListener('input', function() {
-  this.value = this.value.replace(/[^\d]/g, '');
-  if (this.value) document.getElementById('taminotchiPulKursHint').innerHTML = '1$ = ' + formatSumma(this.value);
-  else document.getElementById('taminotchiPulKursHint').innerHTML = '';
-  recalcTaminotchiPul();
-});
 async function confirmTaminotchiPul() {
   var t = taminotchilar.find(function(x) { return x.id === currentTaminotchiId; });
   if (!t) return;
@@ -2221,11 +2194,6 @@ function renderIchki() {
   }).join('');
 }
 document.getElementById('ichkiSearch').addEventListener('input', renderIchki);
-document.getElementById('ichkiSumma').addEventListener('input', function() {
-  this.value = this.value.replace(/[^\d]/g, '');
-  if (this.value) document.getElementById('ichkiSummaHint').innerHTML = formatSumma(this.value);
-  else document.getElementById('ichkiSummaHint').innerHTML = '';
-});
 async function addIchki() {
   var nomi = document.getElementById('ichkiNomi').value.trim();
   var summa = Math.round(Number(document.getElementById('ichkiSumma').value));
@@ -2251,14 +2219,6 @@ async function addIchki() {
 /* ============================================
    QARZDOR FORMASI
    ============================================ */
-document.getElementById('summa').addEventListener('input', function() {
-  this.value = this.value.replace(/[^\d]/g, '');
-  if (this.value) document.getElementById('summaHint').innerHTML = formatSumma(this.value);
-  else document.getElementById('summaHint').innerHTML = '';
-});
-document.getElementById('tolovSumma').addEventListener('input', function() {
-  this.value = this.value.replace(/[^\d]/g, '');
-});
 document.getElementById('qarzdorForm').addEventListener('submit', async function(e) {
   e.preventDefault();
   var inputs = ['ismi','familyasi','yashashJoyi','telRaqami','maxsulot','summa','muddat'];
@@ -2392,11 +2352,6 @@ function openAddDebtModal(id) {
   document.getElementById('addDebtMuddat').value = '';
   openModal('addDebtModal');
 }
-document.getElementById('addDebtSumma').addEventListener('input', function() {
-  this.value = this.value.replace(/[^\d]/g, '');
-  if (this.value) document.getElementById('addDebtSummaHint').innerHTML = formatSumma(this.value);
-  else document.getElementById('addDebtSummaHint').innerHTML = '';
-});
 async function confirmAddDebt() {
   var q = qarzdorlar.find(function(x) { return x.id === currentAddDebtId; });
   if (!q) return;
@@ -2580,7 +2535,7 @@ function showReminderModal() {
         '<div style="font-weight:800;font-size:14px;margin-bottom:4px;">' + q.ismi + ' ' + q.familyasi + '</div>' +
         '<div style="font-size:11px;color:' + (q.kun === 0 ? 'var(--warning)' : 'var(--danger)') + ';font-weight:800;margin-bottom:6px;">' + q.text + '</div>' +
         '<div style="font-size:11px;color:var(--text-muted);margin-bottom:8px;">' + q.maxsulot + ' | Qoldiq: <b style="color:var(--danger);">' + q.qoldiq + '</b></div>' +
-        '<a href="tel:' + q.tel + '" style="display:block;padding:9px;text-align:center;background:var(--blue-bg);border:1px solid var(--border-blue);border-radius:9px;color:var(--blue);font-size:12px;font-weight:800;text-decoration:none;">📞 Qo\'ng\'iroq</a></div>';
+        '<a href="tel:' + q.tel + '" style="display:block;padding:9px;text-align:center;background:var(--blue-bg);border:1px solid #bfdbfe;border-radius:9px;color:var(--blue);font-size:12px;font-weight:800;text-decoration:none;">📞 Qo\'ng\'iroq</a></div>';
     });
   }
   if (mItems.length > 0) {
@@ -2651,6 +2606,8 @@ async function installPWA() {
    INIT
    ============================================ */
 async function init() {
+  setupAllInputs();
+
   updatePingUI();
   renderNotifBanner();
   renderDashboard();
