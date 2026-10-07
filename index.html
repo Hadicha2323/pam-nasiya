@@ -513,10 +513,12 @@
     <p style="font-size:12px;color:var(--text-muted);margin-bottom:14px;">Mijoz mashinasiga moy quyilgan vaqtni kiriting.</p>
     <div class="form-group"><label>Mijoz ismi *</label><input type="text" class="form-control" id="moyIsm" placeholder="Aziz aka"></div>
     <div class="form-group"><label>Telefon raqami *</label><input type="tel" class="form-control" id="moyTel" placeholder="+998 90 123 45 67"></div>
+    <div class="form-group"><label>Mijoz qayerdan? (Manzil) *</label><input type="text" class="form-control" id="moyManzil" placeholder="Toshkent, Chilonzor"></div>
     <div class="moy-grid">
       <div class="form-group"><label>Mashina markasi *</label><input type="text" class="form-control" id="moyMarka" placeholder="Malibu 2"></div>
       <div class="form-group"><label>Mashina raqami *</label><input type="text" class="form-control" id="moyRaqam" placeholder="01 A 123 BC"></div>
     </div>
+    <div class="form-group"><label>Probeg (km) *</label><input type="text" inputmode="numeric" class="form-control" id="moyProbeg" placeholder="125000"><div class="input-hint" id="moyProbegHint"></div></div>
     <div class="form-group"><label>Moy quyilgan kun *</label><input type="date" class="form-control" id="moyKun" onchange="calcMoyNext()"></div>
     <div class="form-group">
       <label>Almashtirish oralig'i</label>
@@ -548,7 +550,7 @@
   </div>
   <div class="search-box">
     <svg class="ico search-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-    <input type="text" class="form-control" id="moySearch" placeholder="Ism, mashina yoki raqam...">
+    <input type="text" class="form-control" id="moySearch" placeholder="Ism, mashina, raqam yoki manzil...">
   </div>
   <div id="moyList"></div>
 </section>
@@ -696,7 +698,7 @@
       Moy SMS matni
     </div>
     <div style="background:var(--bg);padding:12px;border-radius:10px;margin-bottom:14px;font-size:11px;line-height:2;color:var(--text-muted);">
-      <code style="color:var(--purple);font-weight:700;">{ism}</code> <code style="color:var(--purple);font-weight:700;">{marka}</code> <code style="color:var(--purple);font-weight:700;">{raqam}</code> <code style="color:var(--purple);font-weight:700;">{muddat}</code> <code style="color:var(--purple);font-weight:700;">{kun}</code>
+      <code style="color:var(--purple);font-weight:700;">{ism}</code> <code style="color:var(--purple);font-weight:700;">{marka}</code> <code style="color:var(--purple);font-weight:700;">{raqam}</code> <code style="color:var(--purple);font-weight:700;">{muddat}</code> <code style="color:var(--purple);font-weight:700;">{kun}</code> <code style="color:var(--purple);font-weight:700;">{manzil}</code> <code style="color:var(--purple);font-weight:700;">{probeg}</code>
     </div>
     <div class="form-group"><label>SMS matni</label><textarea id="moySmsTemplate" class="form-control" rows="5" style="font-size:13px;line-height:1.6;"></textarea></div>
     <button class="btn btn-purple" onclick="saveMoySmsTemplate()">💾 Saqlash</button>
@@ -833,7 +835,7 @@ var DEFAULT_SMS_TEMPLATE =
 'Xurmatli {familiya} {ismi}!\n\n"POP AUTO MAKON" do\'konidan {yaratilgan} kuni quyidagi maxsulotni nasiyaga olgansiz:\n\nMaxsulot: {maxsulot}\nUmumiy summa: {summa}\nTo\'langan: {tolangan}\nQoldiq qarz: {qoldiq}\n\nSiz bilan {muddat} sanasiga kelishgan edik. Iltimos, kerakli summani to\'lab qo\'ying.\n\nHurmat bilan,\n"POP AUTO MAKON" jamoasi';
 
 var DEFAULT_MOY_SMS_TEMPLATE =
-'Assalomu alaykum, {ism}!\n\nSizning {marka} ({raqam}) avtomobilingizga moy almashtirish vaqti keldi.\n\nAlmashtirish sanasi: {muddat}\nO\'tgan kun: {kun} kun\n\nIltimos, POP AUTO MAKON xizmatiga murojaat qiling.\n\nHurmat bilan,\nPOP AUTO MAKON';
+'Assalomu alaykum, {ism}!\n\nSizning {marka} ({raqam}) avtomobilingizga moy almashtirish vaqti keldi.\n\nManzil: {manzil}\nProbeg: {probeg} km\nAlmashtirish sanasi: {muddat}\nO\'tgan kun: {kun} kun\n\nIltimos, POP AUTO MAKON xizmatiga murojaat qiling.\n\nHurmat bilan,\nPOP AUTO MAKON';
 
 var smsTemplate = localStorage.getItem('pam_sms_template') || DEFAULT_SMS_TEMPLATE;
 var moySmsTemplate = localStorage.getItem('pam_moy_sms_template') || DEFAULT_MOY_SMS_TEMPLATE;
@@ -889,6 +891,15 @@ function formatSummaShort(n, currency) {
     out = result;
   }
   return (neg ? '-' : '') + out;
+}
+function formatProbeg(n) {
+  n = Number(n) || 0;
+  var s = String(Math.round(n)), result = '', count = 0;
+  for (var i = s.length - 1; i >= 0; i--) {
+    result = s[i] + result; count++;
+    if (count % 3 === 0 && i > 0) result = ' ' + result;
+  }
+  return result + ' km';
 }
 function initials(ismi, familyasi) {
   return (ismi && ismi[0] ? ismi[0].toUpperCase() : '') + (familyasi && familyasi[0] ? familyasi[0].toUpperCase() : '');
@@ -954,30 +965,23 @@ function attachDecimalInput(elementId, hintId, currency) {
 
   el.addEventListener('input', function() {
     var val = this.value;
-    // Vergulni nuqtaga
     val = val.replace(/,/g, '.');
-    // Faqat raqam va bitta nuqta
     val = val.replace(/[^\d.]/g, '');
-    // 2 ta nuqta bo'lsa, ortiqchasini olib tashlash
     var firstDot = val.indexOf('.');
     if (firstDot !== -1) {
       val = val.substring(0, firstDot + 1) + val.substring(firstDot + 1).replace(/\./g, '');
     }
-    // Kasr qismi 2 xonadan oshmasin
     var dotIdx = val.indexOf('.');
     if (dotIdx !== -1) {
       var intPart = val.substring(0, dotIdx);
       var decPart = val.substring(dotIdx + 1, dotIdx + 3);
       val = intPart + '.' + decPart;
     }
-    // Boshidagi 0 larni olib tashlash (0.5 qolsin, 00.5 -> 0.5)
     if (val.length > 1 && val[0] === '0' && val[1] !== '.' && val[1] !== '') {
       val = val.replace(/^0+/, '');
       if (val[0] === '.') val = '0' + val;
     }
     this.value = val;
-
-    // Hint yangilash
     if (hintId) {
       var hintEl = document.getElementById(hintId);
       if (hintEl) {
@@ -988,12 +992,9 @@ function attachDecimalInput(elementId, hintId, currency) {
         }
       }
     }
-    // Qo'shimcha callback
     var cb = window['onDecimal_' + elementId];
     if (typeof cb === 'function') cb();
   });
-
-  // Nuqta va vergulga ruxsat (klaviaturadan)
   el.addEventListener('keypress', function(e) {
     var ch = String.fromCharCode(e.which);
     if (ch === ',' || ch === '.') {
@@ -1013,7 +1014,6 @@ function attachIntegerInput(elementId, hintId, currency) {
 
   el.addEventListener('input', function() {
     var val = this.value.replace(/[^\d]/g, '');
-    // Boshidagi 0 larni olib tashlash
     if (val.length > 1 && val[0] === '0') val = val.replace(/^0+/, '');
     this.value = val;
     if (hintId) {
@@ -1032,18 +1032,16 @@ function attachIntegerInput(elementId, hintId, currency) {
    INPUT'LARNI SOZLASH
    ============================================ */
 function setupAllInputs() {
-  // QARZDOR FORMASI
   attachIntegerInput('summa', 'summaHint', 'UZS');
   attachIntegerInput('tolovSumma', null, 'UZS');
   attachIntegerInput('addDebtSumma', 'addDebtSummaHint', 'UZS');
   attachIntegerInput('ichkiSumma', 'ichkiSummaHint', 'UZS');
   attachIntegerInput('kassaSumma', 'kassaSummaHint', selectedKassaCurr);
+  attachIntegerInput('moyProbeg', 'moyProbegHint', null);
 
-  // TA'MINOTCHI
   attachDecimalInput('tashqiJami', 'tashqiJamiHint', selectedTashqiCurr);
   attachDecimalInput('tashqiBerildi', 'tashqiBerildiHint', selectedTashqiCurr);
 
-  // TA'MINOTCHIGA PUL (UZS + USD + KURS)
   attachDecimalInput('taminotchiPulSummaUZS', 'taminotchiPulHintUZS', 'UZS');
   attachDecimalInput('taminotchiPulSummaUSD', 'taminotchiPulHintUSD', 'USD');
   attachIntegerInput('taminotchiPulKurs', 'taminotchiPulKursHint', 'UZS');
@@ -1058,12 +1056,22 @@ function setupAllInputs() {
     recalcTaminotchiPul();
   };
 
-  // TA'MINOTCHIGA QARZ QO'SHISH
   attachDecimalInput('addTCQarzJami', 'addTCQarzJamiHint', selectedTashqiCurr);
   attachDecimalInput('addTCQarzBerildi', 'addTCQarzBerildiHint', selectedTashqiCurr);
 
-  // CHIQIM
   attachDecimalInput('chiqimSumma', 'chiqimSummaHint', selectedChiqimCurr);
+
+  // Probeg hint maxsus
+  var probegEl = document.getElementById('moyProbeg');
+  if (probegEl) {
+    probegEl.addEventListener('input', function() {
+      var hint = document.getElementById('moyProbegHint');
+      if (hint) {
+        if (this.value) hint.innerHTML = formatProbeg(this.value);
+        else hint.innerHTML = '';
+      }
+    });
+  }
 }
 
 /* ============================================
@@ -1265,7 +1273,9 @@ async function supabaseGetMoy() {
     return (res.data || []).map(function(d) {
       return {
         id: d.id, ism: d.ism, tel: d.tel,
+        manzil: d.manzil || '',
         marka: d.marka, raqam: d.raqam,
+        probeg: Number(d.probeg) || 0,
         last_date: d.last_date, next_date: d.next_date,
         interval: Number(d.interval) || 90,
         izoh: d.izoh, yaratilgan: d.yaratilgan
@@ -1276,7 +1286,10 @@ async function supabaseGetMoy() {
 async function supabaseInsertMoy(m) {
   try {
     var res = await supabaseClient.from('moy_mijozlar').insert([{
-      id: m.id, ism: m.ism, tel: m.tel, marka: m.marka, raqam: m.raqam,
+      id: m.id, ism: m.ism, tel: m.tel,
+      manzil: m.manzil || null,
+      marka: m.marka, raqam: m.raqam,
+      probeg: m.probeg || 0,
       last_date: m.last_date, next_date: m.next_date, interval: m.interval,
       izoh: m.izoh
     }]);
@@ -1359,7 +1372,9 @@ function fillMoySmsTemplate(m) {
     .replace(/{marka}/g, m.marka)
     .replace(/{raqam}/g, m.raqam)
     .replace(/{muddat}/g, formatDate(m.next_date))
-    .replace(/{kun}/g, kun);
+    .replace(/{kun}/g, kun)
+    .replace(/{manzil}/g, m.manzil || '-')
+    .replace(/{probeg}/g, m.probeg ? formatProbeg(m.probeg) : '-');
 }
 
 /* ============================================
@@ -1594,7 +1609,8 @@ function renderMoy() {
       return (m.ism || '').toLowerCase().indexOf(search) !== -1 ||
         (m.marka || '').toLowerCase().indexOf(search) !== -1 ||
         (m.raqam || '').toLowerCase().indexOf(search) !== -1 ||
-        (m.tel || '').indexOf(search) !== -1;
+        (m.tel || '').indexOf(search) !== -1 ||
+        (m.manzil || '').toLowerCase().indexOf(search) !== -1;
     });
   }
   filtered.sort(function(a, b) { return daysDiff(a.next_date) - daysDiff(b.next_date); });
@@ -1619,7 +1635,9 @@ function renderMoy() {
         '</div>' +
         '<div class="q-badge ' + holat.badge + '">' + holat.text + '</div>' +
       '</div>' +
+      (m.manzil ? '<div class="q-info">📍 <b>' + m.manzil + '</b></div>' : '') +
       '<div class="q-info">🚗 <b>' + m.marka + '</b> • ' + m.raqam + '</div>' +
+      (m.probeg > 0 ? '<div class="q-info">📊 Probeg: <b style="color:var(--text);">' + formatProbeg(m.probeg) + '</b></div>' : '') +
       '<div class="q-info">🛢 Moy: <b style="color:var(--text);">' + formatDate(m.last_date) + '</b></div>' +
       '<div class="q-info">📅 Keyingi: <b style="color:' + color + ';">' + formatDate(m.next_date) + '</b> • ' + kunText + '</div>' +
       (m.izoh ? '<div class="q-info">📝 ' + m.izoh + '</div>' : '') +
@@ -1638,8 +1656,10 @@ document.getElementById('moySearch').addEventListener('input', renderMoy);
 async function addMoyClient() {
   var ism = document.getElementById('moyIsm').value.trim();
   var tel = document.getElementById('moyTel').value.trim();
+  var manzil = document.getElementById('moyManzil').value.trim();
   var marka = document.getElementById('moyMarka').value.trim();
   var raqam = document.getElementById('moyRaqam').value.trim();
+  var probeg = Number(document.getElementById('moyProbeg').value) || 0;
   var kun = document.getElementById('moyKun').value;
   var oraliq = Number(document.getElementById('moyOraliq').value) || 90;
   var next = document.getElementById('moyNext').value;
@@ -1647,6 +1667,7 @@ async function addMoyClient() {
 
   if (!ism) { showToast('Ism!', 'error'); return; }
   if (!tel) { showToast('Telefon!', 'error'); return; }
+  if (!manzil) { showToast('Manzil!', 'error'); return; }
   if (!marka) { showToast('Marka!', 'error'); return; }
   if (!raqam) { showToast('Raqam!', 'error'); return; }
   if (!kun) { showToast('Moy quyilgan kun!', 'error'); return; }
@@ -1656,18 +1677,19 @@ async function addMoyClient() {
   btn.textContent = 'Saqlanmoqda...';
 
   if (moyEditId) {
-    var updData = { ism: ism, tel: tel, marka: marka, raqam: raqam, last_date: kun, next_date: next, interval: oraliq, izoh: izoh };
+    var updData = { ism: ism, tel: tel, manzil: manzil, marka: marka, raqam: raqam, probeg: probeg, last_date: kun, next_date: next, interval: oraliq, izoh: izoh };
     var ok = await supabaseUpdateMoy(moyEditId, updData);
     btn.disabled = false;
     btn.textContent = '🛢 Mijozni qo\'shish';
     if (!ok) { showToast('Xatolik!', 'error'); return; }
     var m = moyMijozlar.find(function(x) { return x.id === moyEditId; });
-    if (m) { m.ism = ism; m.tel = tel; m.marka = marka; m.raqam = raqam; m.last_date = kun; m.next_date = next; m.interval = oraliq; m.izoh = izoh; }
+    if (m) { m.ism = ism; m.tel = tel; m.manzil = manzil; m.marka = marka; m.raqam = raqam; m.probeg = probeg; m.last_date = kun; m.next_date = next; m.interval = oraliq; m.izoh = izoh; }
     cancelMoyEdit();
     showToast('✅ Yangilandi!');
   } else {
     var yangi = {
-      id: Date.now(), ism: ism, tel: tel, marka: marka, raqam: raqam,
+      id: Date.now(), ism: ism, tel: tel, manzil: manzil, marka: marka, raqam: raqam,
+      probeg: probeg,
       last_date: kun, next_date: next, interval: oraliq, izoh: izoh
     };
     var ok2 = await supabaseInsertMoy(yangi);
@@ -1683,8 +1705,11 @@ async function addMoyClient() {
 function clearMoyForm() {
   document.getElementById('moyIsm').value = '';
   document.getElementById('moyTel').value = '';
+  document.getElementById('moyManzil').value = '';
   document.getElementById('moyMarka').value = '';
   document.getElementById('moyRaqam').value = '';
+  document.getElementById('moyProbeg').value = '';
+  document.getElementById('moyProbegHint').innerHTML = '';
   document.getElementById('moyKun').value = '';
   document.getElementById('moyNext').value = '';
   document.getElementById('moyNextHint').innerHTML = '';
@@ -1696,8 +1721,11 @@ function editMoy(id) {
   moyEditId = id;
   document.getElementById('moyIsm').value = m.ism;
   document.getElementById('moyTel').value = m.tel;
+  document.getElementById('moyManzil').value = m.manzil || '';
   document.getElementById('moyMarka').value = m.marka;
   document.getElementById('moyRaqam').value = m.raqam;
+  document.getElementById('moyProbeg').value = m.probeg || '';
+  if (m.probeg > 0) document.getElementById('moyProbegHint').innerHTML = formatProbeg(m.probeg);
   document.getElementById('moyKun').value = m.last_date;
   document.getElementById('moyOraliq').value = m.interval || 90;
   document.getElementById('moyNext').value = m.next_date;
