@@ -48,7 +48,7 @@
   .sync-badge { display: flex; align-items: center; gap: 4px; font-size: 9px; font-weight: 700; padding: 4px 9px; border-radius: 10px; background: #d1fae5; color: #065f46; border: 1px solid #a7f3d0; }
   .sync-badge.offline { background: #fef3c7; color: #92400e; border-color: #fde68a; }
   .sync-badge.error { background: #fee2e2; color: #991b1b; border-color: #fecaca; }
-  .bell-btn { position: relative; background: var(--blue-bg); border: 1px solid var(--border-blue); width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--blue); cursor: pointer; flex-shrink: 0; transition: all 0.2s; }
+  .bell-btn { position: relative; background: var(--blue-bg); border: 1px solid #bfdbfe; width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--blue); cursor: pointer; flex-shrink: 0; transition: all 0.2s; }
   .bell-btn:active { transform: scale(0.9); }
   .bell-btn.has-alert { animation: bellShake 1s ease-in-out infinite; background: #fef3c7; border-color: #fde68a; color: #d97706; }
   @keyframes bellShake { 0%,100% { transform: rotate(0); } 20% { transform: rotate(-15deg); } 40% { transform: rotate(15deg); } 60% { transform: rotate(-10deg); } 80% { transform: rotate(10deg); } }
@@ -510,30 +510,27 @@
       <span class="st-icon" style="background:linear-gradient(135deg,#8b5cf6,#7c3aed);"><svg class="ico" viewBox="0 0 24 24" style="width:15px;height:15px;stroke-width:2.2;"><circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 10v6"/></svg></span>
       Yangi moy mijozi
     </div>
-    <p style="font-size:12px;color:var(--text-muted);margin-bottom:14px;">Mijoz mashinasiga moy quyilgan vaqtni kiriting.</p>
+    <p style="font-size:12px;color:var(--text-muted);margin-bottom:14px;">Barcha ma'lumotlarni qo'lda kiriting. Keyingi almashtirish probeg va sanasi bo'yicha eslatma chiqadi.</p>
     <div class="form-group"><label>Mijoz ismi *</label><input type="text" class="form-control" id="moyIsm" placeholder="Aziz aka"></div>
     <div class="form-group"><label>Telefon raqami *</label><input type="tel" class="form-control" id="moyTel" placeholder="+998 90 123 45 67"></div>
-    <div class="form-group"><label>Mijoz qayerdan? (Manzil) *</label><input type="text" class="form-control" id="moyManzil" placeholder="Toshkent, Chilonzor"></div>
+    <div class="form-group"><label>Mijoz manzili *</label><input type="text" class="form-control" id="moyManzil" placeholder="Toshkent, Chilonzor"></div>
     <div class="moy-grid">
       <div class="form-group"><label>Mashina markasi *</label><input type="text" class="form-control" id="moyMarka" placeholder="Malibu 2"></div>
       <div class="form-group"><label>Mashina raqami *</label><input type="text" class="form-control" id="moyRaqam" placeholder="01 A 123 BC"></div>
     </div>
-    <div class="form-group"><label>Probeg (km) *</label><input type="text" inputmode="numeric" class="form-control" id="moyProbeg" placeholder="125000"><div class="input-hint" id="moyProbegHint"></div></div>
-    <div class="form-group"><label>Moy quyilgan kun *</label><input type="date" class="form-control" id="moyKun" onchange="calcMoyNext()"></div>
-    <div class="form-group">
-      <label>Almashtirish oralig'i</label>
-      <select class="form-control" id="moyOraliq" onchange="calcMoyNext()">
-        <option value="90">3 oy (90 kun) — standart</option>
-        <option value="120">4 oy (120 kun)</option>
-        <option value="150">5 oy (150 kun)</option>
-        <option value="180">6 oy (180 kun)</option>
-      </select>
+
+    <div style="background:var(--purple-bg);padding:14px;border-radius:12px;border:1px solid #ddd6fe;margin-bottom:14px;">
+      <div style="font-size:11px;font-weight:800;color:var(--purple);margin-bottom:10px;">🛢 HOZIRGI MOY QUYILGAN</div>
+      <div class="form-group"><label>Hozirgi probeg (km) *</label><input type="text" inputmode="numeric" class="form-control" id="moyProbeg" placeholder="125000"><div class="input-hint" id="moyProbegHint"></div></div>
+      <div class="form-group" style="margin-bottom:0;"><label>Moy quyilgan sana *</label><input type="date" class="form-control" id="moyKun"></div>
     </div>
-    <div class="form-group">
-      <label>Keyingi almashtirish</label>
-      <input type="date" class="form-control" id="moyNext" readonly>
-      <div class="input-hint" id="moyNextHint"></div>
+
+    <div style="background:var(--warning-bg);padding:14px;border-radius:12px;border:1px solid #fde68a;margin-bottom:14px;">
+      <div style="font-size:11px;font-weight:800;color:#92400e;margin-bottom:10px;">🔔 KEYINGI ALMASHTIRISH</div>
+      <div class="form-group"><label>Keyingi probeg (km) *</label><input type="text" inputmode="numeric" class="form-control" id="moyNextProbeg" placeholder="135000"><div class="input-hint" id="moyNextProbegHint"></div></div>
+      <div class="form-group" style="margin-bottom:0;"><label>Keyingi sana *</label><input type="date" class="form-control" id="moyNextDate"><div class="input-hint">Shu kuni va probeg yetganda eslatma chiqadi</div></div>
     </div>
+
     <div class="form-group"><label>Izoh</label><input type="text" class="form-control" id="moyIzoh" placeholder="5W-30 sintetik"></div>
     <button class="btn btn-purple" id="moySaveBtn" onclick="addMoyClient()">🛢 Mijozni qo'shish</button>
     <button type="button" class="btn btn-danger" style="margin-top:10px;display:none;" id="moyCancelEditBtn" onclick="cancelMoyEdit()">Bekor qilish</button>
@@ -550,7 +547,7 @@
   </div>
   <div class="search-box">
     <svg class="ico search-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-    <input type="text" class="form-control" id="moySearch" placeholder="Ism, mashina, raqam yoki manzil...">
+    <input type="text" class="form-control" id="moySearch" placeholder="Ism, mashina, raqam...">
   </div>
   <div id="moyList"></div>
 </section>
@@ -615,7 +612,7 @@
         </div>
       </div>
       <div class="form-group"><label>Jami summa *</label><input type="text" inputmode="decimal" class="form-control" id="tashqiJami" placeholder="0"><div class="input-hint" id="tashqiJamiHint"></div></div>
-      <div class="form-group"><label>Berildi</label><input type="text" inputmode="decimal" class="form-control" id="tashqiBerildi" placeholder="0"><div class="input-hint" id="tashqiBerildiHint"></div></div>
+      <div class="form-group"><label>Berildi (hozir to'langan)</label><input type="text" inputmode="decimal" class="form-control" id="tashqiBerildi" placeholder="0"><div class="input-hint" id="tashqiBerildiHint"></div></div>
       <div class="form-group"><label>Izoh</label><input type="text" class="form-control" id="tashqiIzoh"></div>
       <button class="btn btn-warning" onclick="addTashqi()">📥 Qo'shish</button>
     </div>
@@ -698,7 +695,7 @@
       Moy SMS matni
     </div>
     <div style="background:var(--bg);padding:12px;border-radius:10px;margin-bottom:14px;font-size:11px;line-height:2;color:var(--text-muted);">
-      <code style="color:var(--purple);font-weight:700;">{ism}</code> <code style="color:var(--purple);font-weight:700;">{marka}</code> <code style="color:var(--purple);font-weight:700;">{raqam}</code> <code style="color:var(--purple);font-weight:700;">{muddat}</code> <code style="color:var(--purple);font-weight:700;">{kun}</code> <code style="color:var(--purple);font-weight:700;">{manzil}</code> <code style="color:var(--purple);font-weight:700;">{probeg}</code>
+      <code style="color:var(--purple);font-weight:700;">{ism}</code> <code style="color:var(--purple);font-weight:700;">{marka}</code> <code style="color:var(--purple);font-weight:700;">{raqam}</code> <code style="color:var(--purple);font-weight:700;">{manzil}</code> <code style="color:var(--purple);font-weight:700;">{probeg}</code> <code style="color:var(--purple);font-weight:700;">{keyingi_probeg}</code> <code style="color:var(--purple);font-weight:700;">{keyingi_sana}</code>
     </div>
     <div class="form-group"><label>SMS matni</label><textarea id="moySmsTemplate" class="form-control" rows="5" style="font-size:13px;line-height:1.6;"></textarea></div>
     <button class="btn btn-purple" onclick="saveMoySmsTemplate()">💾 Saqlash</button>
@@ -721,11 +718,10 @@
       Ilova haqida
     </div>
     <div style="font-size:12px;color:var(--text-muted);line-height:2;">
-      <div>📱 <b style="color:var(--text);">PAM Nasiya</b> — v13.0</div>
+      <div>📱 <b style="color:var(--text);">PAM Nasiya</b> — v16.0</div>
       <div>🏢 POP AUTO MAKON</div>
-      <div>🛢 Moy almashtirish eslatmalari</div>
+      <div>🛢 Moy — qo'lda probeg + sana</div>
       <div>💰 Nasiya, Kassa, Rasxod</div>
-      <div>💵 UZS + USD aralash to'lov</div>
     </div>
   </div>
 </section>
@@ -759,7 +755,6 @@
   </button>
 </nav>
 
-<!-- MODALLAR -->
 <div class="modal-overlay" id="smsModal"><div class="modal-sheet"><div class="modal-handle"></div><div class="modal-title"><div class="mt-icon"><svg class="ico" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>SMS yuborish</div><textarea id="smsText" class="form-control" rows="10" style="font-size:13px;line-height:1.6;"></textarea><div class="modal-actions"><button class="btn btn-danger" onclick="closeModal('smsModal')">Bekor</button><button class="btn btn-success" onclick="sendSms()">📤 Yuborish</button></div></div></div>
 
 <div class="modal-overlay" id="moySmsModal"><div class="modal-sheet"><div class="modal-handle"></div><div class="modal-title"><div class="mt-icon" style="background:#f3e8ff;color:#8b5cf6;"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 10v6"/></svg></div>Moy SMS</div><textarea id="moySmsText" class="form-control" rows="8" style="font-size:13px;line-height:1.6;"></textarea><div class="modal-actions"><button class="btn btn-danger" onclick="closeModal('moySmsModal')">Bekor</button><button class="btn btn-success" onclick="sendMoySms()">📤 Yuborish</button></div></div></div>
@@ -770,7 +765,29 @@
 
 <div class="modal-overlay" id="tolovModal"><div class="modal-sheet"><div class="modal-handle"></div><div class="modal-title"><div class="mt-icon" style="background:#ecfdf5;color:#10b981;"><svg class="ico" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/></svg></div>To'lovni qabul qilish</div><div class="info-box" id="tolovInfoBox"></div><div class="form-group"><label>To'lanayotgan summa</label><input type="text" inputmode="numeric" class="form-control" id="tolovSumma"></div><div class="modal-actions"><button class="btn btn-danger" onclick="closeModal('tolovModal')">Bekor</button><button class="btn btn-success" id="tolovBtn" onclick="confirmTolov()">✅ Tasdiqlash</button></div></div></div>
 
-<div class="modal-overlay" id="taminotchiPulModal"><div class="modal-sheet"><div class="modal-handle"></div><div class="modal-title" style="color:var(--success);"><div class="mt-icon" style="background:#ecfdf5;color:#10b981;"><svg class="ico" viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>Ta'minotchiga pul berish</div><div class="info-box" id="taminotchiInfoBox"></div><div class="form-group"><label>💵 UZS summasi</label><input type="text" inputmode="decimal" class="form-control" id="taminotchiPulSummaUZS" placeholder="0"><div class="input-hint" id="taminotchiPulHintUZS"></div></div><div class="form-group"><label>💵 USD summasi ($)</label><input type="text" inputmode="decimal" class="form-control" id="taminotchiPulSummaUSD" placeholder="0"><div class="input-hint" id="taminotchiPulHintUSD"></div></div><div class="form-group" id="kursGroup" style="display:none;"><label>💱 USD kursi</label><input type="text" inputmode="numeric" class="form-control" id="taminotchiPulKurs" placeholder="12500"><div class="input-hint" id="taminotchiPulKursHint"></div></div><div class="info-box green" id="taminotchiJamiBox" style="display:none;"><div class="info-row"><span class="lbl">Jami (so'mda)</span><span class="val" id="taminotchiJamiSumma" style="color:var(--success);"></span></div><div class="info-row"><span class="lbl">Qoldiq</span><span class="val" id="taminotchiYangiQoldiq" style="color:var(--danger);"></span></div></div><div class="modal-actions"><button class="btn btn-danger" onclick="closeModal('taminotchiPulModal')">Bekor</button><button class="btn btn-success" id="taminotchiPulBtn" onclick="confirmTaminotchiPul()">💸 Berish</button></div></div></div>
+<div class="modal-overlay" id="taminotchiPulModal"><div class="modal-sheet"><div class="modal-handle"></div><div class="modal-title" style="color:var(--success);"><div class="mt-icon" style="background:#ecfdf5;color:#10b981;"><svg class="ico" viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>To'lov qilish</div><div class="info-box" id="taminotchiInfoBox"></div>
+
+    <div class="form-group">
+      <label>To'lov turi</label>
+      <div class="curr-toggle" id="tolovTurToggle" style="border-color:#10b981;background:#ecfdf5;">
+        <button type="button" class="active" data-tur="full" onclick="setTolovTur('full')" style="background:#10b981;color:#fff;">✅ To'liq to'lash</button>
+        <button type="button" data-tur="partial" onclick="setTolovTur('partial')">📝 Qisman to'lash</button>
+      </div>
+    </div>
+
+    <div id="tolovFullBox" class="info-box green">
+      <div class="info-row"><span class="lbl">To'lanadigan summa</span><span class="val" id="tolovFullSumma" style="color:var(--success);font-size:16px;"></span></div>
+      <div class="info-row"><span class="lbl">To'lovdan keyin</span><span class="val" style="color:var(--text);">Qarz to'liq yopiladi ✅</span></div>
+    </div>
+
+    <div id="tolovPartialBox" style="display:none;">
+      <div class="form-group"><label>💵 UZS summasi</label><input type="text" inputmode="decimal" class="form-control" id="taminotchiPulSummaUZS" placeholder="0"><div class="input-hint" id="taminotchiPulHintUZS"></div></div>
+      <div class="form-group"><label>💵 USD summasi ($)</label><input type="text" inputmode="decimal" class="form-control" id="taminotchiPulSummaUSD" placeholder="0"><div class="input-hint" id="taminotchiPulHintUSD"></div></div>
+      <div class="form-group" id="kursGroup" style="display:none;"><label>💱 USD kursi</label><input type="text" inputmode="numeric" class="form-control" id="taminotchiPulKurs" placeholder="12500"><div class="input-hint" id="taminotchiPulKursHint"></div></div>
+      <div class="info-box green" id="taminotchiJamiBox" style="display:none;"><div class="info-row"><span class="lbl">To'lanadigan (so'mda)</span><span class="val" id="taminotchiJamiSumma" style="color:var(--success);"></span></div><div class="info-row"><span class="lbl">To'lovdan keyin qoladi</span><span class="val" id="taminotchiYangiQoldiq" style="color:var(--danger);"></span></div></div>
+    </div>
+
+    <div class="modal-actions"><button class="btn btn-danger" onclick="closeModal('taminotchiPulModal')">Bekor</button><button class="btn btn-success" id="taminotchiPulBtn" onclick="confirmTaminotchiPul()">✅ To'liq to'lash</button></div></div></div>
 
 <div class="modal-overlay" id="taminotchiTarixModal"><div class="modal-sheet"><div class="modal-handle"></div><div class="modal-title"><div class="mt-icon"><svg class="ico" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/></svg></div>Ta'minotchi tarixi</div><div id="taminotchiTarixContent"></div><div class="modal-actions"><button class="btn btn-primary" onclick="closeModal('taminotchiTarixModal')" style="grid-column:1/-1;">Yopish</button></div></div></div>
 
@@ -821,6 +838,7 @@ var moyEditId = null;
 var selectedKassaCurr = 'UZS';
 var selectedTashqiCurr = 'UZS';
 var selectedChiqimCurr = 'UZS';
+var selectedTolovTur = 'full';
 var currentTCTab = 'qarzli';
 var currentMoyTab = 'kutayotgan';
 var pingEnabled = localStorage.getItem('pam_ping_enabled') === 'true';
@@ -835,7 +853,7 @@ var DEFAULT_SMS_TEMPLATE =
 'Xurmatli {familiya} {ismi}!\n\n"POP AUTO MAKON" do\'konidan {yaratilgan} kuni quyidagi maxsulotni nasiyaga olgansiz:\n\nMaxsulot: {maxsulot}\nUmumiy summa: {summa}\nTo\'langan: {tolangan}\nQoldiq qarz: {qoldiq}\n\nSiz bilan {muddat} sanasiga kelishgan edik. Iltimos, kerakli summani to\'lab qo\'ying.\n\nHurmat bilan,\n"POP AUTO MAKON" jamoasi';
 
 var DEFAULT_MOY_SMS_TEMPLATE =
-'Assalomu alaykum, {ism}!\n\nSizning {marka} ({raqam}) avtomobilingizga moy almashtirish vaqti keldi.\n\nManzil: {manzil}\nProbeg: {probeg} km\nAlmashtirish sanasi: {muddat}\nO\'tgan kun: {kun} kun\n\nIltimos, POP AUTO MAKON xizmatiga murojaat qiling.\n\nHurmat bilan,\nPOP AUTO MAKON';
+'Assalomu alaykum, {ism}!\n\nSizning {marka} ({raqam}) avtomobilingizga moy almashtirish vaqti keldi.\n\nManzil: {manzil}\nOldingi probeg: {probeg}\nKeyingi almashtirish probegi: {keyingi_probeg}\nKeyingi almashtirish sanasi: {keyingi_sana}\n\nIltimos, POP AUTO MAKON xizmatiga murojaat qiling.\n\nHurmat bilan,\nPOP AUTO MAKON';
 
 var smsTemplate = localStorage.getItem('pam_sms_template') || DEFAULT_SMS_TEMPLATE;
 var moySmsTemplate = localStorage.getItem('pam_moy_sms_template') || DEFAULT_MOY_SMS_TEMPLATE;
@@ -918,13 +936,63 @@ function getHolat(q) {
   if (kun <= 7) return { type: 'info', text: kun + " kun", badge: 'info', kun: kun };
   return { type: 'ok', text: kun + " kun", badge: 'info', kun: kun };
 }
+
+/* ⭐ MOY HOLATI — qo'lda kiritilgan probeg va sana asosida */
 function getMoyHolat(m) {
-  var kun = daysDiff(m.next_date);
-  if (kun < 0) return { type: 'overdue', text: "MUDDATI O'TGAN", badge: 'danger', kun: kun };
-  if (kun === 0) return { type: 'today', text: "BUGUN", badge: 'today', kun: 0 };
-  if (kun <= 7) return { type: 'soon', text: kun + " kun", badge: 'warning', kun: kun };
-  return { type: 'ok', text: kun + " kun", badge: 'success', kun: kun };
+  var currentProbeg = Number(m.current_probeg) || Number(m.probeg) || 0;
+  var nextProbeg = Number(m.next_probeg) || 0;
+  var qolganKm = nextProbeg - currentProbeg;
+  var sanaKun = m.next_date ? daysDiff(m.next_date) : null;
+
+  // Ikkalasi ham o'tgan bo'lsa
+  var probegOtdi = qolganKm <= 0;
+  var sanaOtdi = sanaKun !== null && sanaKun < 0;
+
+  if (probegOtdi || sanaOtdi) {
+    var reasons = [];
+    if (probegOtdi) reasons.push('Probeg ' + formatProbeg(Math.abs(qolganKm)) + ' o\'tgan');
+    if (sanaOtdi) reasons.push('Sana ' + Math.abs(sanaKun) + ' kun o\'tgan');
+    return {
+      type: 'overdue',
+      text: 'MUDDATI O\'TGAN',
+      badge: 'danger',
+      qolgan: qolganKm,
+      sanaKun: sanaKun,
+      reasons: reasons
+    };
+  }
+
+  // Ikkalasi yaqin
+  var probegYaqin = qolganKm <= 500;
+  var sanaYaqin = sanaKun !== null && sanaKun <= 3;
+
+  if (probegYaqin || sanaYaqin) {
+    var t = [];
+    if (probegYaqin) t.push(formatProbeg(qolganKm));
+    if (sanaYaqin) t.push(sanaKun + ' kun');
+    return { type: 'today', text: t.join(' / '), badge: 'today', qolgan: qolganKm, sanaKun: sanaKun };
+  }
+
+  // O'rtacha
+  var probegOrt = qolganKm <= 1500;
+  var sanaOrt = sanaKun !== null && sanaKun <= 14;
+
+  if (probegOrt || sanaOrt) {
+    var t2 = [];
+    if (probegOrt) t2.push(formatProbeg(qolganKm));
+    if (sanaOrt) t2.push(sanaKun + ' kun');
+    return { type: 'soon', text: t2.join(' / '), badge: 'warning', qolgan: qolganKm, sanaKun: sanaKun };
+  }
+
+  return {
+    type: 'ok',
+    text: formatProbeg(qolganKm) + ' / ' + (sanaKun !== null ? sanaKun + ' kun' : '-'),
+    badge: 'success',
+    qolgan: qolganKm,
+    sanaKun: sanaKun
+  };
 }
+
 function getClientHistory(q) {
   return qarzdorlar.filter(function(x) {
     return x.ismi.toLowerCase() === q.ismi.toLowerCase() &&
@@ -954,7 +1022,7 @@ function warnRLS() {
 }
 
 /* ============================================
-   ⭐ DECIMAL INPUT (NUQTA MUAMMOSI HAL)
+   DECIMAL / INTEGER / PROBEG INPUT
    ============================================ */
 function attachDecimalInput(elementId, hintId, currency) {
   var el = document.getElementById(elementId);
@@ -962,15 +1030,12 @@ function attachDecimalInput(elementId, hintId, currency) {
   el.setAttribute('inputmode', 'decimal');
   el.setAttribute('type', 'text');
   el.setAttribute('autocomplete', 'off');
-
   el.addEventListener('input', function() {
     var val = this.value;
     val = val.replace(/,/g, '.');
     val = val.replace(/[^\d.]/g, '');
     var firstDot = val.indexOf('.');
-    if (firstDot !== -1) {
-      val = val.substring(0, firstDot + 1) + val.substring(firstDot + 1).replace(/\./g, '');
-    }
+    if (firstDot !== -1) val = val.substring(0, firstDot + 1) + val.substring(firstDot + 1).replace(/\./g, '');
     var dotIdx = val.indexOf('.');
     if (dotIdx !== -1) {
       var intPart = val.substring(0, dotIdx);
@@ -985,33 +1050,20 @@ function attachDecimalInput(elementId, hintId, currency) {
     if (hintId) {
       var hintEl = document.getElementById(hintId);
       if (hintEl) {
-        if (val && !isNaN(Number(val)) && val !== '.') {
-          hintEl.innerHTML = formatSumma(Number(val), currency || 'UZS');
-        } else {
-          hintEl.innerHTML = '';
-        }
+        if (val && !isNaN(Number(val)) && val !== '.') hintEl.innerHTML = formatSumma(Number(val), currency || 'UZS');
+        else hintEl.innerHTML = '';
       }
     }
     var cb = window['onDecimal_' + elementId];
     if (typeof cb === 'function') cb();
   });
-  el.addEventListener('keypress', function(e) {
-    var ch = String.fromCharCode(e.which);
-    if (ch === ',' || ch === '.') {
-      if (this.value.indexOf('.') !== -1 && this.value.indexOf(',') !== -1) {
-        e.preventDefault();
-      }
-    }
-  });
 }
-
 function attachIntegerInput(elementId, hintId, currency) {
   var el = document.getElementById(elementId);
   if (!el) return;
   el.setAttribute('inputmode', 'numeric');
   el.setAttribute('type', 'text');
   el.setAttribute('autocomplete', 'off');
-
   el.addEventListener('input', function() {
     var val = this.value.replace(/[^\d]/g, '');
     if (val.length > 1 && val[0] === '0') val = val.replace(/^0+/, '');
@@ -1020,6 +1072,27 @@ function attachIntegerInput(elementId, hintId, currency) {
       var hintEl = document.getElementById(hintId);
       if (hintEl) {
         if (val) hintEl.innerHTML = formatSumma(val, currency || 'UZS');
+        else hintEl.innerHTML = '';
+      }
+    }
+    var cb = window['onDecimal_' + elementId];
+    if (typeof cb === 'function') cb();
+  });
+}
+function attachProbegInput(elementId, hintId) {
+  var el = document.getElementById(elementId);
+  if (!el) return;
+  el.setAttribute('inputmode', 'numeric');
+  el.setAttribute('type', 'text');
+  el.setAttribute('autocomplete', 'off');
+  el.addEventListener('input', function() {
+    var val = this.value.replace(/[^\d]/g, '');
+    if (val.length > 1 && val[0] === '0') val = val.replace(/^0+/, '');
+    this.value = val;
+    if (hintId) {
+      var hintEl = document.getElementById(hintId);
+      if (hintEl) {
+        if (val) hintEl.innerHTML = formatProbeg(val);
         else hintEl.innerHTML = '';
       }
     }
@@ -1036,12 +1109,9 @@ function setupAllInputs() {
   attachIntegerInput('tolovSumma', null, 'UZS');
   attachIntegerInput('addDebtSumma', 'addDebtSummaHint', 'UZS');
   attachIntegerInput('ichkiSumma', 'ichkiSummaHint', 'UZS');
-  attachIntegerInput('kassaSumma', 'kassaSummaHint', selectedKassaCurr);
-  attachIntegerInput('moyProbeg', 'moyProbegHint', null);
-
+  attachDecimalInput('kassaSumma', 'kassaSummaHint', selectedKassaCurr);
   attachDecimalInput('tashqiJami', 'tashqiJamiHint', selectedTashqiCurr);
   attachDecimalInput('tashqiBerildi', 'tashqiBerildiHint', selectedTashqiCurr);
-
   attachDecimalInput('taminotchiPulSummaUZS', 'taminotchiPulHintUZS', 'UZS');
   attachDecimalInput('taminotchiPulSummaUSD', 'taminotchiPulHintUSD', 'USD');
   attachIntegerInput('taminotchiPulKurs', 'taminotchiPulKursHint', 'UZS');
@@ -1058,20 +1128,11 @@ function setupAllInputs() {
 
   attachDecimalInput('addTCQarzJami', 'addTCQarzJamiHint', selectedTashqiCurr);
   attachDecimalInput('addTCQarzBerildi', 'addTCQarzBerildiHint', selectedTashqiCurr);
-
   attachDecimalInput('chiqimSumma', 'chiqimSummaHint', selectedChiqimCurr);
 
-  // Probeg hint maxsus
-  var probegEl = document.getElementById('moyProbeg');
-  if (probegEl) {
-    probegEl.addEventListener('input', function() {
-      var hint = document.getElementById('moyProbegHint');
-      if (hint) {
-        if (this.value) hint.innerHTML = formatProbeg(this.value);
-        else hint.innerHTML = '';
-      }
-    });
-  }
+  // Moy probeg inputlar
+  attachProbegInput('moyProbeg', 'moyProbegHint');
+  attachProbegInput('moyNextProbeg', 'moyNextProbegHint');
 }
 
 /* ============================================
@@ -1276,8 +1337,11 @@ async function supabaseGetMoy() {
         manzil: d.manzil || '',
         marka: d.marka, raqam: d.raqam,
         probeg: Number(d.probeg) || 0,
-        last_date: d.last_date, next_date: d.next_date,
-        interval: Number(d.interval) || 90,
+        current_probeg: Number(d.current_probeg) || Number(d.probeg) || 0,
+        next_probeg: Number(d.next_probeg) || 0,
+        interval_km: Number(d.interval_km) || 10000,
+        last_date: d.last_date,
+        next_date: d.next_date,
         izoh: d.izoh, yaratilgan: d.yaratilgan
       };
     });
@@ -1290,7 +1354,10 @@ async function supabaseInsertMoy(m) {
       manzil: m.manzil || null,
       marka: m.marka, raqam: m.raqam,
       probeg: m.probeg || 0,
-      last_date: m.last_date, next_date: m.next_date, interval: m.interval,
+      current_probeg: m.current_probeg || m.probeg || 0,
+      next_probeg: m.next_probeg || 0,
+      interval_km: m.interval_km || 10000,
+      last_date: m.last_date, next_date: m.next_date,
       izoh: m.izoh
     }]);
     if (res.error) { console.error('moy insert:', res.error.message); return false; }
@@ -1366,15 +1433,14 @@ function fillSmsTemplate(q) {
     .replace(/{yaratilgan}/g, formatDate(q.yaratilgan));
 }
 function fillMoySmsTemplate(m) {
-  var kun = Math.abs(daysDiff(m.next_date));
   return moySmsTemplate
     .replace(/{ism}/g, m.ism)
     .replace(/{marka}/g, m.marka)
     .replace(/{raqam}/g, m.raqam)
-    .replace(/{muddat}/g, formatDate(m.next_date))
-    .replace(/{kun}/g, kun)
     .replace(/{manzil}/g, m.manzil || '-')
-    .replace(/{probeg}/g, m.probeg ? formatProbeg(m.probeg) : '-');
+    .replace(/{probeg}/g, formatProbeg(m.current_probeg || m.probeg || 0))
+    .replace(/{keyingi_probeg}/g, formatProbeg(m.next_probeg || 0))
+    .replace(/{keyingi_sana}/g, formatDate(m.next_date));
 }
 
 /* ============================================
@@ -1391,7 +1457,10 @@ function renderDashboard() {
   var jamiRasxod = jamiIchki + jamiTashqi;
   var tQarzUZS = taminotchilar.filter(function(t) { return t.valyuta === 'UZS'; }).reduce(function(s, t) { return s + t.qoldiq; }, 0);
   var tQarzUSD = taminotchilar.filter(function(t) { return t.valyuta === 'USD'; }).reduce(function(s, t) { return s + t.qoldiq; }, 0);
-  var moyKut = moyMijozlar.filter(function(m) { return daysDiff(m.next_date) <= 7; }).length;
+  var moyKut = moyMijozlar.filter(function(m) {
+    var h = getMoyHolat(m);
+    return h.type === 'overdue' || h.type === 'today' || h.type === 'soon';
+  }).length;
 
   document.getElementById('statTotal').textContent = total;
   document.getElementById('statOverdue').textContent = overdue + today;
@@ -1563,24 +1632,8 @@ document.querySelectorAll('.chip[data-filter]').forEach(function(chip) {
 });
 
 /* ============================================
-   MOY
+   MOY — QO'LDA PROBEG + SANA
    ============================================ */
-function calcMoyNext() {
-  var kun = document.getElementById('moyKun').value;
-  var oraliq = Number(document.getElementById('moyOraliq').value);
-  var nextEl = document.getElementById('moyNext');
-  var hintEl = document.getElementById('moyNextHint');
-  if (kun) {
-    var d = new Date(kun);
-    d.setDate(d.getDate() + oraliq);
-    var nextStr = d.toISOString().slice(0, 10);
-    nextEl.value = nextStr;
-    hintEl.innerHTML = 'Keyingi: <b>' + formatDate(nextStr) + '</b>';
-  } else {
-    nextEl.value = '';
-    hintEl.innerHTML = '';
-  }
-}
 function switchMoyTab(tab) {
   currentMoyTab = tab;
   document.querySelectorAll('#moySegment button').forEach(function(b) {
@@ -1588,13 +1641,17 @@ function switchMoyTab(tab) {
   });
   renderMoy();
 }
+
 function renderMoy() {
   var list = document.getElementById('moyList');
   if (!list) return;
   var search = (document.getElementById('moySearch').value || '').toLowerCase().trim();
 
   var jami = moyMijozlar.length;
-  var kut = moyMijozlar.filter(function(m) { return daysDiff(m.next_date) <= 7; }).length;
+  var kut = moyMijozlar.filter(function(m) {
+    var h = getMoyHolat(m);
+    return h.type === 'overdue' || h.type === 'today' || h.type === 'soon';
+  }).length;
   var elJ = document.getElementById('statMoyJami');
   var elK = document.getElementById('statMoyKut');
   if (elJ) elJ.textContent = jami;
@@ -1602,7 +1659,10 @@ function renderMoy() {
 
   var filtered = moyMijozlar.slice();
   if (currentMoyTab === 'kutayotgan') {
-    filtered = filtered.filter(function(m) { return daysDiff(m.next_date) <= 7; });
+    filtered = filtered.filter(function(m) {
+      var h = getMoyHolat(m);
+      return h.type === 'overdue' || h.type === 'today' || h.type === 'soon';
+    });
   }
   if (search) {
     filtered = filtered.filter(function(m) {
@@ -1613,7 +1673,11 @@ function renderMoy() {
         (m.manzil || '').toLowerCase().indexOf(search) !== -1;
     });
   }
-  filtered.sort(function(a, b) { return daysDiff(a.next_date) - daysDiff(b.next_date); });
+  filtered.sort(function(a, b) {
+    var ha = getMoyHolat(a).qolgan || 0;
+    var hb = getMoyHolat(b).qolgan || 0;
+    return ha - hb;
+  });
 
   if (filtered.length === 0) {
     var msg = currentMoyTab === 'kutayotgan' ? 'Yaqin kunlarda almashtirish yo\'q' : 'Moy mijozlari yo\'q';
@@ -1623,8 +1687,19 @@ function renderMoy() {
 
   list.innerHTML = filtered.map(function(m, i) {
     var holat = getMoyHolat(m);
-    var kun = daysDiff(m.next_date);
-    var kunText = kun < 0 ? Math.abs(kun) + ' kun o\'tgan' : kun === 0 ? 'Bugun!' : kun + ' kun qoldi';
+    var currentProbeg = Number(m.current_probeg) || Number(m.probeg) || 0;
+    var nextProbeg = Number(m.next_probeg) || 0;
+    var qolganKm = nextProbeg - currentProbeg;
+    var qolganKmText = qolganKm <= 0
+      ? formatProbeg(Math.abs(qolganKm)) + ' O\'TGAN!'
+      : formatProbeg(qolganKm) + ' qoldi';
+    var sanaKun = m.next_date ? daysDiff(m.next_date) : null;
+    var sanaText = '';
+    if (sanaKun !== null) {
+      if (sanaKun < 0) sanaText = Math.abs(sanaKun) + ' kun O\'TGAN!';
+      else if (sanaKun === 0) sanaText = 'BUGUN!';
+      else sanaText = sanaKun + ' kun qoldi';
+    }
     var color = holat.type === 'overdue' ? 'var(--danger)' : holat.type === 'today' ? 'var(--warning)' : holat.type === 'soon' ? 'var(--purple)' : 'var(--success)';
 
     return '<div class="moy-card ' + holat.type + '" style="animation-delay:' + (i * 0.03) + 's">' +
@@ -1637,9 +1712,11 @@ function renderMoy() {
       '</div>' +
       (m.manzil ? '<div class="q-info">📍 <b>' + m.manzil + '</b></div>' : '') +
       '<div class="q-info">🚗 <b>' + m.marka + '</b> • ' + m.raqam + '</div>' +
-      (m.probeg > 0 ? '<div class="q-info">📊 Probeg: <b style="color:var(--text);">' + formatProbeg(m.probeg) + '</b></div>' : '') +
-      '<div class="q-info">🛢 Moy: <b style="color:var(--text);">' + formatDate(m.last_date) + '</b></div>' +
-      '<div class="q-info">📅 Keyingi: <b style="color:' + color + ';">' + formatDate(m.next_date) + '</b> • ' + kunText + '</div>' +
+      '<div class="q-info">🛢 Moy quyilgan probeg: <b style="color:var(--text);">' + formatProbeg(currentProbeg) + '</b></div>' +
+      '<div class="q-info">🔔 Keyingi almashtirish: <b style="color:' + color + ';">' + formatProbeg(nextProbeg) + '</b></div>' +
+      '<div class="q-info">📊 Qolgan: <b style="color:' + color + ';">' + qolganKmText + '</b></div>' +
+      '<div class="q-info">📅 Moy quyilgan: <b style="color:var(--text);">' + formatDate(m.last_date) + '</b></div>' +
+      (sanaKun !== null ? '<div class="q-info">📅 Keyingi sana: <b style="color:' + color + ';">' + formatDate(m.next_date) + '</b> • ' + sanaText + '</div>' : '') +
       (m.izoh ? '<div class="q-info">📝 ' + m.izoh + '</div>' : '') +
       '<div class="q-actions with-renewal">' +
         '<button class="qa-btn call" onclick="callClient(\'' + m.tel + '\')">📞</button>' +
@@ -1661,8 +1738,8 @@ async function addMoyClient() {
   var raqam = document.getElementById('moyRaqam').value.trim();
   var probeg = Number(document.getElementById('moyProbeg').value) || 0;
   var kun = document.getElementById('moyKun').value;
-  var oraliq = Number(document.getElementById('moyOraliq').value) || 90;
-  var next = document.getElementById('moyNext').value;
+  var next_probeg = Number(document.getElementById('moyNextProbeg').value) || 0;
+  var next_date = document.getElementById('moyNextDate').value;
   var izoh = document.getElementById('moyIzoh').value.trim();
 
   if (!ism) { showToast('Ism!', 'error'); return; }
@@ -1670,27 +1747,42 @@ async function addMoyClient() {
   if (!manzil) { showToast('Manzil!', 'error'); return; }
   if (!marka) { showToast('Marka!', 'error'); return; }
   if (!raqam) { showToast('Raqam!', 'error'); return; }
-  if (!kun) { showToast('Moy quyilgan kun!', 'error'); return; }
+  if (!probeg || probeg <= 0) { showToast('Hozirgi probeg kiriting!', 'error'); return; }
+  if (!kun) { showToast('Moy quyilgan sana!', 'error'); return; }
+  if (!next_probeg || next_probeg <= probeg) {
+    showToast('Keyingi probeg kattaroq bo\'lishi kerak!', 'error'); return;
+  }
+  if (!next_date) { showToast('Keyingi sana!', 'error'); return; }
+
+  var interval_km = next_probeg - probeg;
 
   var btn = document.getElementById('moySaveBtn');
   btn.disabled = true;
   btn.textContent = 'Saqlanmoqda...';
 
   if (moyEditId) {
-    var updData = { ism: ism, tel: tel, manzil: manzil, marka: marka, raqam: raqam, probeg: probeg, last_date: kun, next_date: next, interval: oraliq, izoh: izoh };
+    var updData = {
+      ism: ism, tel: tel, manzil: manzil, marka: marka, raqam: raqam,
+      probeg: probeg, current_probeg: probeg, next_probeg: next_probeg,
+      interval_km: interval_km, last_date: kun, next_date: next_date, izoh: izoh
+    };
     var ok = await supabaseUpdateMoy(moyEditId, updData);
     btn.disabled = false;
     btn.textContent = '🛢 Mijozni qo\'shish';
     if (!ok) { showToast('Xatolik!', 'error'); return; }
     var m = moyMijozlar.find(function(x) { return x.id === moyEditId; });
-    if (m) { m.ism = ism; m.tel = tel; m.manzil = manzil; m.marka = marka; m.raqam = raqam; m.probeg = probeg; m.last_date = kun; m.next_date = next; m.interval = oraliq; m.izoh = izoh; }
+    if (m) {
+      m.ism = ism; m.tel = tel; m.manzil = manzil; m.marka = marka; m.raqam = raqam;
+      m.probeg = probeg; m.current_probeg = probeg; m.next_probeg = next_probeg;
+      m.interval_km = interval_km; m.last_date = kun; m.next_date = next_date; m.izoh = izoh;
+    }
     cancelMoyEdit();
     showToast('✅ Yangilandi!');
   } else {
     var yangi = {
       id: Date.now(), ism: ism, tel: tel, manzil: manzil, marka: marka, raqam: raqam,
-      probeg: probeg,
-      last_date: kun, next_date: next, interval: oraliq, izoh: izoh
+      probeg: probeg, current_probeg: probeg, next_probeg: next_probeg,
+      interval_km: interval_km, last_date: kun, next_date: next_date, izoh: izoh
     };
     var ok2 = await supabaseInsertMoy(yangi);
     btn.disabled = false;
@@ -1702,6 +1794,7 @@ async function addMoyClient() {
   }
   renderMoy(); renderDashboard();
 }
+
 function clearMoyForm() {
   document.getElementById('moyIsm').value = '';
   document.getElementById('moyTel').value = '';
@@ -1711,10 +1804,12 @@ function clearMoyForm() {
   document.getElementById('moyProbeg').value = '';
   document.getElementById('moyProbegHint').innerHTML = '';
   document.getElementById('moyKun').value = '';
-  document.getElementById('moyNext').value = '';
-  document.getElementById('moyNextHint').innerHTML = '';
+  document.getElementById('moyNextProbeg').value = '';
+  document.getElementById('moyNextProbegHint').innerHTML = '';
+  document.getElementById('moyNextDate').value = '';
   document.getElementById('moyIzoh').value = '';
 }
+
 function editMoy(id) {
   var m = moyMijozlar.find(function(x) { return x.id === id; });
   if (!m) return;
@@ -1724,19 +1819,20 @@ function editMoy(id) {
   document.getElementById('moyManzil').value = m.manzil || '';
   document.getElementById('moyMarka').value = m.marka;
   document.getElementById('moyRaqam').value = m.raqam;
-  document.getElementById('moyProbeg').value = m.probeg || '';
-  if (m.probeg > 0) document.getElementById('moyProbegHint').innerHTML = formatProbeg(m.probeg);
-  document.getElementById('moyKun').value = m.last_date;
-  document.getElementById('moyOraliq').value = m.interval || 90;
-  document.getElementById('moyNext').value = m.next_date;
+  document.getElementById('moyProbeg').value = m.current_probeg || m.probeg || '';
+  if (m.current_probeg || m.probeg) document.getElementById('moyProbegHint').innerHTML = formatProbeg(m.current_probeg || m.probeg);
+  document.getElementById('moyKun').value = m.last_date || '';
+  document.getElementById('moyNextProbeg').value = m.next_probeg || '';
+  if (m.next_probeg) document.getElementById('moyNextProbegHint').innerHTML = formatProbeg(m.next_probeg);
+  document.getElementById('moyNextDate').value = m.next_date || '';
   document.getElementById('moyIzoh').value = m.izoh || '';
   document.getElementById('moyFormTitle').innerHTML = '<span class="st-icon" style="background:linear-gradient(135deg,#8b5cf6,#7c3aed);"><svg class="ico" viewBox="0 0 24 24" style="width:15px;height:15px;stroke:#fff;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 013 3L12 15l-4 1 1-4z"/></svg></span> Moy mijozini tahrirlash';
   document.getElementById('moySaveBtn').textContent = '💾 Yangilash';
   document.getElementById('moyCancelEditBtn').style.display = 'flex';
-  calcMoyNext();
   window.scrollTo({ top: 0, behavior: 'smooth' });
   showToast('✏️ Tahrirlash rejimi', 'info');
 }
+
 function cancelMoyEdit() {
   moyEditId = null;
   clearMoyForm();
@@ -1744,21 +1840,74 @@ function cancelMoyEdit() {
   document.getElementById('moySaveBtn').textContent = '🛢 Mijozni qo\'shish';
   document.getElementById('moyCancelEditBtn').style.display = 'none';
 }
+
+// Yangi moy almashtirilganda — yangi probeg va sanani qo'lda kiritish
 async function renewMoy(id) {
   var m = moyMijozlar.find(function(x) { return x.id === id; });
   if (!m) return;
-  if (!confirm(m.ism + ' — bugun moy almashtirildi?')) return;
+
+  var yangiProbegStr = prompt(
+    m.ism + '\n\nHozirgi probeg: ' + formatProbeg(m.current_probeg || m.probeg || 0) +
+    '\n\nYangi probeg kiriting (km):', ''
+  );
+  if (yangiProbegStr === null) return;
+  var yangiProbeg = Number(yangiProbegStr.replace(/[^\d]/g, ''));
+  if (!yangiProbeg || yangiProbeg <= (m.current_probeg || m.probeg || 0)) {
+    showToast('Yangi probeg kattaroq bo\'lishi kerak!', 'error');
+    return;
+  }
+
+  // Keyingi probegni qo'lda kiritish
+  var oldInterval = m.interval_km || 10000;
+  var defaultNext = yangiProbeg + oldInterval;
+  var nextProbegStr = prompt(
+    'Keyingi almashtirish probegini kiriting (km):\n\nMasalan: ' + defaultNext,
+    String(defaultNext)
+  );
+  if (nextProbegStr === null) return;
+  var yangiNextProbeg = Number(nextProbegStr.replace(/[^\d]/g, ''));
+  if (!yangiNextProbeg || yangiNextProbeg <= yangiProbeg) {
+    showToast('Keyingi probeg kattaroq bo\'lishi kerak!', 'error');
+    return;
+  }
+
+  // Keyingi sanani kiritish
+  var defaultDate = new Date();
+  defaultDate.setMonth(defaultDate.getMonth() + 3);
+  var nextDateStr = prompt(
+    'Keyingi almashtirish sanasini kiriting (YYYY-MM-DD):\n\nMasalan: ' + defaultDate.toISOString().slice(0, 10),
+    defaultDate.toISOString().slice(0, 10)
+  );
+  if (nextDateStr === null) return;
+  if (!nextDateStr || !nextDateStr.match(/^\d{4}-\d{2}-\d{2}$/)) {
+    showToast('Sana noto\'g\'ri formatda!', 'error');
+    return;
+  }
+
   var bugun = new Date().toISOString().slice(0, 10);
-  var d = new Date(bugun);
-  d.setDate(d.getDate() + (m.interval || 90));
-  var yangiNext = d.toISOString().slice(0, 10);
-  var ok = await supabaseUpdateMoy(id, { last_date: bugun, next_date: yangiNext });
+  var yangiInterval = yangiNextProbeg - yangiProbeg;
+
+  var ok = await supabaseUpdateMoy(id, {
+    probeg: yangiProbeg,
+    current_probeg: yangiProbeg,
+    next_probeg: yangiNextProbeg,
+    interval_km: yangiInterval,
+    last_date: bugun,
+    next_date: nextDateStr
+  });
   if (!ok) { showToast('Xatolik!', 'error'); return; }
+
+  m.probeg = yangiProbeg;
+  m.current_probeg = yangiProbeg;
+  m.next_probeg = yangiNextProbeg;
+  m.interval_km = yangiInterval;
   m.last_date = bugun;
-  m.next_date = yangiNext;
+  m.next_date = nextDateStr;
+
   renderMoy(); renderDashboard();
-  showToast('✅ Yangilandi! Keyingi: ' + formatDate(yangiNext), 'purple');
+  showToast('✅ Yangilandi! Keyingi: ' + formatProbeg(yangiNextProbeg) + ' / ' + formatDate(nextDateStr), 'purple');
 }
+
 function openMoySmsModal(id) {
   currentMoySmsId = id;
   var m = moyMijozlar.find(function(x) { return x.id === id; });
@@ -1766,6 +1915,7 @@ function openMoySmsModal(id) {
   document.getElementById('moySmsText').value = fillMoySmsTemplate(m);
   openModal('moySmsModal');
 }
+
 function sendMoySms() {
   var m = moyMijozlar.find(function(x) { return x.id === currentMoySmsId; });
   if (!m) return;
@@ -1972,7 +2122,7 @@ function renderTaminotchilar() {
         '<div><div class="m-label">Qoldiq</div><div class="m-value ' + (isQarzli ? 'red' : 'green') + '">' + formatSumma(t.qoldiq, t.valyuta) + '</div></div>' +
       '</div>' +
       '<div class="tc-actions">' +
-        (isQarzli ? '<button class="tc-btn pay" onclick="openTaminotchiPulModal(' + t.id + ')">💸 Pul berish</button>' : '<button class="tc-btn pay" style="opacity:0.5;" disabled>✅ Yopilgan</button>') +
+        (isQarzli ? '<button class="tc-btn pay" onclick="openTaminotchiPulModal(' + t.id + ')">💸 To\'lash</button>' : '<button class="tc-btn pay" style="opacity:0.5;" disabled>✅ Yopilgan</button>') +
         '<button class="tc-btn addmore" onclick="openAddTaminotchiQarzModal(' + t.id + ')">➕ Qarz</button>' +
         '<button class="tc-btn detail" onclick="showTaminotchiTarix(' + t.id + ')">📋</button>' +
         '<button class="tc-btn del" onclick="openDeleteModal(' + t.id + ', \'tashqi\')">🗑</button>' +
@@ -2074,8 +2224,26 @@ async function confirmAddTCQarz() {
 }
 
 /* ============================================
-   TA'MINOTCHIGA PUL (UZS + USD)
+   TA'MINOTCHIGA TO'LOV — TO'LIQ / QISMAN
    ============================================ */
+function setTolovTur(tur) {
+  selectedTolovTur = tur;
+  document.querySelectorAll('#tolovTurToggle button').forEach(function(b) {
+    var isActive = b.dataset.tur === tur;
+    b.classList.toggle('active', isActive);
+    if (isActive) {
+      b.style.background = tur === 'full' ? '#10b981' : '#2563eb';
+      b.style.color = '#fff';
+    } else {
+      b.style.background = 'transparent';
+      b.style.color = 'var(--text-muted)';
+    }
+  });
+  document.getElementById('tolovFullBox').style.display = tur === 'full' ? 'block' : 'none';
+  document.getElementById('tolovPartialBox').style.display = tur === 'partial' ? 'block' : 'none';
+  document.getElementById('taminotchiPulBtn').textContent = tur === 'full' ? '✅ To\'liq to\'lash' : '💸 Qisman to\'lash';
+}
+
 function openTaminotchiPulModal(id) {
   currentTaminotchiId = id;
   var t = taminotchilar.find(function(x) { return x.id === id; });
@@ -2084,7 +2252,9 @@ function openTaminotchiPulModal(id) {
     '<div class="info-row"><span class="lbl">Kim</span><span class="val">' + t.kim + '</span></div>' +
     '<div class="info-row"><span class="lbl">Jami</span><span class="val">' + formatSumma(t.jami_summa, t.valyuta) + '</span></div>' +
     '<div class="info-row"><span class="lbl">Berildi</span><span class="val" style="color:var(--success);">' + formatSumma(t.berildi, t.valyuta) + '</span></div>' +
-    '<div class="info-row"><span class="lbl">Qoldiq</span><span class="val" style="color:var(--danger);">' + formatSumma(t.qoldiq, t.valyuta) + '</span></div>';
+    '<div class="info-row"><span class="lbl">To\'lanadigan</span><span class="val" style="color:var(--danger);font-size:15px;">' + formatSumma(t.qoldiq, t.valyuta) + '</span></div>';
+
+  document.getElementById('tolovFullSumma').textContent = formatSumma(t.qoldiq, t.valyuta);
   document.getElementById('taminotchiPulSummaUZS').value = '';
   document.getElementById('taminotchiPulSummaUSD').value = '';
   document.getElementById('taminotchiPulKurs').value = '';
@@ -2093,8 +2263,11 @@ function openTaminotchiPulModal(id) {
   document.getElementById('taminotchiPulKursHint').innerHTML = '';
   document.getElementById('taminotchiJamiBox').style.display = 'none';
   document.getElementById('kursGroup').style.display = 'none';
+
+  setTolovTur('full');
   openModal('taminotchiPulModal');
 }
+
 function recalcTaminotchiPul() {
   var t = taminotchilar.find(function(x) { return x.id === currentTaminotchiId; });
   if (!t) return;
@@ -2114,20 +2287,40 @@ function recalcTaminotchiPul() {
     document.getElementById('taminotchiJamiBox').style.display = 'none';
   }
 }
+
 async function confirmTaminotchiPul() {
   var t = taminotchilar.find(function(x) { return x.id === currentTaminotchiId; });
   if (!t) return;
-  var uzs = Number(document.getElementById('taminotchiPulSummaUZS').value) || 0;
-  var usd = Number(document.getElementById('taminotchiPulSummaUSD').value) || 0;
-  var kurs = Number(document.getElementById('taminotchiPulKurs').value) || 0;
-  if (uzs <= 0 && usd <= 0) { showToast('Summa!', 'error'); return; }
-  if (usd > 0 && kurs <= 0) { showToast('USD kursi!', 'error'); return; }
-  var jami = uzs + (usd * kurs);
-  if (jami > t.qoldiq + 0.01) { showToast('Jami > Qoldiq!', 'error'); return; }
+
+  var uzs = 0, usd = 0, kurs = 0;
+  var jami = 0;
+
+  if (selectedTolovTur === 'full') {
+    if (t.valyuta === 'USD') {
+      usd = t.qoldiq;
+      jami = t.qoldiq;
+    } else {
+      uzs = t.qoldiq;
+      jami = t.qoldiq;
+    }
+  } else {
+    uzs = Number(document.getElementById('taminotchiPulSummaUZS').value) || 0;
+    usd = Number(document.getElementById('taminotchiPulSummaUSD').value) || 0;
+    kurs = Number(document.getElementById('taminotchiPulKurs').value) || 0;
+    if (uzs <= 0 && usd <= 0) { showToast('Summa kiriting!', 'error'); return; }
+    if (usd > 0 && kurs <= 0) { showToast('USD kursi!', 'error'); return; }
+    jami = uzs + (usd * kurs);
+    if (jami > t.qoldiq + 0.01) { showToast('Jami > Qoldiq!', 'error'); return; }
+  }
 
   var yangiBerildi, yangiQoldiq;
   if (t.valyuta === 'USD') {
-    var jamiUSDDa = (uzs / (kurs || 1)) + usd;
+    var jamiUSDDa;
+    if (selectedTolovTur === 'full') {
+      jamiUSDDa = t.qoldiq;
+    } else {
+      jamiUSDDa = (uzs / (kurs || 1)) + usd;
+    }
     yangiBerildi = t.berildi + jamiUSDDa;
     yangiQoldiq = Math.max(0, t.jami_summa - yangiBerildi);
   } else {
@@ -2137,33 +2330,43 @@ async function confirmTaminotchiPul() {
 
   var btn = document.getElementById('taminotchiPulBtn');
   btn.disabled = true; btn.textContent = 'Saqlanmoqda...';
+
   var ok = await supabaseUpdateRasxodMixed(t.id, yangiBerildi, yangiQoldiq, uzs, usd, kurs);
   if (!ok) ok = await supabaseUpdateRasxod(t.id, yangiBerildi, yangiQoldiq);
-  btn.disabled = false; btn.textContent = '💸 Berish';
+  btn.disabled = false; btn.textContent = selectedTolovTur === 'full' ? '✅ To\'liq to\'lash' : '💸 Qisman to\'lash';
   if (!ok) { showToast('Xatolik!', 'error'); return; }
 
   var kassaId = Date.now();
-  if (uzs > 0) {
-    var kUZS = { id: kassaId, tur: 'chiqim', summa: uzs, valyuta: 'UZS', izoh: 'Ta\'minotchi: ' + t.kim };
-    await supabaseInsertKassa(kUZS);
-    kassaTarix.push(kUZS);
+  if (t.valyuta === 'USD') {
+    var totalUSD = selectedTolovTur === 'full' ? t.qoldiq : ((uzs / (kurs || 1)) + usd);
+    if (totalUSD > 0) {
+      var kUSD = { id: kassaId, tur: 'chiqim', summa: totalUSD, valyuta: 'USD', izoh: 'Ta\'minotchi: ' + t.kim };
+      await supabaseInsertKassa(kUSD);
+      kassaTarix.push(kUSD);
+    }
+  } else {
+    if (uzs > 0) {
+      var kUZS = { id: kassaId, tur: 'chiqim', summa: uzs, valyuta: 'UZS', izoh: 'Ta\'minotchi: ' + t.kim };
+      await supabaseInsertKassa(kUZS);
+      kassaTarix.push(kUZS);
+    }
+    if (usd > 0) {
+      var kUSD2 = { id: kassaId + 1, tur: 'chiqim', summa: usd, valyuta: 'USD', izoh: 'Ta\'minotchi: ' + t.kim };
+      await supabaseInsertKassa(kUSD2);
+      kassaTarix.push(kUSD2);
+    }
   }
-  if (usd > 0) {
-    var kUSD = { id: kassaId + 1, tur: 'chiqim', summa: usd, valyuta: 'USD', izoh: 'Ta\'minotchi: ' + t.kim };
-    await supabaseInsertKassa(kUSD);
-    kassaTarix.push(kUSD);
-  }
+
   t.berildi = yangiBerildi;
   t.qoldiq = yangiQoldiq;
   closeModal('taminotchiPulModal');
 
-  var msg = '✅ Berildi:';
-  if (uzs > 0) msg += ' ' + formatSumma(uzs);
-  if (usd > 0) msg += ' + ' + formatSumma(usd, 'USD');
-  if (yangiQoldiq <= 0.01) msg += ' — Yopildi! 🎉';
+  var msg = selectedTolovTur === 'full' ? '✅ To\'liq to\'landi!' : '✅ Qisman to\'landi!';
+  if (yangiQoldiq <= 0.01) msg += ' Qarz yopildi! 🎉';
   showToast(msg, yangiQoldiq <= 0.01 ? 'purple' : '');
   renderTaminotchilar(); renderKassa(); renderDashboard();
 }
+
 function showTaminotchiTarix(id) {
   var t = taminotchilar.find(function(x) { return x.id === id; });
   if (!t) return;
@@ -2543,11 +2746,20 @@ function getReminderList() {
 }
 function getMoyReminderList() {
   return moyMijozlar.filter(function(m) {
-    return daysDiff(m.next_date) <= 7;
+    var h = getMoyHolat(m);
+    return h.type === 'overdue' || h.type === 'today' || h.type === 'soon';
   }).map(function(m) {
-    var kun = daysDiff(m.next_date);
-    var text = kun < 0 ? 'Moy ' + Math.abs(kun) + ' kun o\'tdi!' : kun === 0 ? 'BUGUN moy almashtirish!' : kun + ' kun qoldi';
-    return { id: m.id, ism: m.ism, tel: m.tel, marka: m.marka, raqam: m.raqam, text: text, kun: kun, next_date: m.next_date, type: 'moy' };
+    var h = getMoyHolat(m);
+    var currentProbeg = Number(m.current_probeg) || Number(m.probeg) || 0;
+    var nextProbeg = Number(m.next_probeg) || 0;
+    var qolganKm = nextProbeg - currentProbeg;
+    var sanaKun = m.next_date ? daysDiff(m.next_date) : null;
+    return {
+      id: m.id, ism: m.ism, tel: m.tel, marka: m.marka, raqam: m.raqam,
+      text: h.text, qolganKm: qolganKm, sanaKun: sanaKun,
+      next_probeg: nextProbeg, probeg: currentProbeg, next_date: m.next_date,
+      type: 'moy'
+    };
   });
 }
 function showReminderModal() {
@@ -2569,11 +2781,28 @@ function showReminderModal() {
   if (mItems.length > 0) {
     html += '<div style="font-size:11px;font-weight:800;color:var(--purple);margin:12px 0 8px;">🛢 MOY (' + mItems.length + ')</div>';
     mItems.forEach(function(m) {
-      var color = m.kun < 0 ? 'var(--danger)' : m.kun === 0 ? 'var(--warning)' : 'var(--purple)';
+      var color = 'var(--purple)';
+      if (m.qolganKm <= 0 || (m.sanaKun !== null && m.sanaKun < 0)) color = 'var(--danger)';
+      else if (m.qolganKm <= 500 || (m.sanaKun !== null && m.sanaKun <= 3)) color = 'var(--warning)';
+
+      var detail = '';
+      if (m.qolganKm <= 1500) {
+        detail += '📊 Probeg: <b>' + (m.qolganKm <= 0
+          ? formatProbeg(Math.abs(m.qolganKm)) + ' yurilgan (o\'tgan!)'
+          : formatProbeg(m.qolganKm) + ' qoldi') + '</b>';
+      }
+      if (m.sanaKun !== null) {
+        if (detail) detail += '<br>';
+        detail += '📅 Sana: <b>' + (m.sanaKun < 0
+          ? Math.abs(m.sanaKun) + ' kun o\'tgan'
+          : m.sanaKun === 0 ? 'BUGUN!' : m.sanaKun + ' kun qoldi') + '</b>';
+      }
+
       html += '<div style="padding:12px;margin-bottom:10px;background:#fff;border-radius:12px;border:1px solid var(--border);border-left:4px solid ' + color + ';">' +
         '<div style="font-weight:800;font-size:14px;margin-bottom:4px;">' + m.ism + '</div>' +
         '<div style="font-size:11px;color:var(--text-muted);margin-bottom:4px;">🚗 ' + m.marka + ' • ' + m.raqam + '</div>' +
-        '<div style="font-size:11px;color:' + color + ';font-weight:800;margin-bottom:8px;">' + m.text + ' (' + formatDate(m.next_date) + ')</div>' +
+        '<div style="font-size:11px;color:' + color + ';font-weight:800;margin-bottom:6px;">' + m.text + '</div>' +
+        '<div style="font-size:11px;color:var(--text-muted);margin-bottom:8px;line-height:1.6;">' + detail + '</div>' +
         '<a href="tel:' + m.tel + '" style="display:block;padding:9px;text-align:center;background:var(--purple-bg);border:1px solid #d8b4fe;border-radius:9px;color:#7c3aed;font-size:12px;font-weight:800;text-decoration:none;">📞 Qo\'ng\'iroq</a></div>';
     });
   }
@@ -2642,6 +2871,14 @@ async function init() {
 
   var sanaEl = document.getElementById('ichkiSana');
   if (sanaEl) sanaEl.value = new Date().toISOString().slice(0, 10);
+  var moyKunEl = document.getElementById('moyKun');
+  if (moyKunEl) moyKunEl.value = new Date().toISOString().slice(0, 10);
+  var moyNextEl = document.getElementById('moyNextDate');
+  if (moyNextEl) {
+    var d = new Date();
+    d.setMonth(d.getMonth() + 3);
+    moyNextEl.value = d.toISOString().slice(0, 10);
+  }
 
   var data = await supabaseGetAll();
   if (data === null) {
