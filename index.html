@@ -263,6 +263,8 @@
   .tc-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; gap: 10px; }
   .tc-name { font-size: 15px; font-weight: 800; margin-bottom: 4px; }
   .tc-nima { font-size: 11px; color: var(--text-muted); line-height: 1.5; font-weight: 500; }
+  .tc-phone { font-size: 11px; color: var(--text-muted); display: flex; align-items: center; gap: 4px; font-weight: 600; margin-top: 4px; }
+  .tc-phone a { color: var(--blue); text-decoration: none; font-weight: 800; }
   .tc-badge { padding: 5px 11px; border-radius: 20px; font-size: 10px; font-weight: 800; text-transform: uppercase; }
   .tc-badge.qarzli { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
   .tc-badge.tolangan { background: #d1fae5; color: #065f46; border: 1px solid #a7f3d0; }
@@ -603,6 +605,7 @@
         Yangi ta'minotchi
       </div>
       <div class="form-group"><label>Kim *</label><input type="text" class="form-control" id="tashqiKim" placeholder="Akmal aka"></div>
+      <div class="form-group"><label>Telefon raqami</label><input type="tel" class="form-control" id="tashqiTel" placeholder="+998 90 123 45 67"></div>
       <div class="form-group"><label>Nima uchun *</label><input type="text" class="form-control" id="tashqiNima" placeholder="Ehtiyot qismlar"></div>
       <div class="form-group">
         <label>Valyuta</label>
@@ -944,7 +947,6 @@ function getMoyHolat(m) {
   var qolganKm = nextProbeg - currentProbeg;
   var sanaKun = m.next_date ? daysDiff(m.next_date) : null;
 
-  // Ikkalasi ham o'tgan bo'lsa
   var probegOtdi = qolganKm <= 0;
   var sanaOtdi = sanaKun !== null && sanaKun < 0;
 
@@ -962,7 +964,6 @@ function getMoyHolat(m) {
     };
   }
 
-  // Ikkalasi yaqin
   var probegYaqin = qolganKm <= 500;
   var sanaYaqin = sanaKun !== null && sanaKun <= 3;
 
@@ -973,7 +974,6 @@ function getMoyHolat(m) {
     return { type: 'today', text: t.join(' / '), badge: 'today', qolgan: qolganKm, sanaKun: sanaKun };
   }
 
-  // O'rtacha
   var probegOrt = qolganKm <= 1500;
   var sanaOrt = sanaKun !== null && sanaKun <= 14;
 
@@ -1130,7 +1130,6 @@ function setupAllInputs() {
   attachDecimalInput('addTCQarzBerildi', 'addTCQarzBerildiHint', selectedTashqiCurr);
   attachDecimalInput('chiqimSumma', 'chiqimSummaHint', selectedChiqimCurr);
 
-  // Moy probeg inputlar
   attachProbegInput('moyProbeg', 'moyProbegHint');
   attachProbegInput('moyNextProbeg', 'moyNextProbegHint');
 }
@@ -1238,6 +1237,7 @@ async function supabaseGetRasxodlar() {
     return (res.data || []).map(function(d) {
       return {
         id: d.id, kim: d.kim, nima_uchun: d.nima_uchun,
+        tel_raqami: d.tel_raqami || '',
         jami_summa: Number(d.jami_summa), berildi: Number(d.berildi),
         berildi_usd: Number(d.berildi_usd) || 0,
         usd_kurs: Number(d.usd_kurs) || 0,
@@ -1251,6 +1251,7 @@ async function supabaseInsertRasxod(r) {
   try {
     var res = await supabaseClient.from('rasxodlar').insert([{
       id: r.id, kim: r.kim, nima_uchun: r.nima_uchun,
+      tel_raqami: r.tel_raqami || null,
       jami_summa: r.jami_summa, berildi: r.berildi,
       qoldiq: r.qoldiq, valyuta: r.valyuta, izoh: r.izoh, sana: r.sana
     }]);
@@ -1841,7 +1842,6 @@ function cancelMoyEdit() {
   document.getElementById('moyCancelEditBtn').style.display = 'none';
 }
 
-// Yangi moy almashtirilganda — yangi probeg va sanani qo'lda kiritish
 async function renewMoy(id) {
   var m = moyMijozlar.find(function(x) { return x.id === id; });
   if (!m) return;
@@ -1857,7 +1857,6 @@ async function renewMoy(id) {
     return;
   }
 
-  // Keyingi probegni qo'lda kiritish
   var oldInterval = m.interval_km || 10000;
   var defaultNext = yangiProbeg + oldInterval;
   var nextProbegStr = prompt(
@@ -1871,7 +1870,6 @@ async function renewMoy(id) {
     return;
   }
 
-  // Keyingi sanani kiritish
   var defaultDate = new Date();
   defaultDate.setMonth(defaultDate.getMonth() + 3);
   var nextDateStr = prompt(
@@ -2073,7 +2071,8 @@ function renderTaminotchilar() {
   if (search) {
     activeList = activeList.filter(function(t) {
       return (t.kim || '').toLowerCase().indexOf(search) !== -1 ||
-        (t.nima_uchun || '').toLowerCase().indexOf(search) !== -1;
+        (t.nima_uchun || '').toLowerCase().indexOf(search) !== -1 ||
+        (t.tel_raqami || '').indexOf(search) !== -1;
     });
   }
   activeList.sort(function(a, b) { return b.id - a.id; });
@@ -2111,6 +2110,7 @@ function renderTaminotchilar() {
       '<div class="tc-header">' +
         '<div style="flex:1;min-width:0;">' +
           '<div class="tc-name">' + t.kim + '</div>' +
+          (t.tel_raqami ? '<div class="tc-phone">📞 <a href="tel:' + t.tel_raqami + '">' + t.tel_raqami + '</a></div>' : '') +
           '<div class="tc-nima">📦 ' + t.nima_uchun + '</div>' +
         '</div>' +
         '<div class="tc-badge ' + cardClass + '">' + badgeText + '</div>' +
@@ -2134,6 +2134,7 @@ document.getElementById('tashqiSearch').addEventListener('input', renderTaminotc
 
 async function addTashqi() {
   var kim = document.getElementById('tashqiKim').value.trim();
+  var tel = document.getElementById('tashqiTel').value.trim();
   var nima = document.getElementById('tashqiNima').value.trim();
   var jami = Number(document.getElementById('tashqiJami').value);
   var berildi = Number(document.getElementById('tashqiBerildi').value) || 0;
@@ -2144,7 +2145,8 @@ async function addTashqi() {
   if (berildi > jami) { showToast('Berildi > Jami!', 'error'); return; }
   var qoldiq = jami - berildi;
   var yangi = {
-    id: Date.now(), kim: kim, nima_uchun: nima,
+    id: Date.now(), kim: kim, tel_raqami: tel || null,
+    nima_uchun: nima,
     jami_summa: jami, berildi: berildi, qoldiq: qoldiq,
     valyuta: selectedTashqiCurr, izoh: izoh,
     sana: new Date().toISOString().slice(0, 10)
@@ -2158,6 +2160,7 @@ async function addTashqi() {
   }
   taminotchilar.push(yangi);
   document.getElementById('tashqiKim').value = '';
+  document.getElementById('tashqiTel').value = '';
   document.getElementById('tashqiNima').value = '';
   document.getElementById('tashqiJami').value = '';
   document.getElementById('tashqiBerildi').value = '';
@@ -2174,6 +2177,7 @@ function openAddTaminotchiQarzModal(id) {
   if (!t) return;
   document.getElementById('addTCQarzInfoBox').innerHTML =
     '<div class="info-row"><span class="lbl">Ta\'minotchi</span><span class="val">' + t.kim + '</span></div>' +
+    (t.tel_raqami ? '<div class="info-row"><span class="lbl">Telefon</span><span class="val">' + t.tel_raqami + '</span></div>' : '') +
     '<div class="info-row"><span class="lbl">Hozirgi</span><span class="val" style="font-size:11px;">' + t.nima_uchun + '</span></div>' +
     '<div class="info-row"><span class="lbl">Jami</span><span class="val">' + formatSumma(t.jami_summa, t.valyuta) + '</span></div>' +
     '<div class="info-row"><span class="lbl">Berildi</span><span class="val" style="color:var(--success);">' + formatSumma(t.berildi, t.valyuta) + '</span></div>' +
@@ -2223,9 +2227,6 @@ async function confirmAddTCQarz() {
   renderTaminotchilar(); renderKassa(); renderDashboard();
 }
 
-/* ============================================
-   TA'MINOTCHIGA TO'LOV — TO'LIQ / QISMAN
-   ============================================ */
 function setTolovTur(tur) {
   selectedTolovTur = tur;
   document.querySelectorAll('#tolovTurToggle button').forEach(function(b) {
@@ -2250,6 +2251,7 @@ function openTaminotchiPulModal(id) {
   if (!t) return;
   document.getElementById('taminotchiInfoBox').innerHTML =
     '<div class="info-row"><span class="lbl">Kim</span><span class="val">' + t.kim + '</span></div>' +
+    (t.tel_raqami ? '<div class="info-row"><span class="lbl">Telefon</span><span class="val">' + t.tel_raqami + '</span></div>' : '') +
     '<div class="info-row"><span class="lbl">Jami</span><span class="val">' + formatSumma(t.jami_summa, t.valyuta) + '</span></div>' +
     '<div class="info-row"><span class="lbl">Berildi</span><span class="val" style="color:var(--success);">' + formatSumma(t.berildi, t.valyuta) + '</span></div>' +
     '<div class="info-row"><span class="lbl">To\'lanadigan</span><span class="val" style="color:var(--danger);font-size:15px;">' + formatSumma(t.qoldiq, t.valyuta) + '</span></div>';
@@ -2375,6 +2377,7 @@ function showTaminotchiTarix(id) {
   });
   var html = '<div class="info-box blue">' +
     '<div class="info-row"><span class="lbl">Kim</span><span class="val">' + t.kim + '</span></div>' +
+    (t.tel_raqami ? '<div class="info-row"><span class="lbl">Telefon</span><span class="val"><a href="tel:' + t.tel_raqami + '" style="color:var(--blue);font-weight:800;text-decoration:none;">' + t.tel_raqami + '</a></span></div>' : '') +
     '<div class="info-row"><span class="lbl">Maxsulotlar</span><span class="val" style="font-size:11px;">' + t.nima_uchun + '</span></div>' +
     '<div class="info-row"><span class="lbl">Jami</span><span class="val">' + formatSumma(t.jami_summa, t.valyuta) + '</span></div>' +
     '<div class="info-row"><span class="lbl">Berildi</span><span class="val" style="color:var(--success);">' + formatSumma(t.berildi, t.valyuta) + '</span></div>' +
