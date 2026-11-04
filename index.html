@@ -753,12 +753,14 @@
       Ilova haqida
     </div>
     <div style="font-size:12px;color:var(--text-muted);line-height:2;">
-      <div>📱 <b style="color:var(--text);">PAM Nasiya</b> — v18.0</div>
+      <div>📱 <b style="color:var(--text);">PAM Nasiya</b> — v19.0</div>
       <div>🏢 POP AUTO MAKON</div>
       <div>🛢 Moy — qo'lda probeg + sana</div>
       <div>💰 Nasiya, Kassa, Rasxod</div>
       <div>💎 Do'kon hisobi (haqdorlik)</div>
       <div>✏️ Ta'minotchi tahrirlash</div>
+      <div>💵 Ortiqcha to'lov = haqdorlik</div>
+      <div>📌 Haqdorlar Qarzli tabda qoladi</div>
     </div>
   </div>
 </section>
@@ -1011,13 +1013,14 @@ function getTCAllTotals(t){return{UZS:getTCBalance(t,'UZS'),USD:getTCBalance(t,'
 function tcCurrencyText(t,key){var z=getTCAllTotals(t),a=[];['UZS','USD'].forEach(function(c){var v=z[c][key];if(key==='qoldiq')v=Math.abs(v);if(v>0.0001)a.push(formatSumma(v,c));});return a.length?a.join(' + '):'0';}
 function renderTCAddHistory(t){return ensureTCLedger(t).history.slice().sort(function(a,b){return new Date(b.date)-new Date(a.date);});}
 
-/* ⭐ TA'MINOTCHI HOLATI */
+/* ⭐ TA'MINOTCHI HOLATI — QARZLI / HAQDOR / YOPILGAN */
 function getTaminotchiHolat(t) {
-  var z=getTCAllTotals(t),debt=z.UZS.qoldiq>0.01||z.USD.qoldiq>0.01;
-  var credit=z.UZS.qoldiq< -0.01||z.USD.qoldiq< -0.01;
-  if(debt)return{type:'qarzli',text:'QARZ: '+tcCurrencyText(t,'qoldiq'),badge:'qarzli'};
-  if(credit)return{type:'haqdor',text:'HAQDIR: '+tcCurrencyText(t,'qoldiq'),badge:'haqdor'};
-  return{type:'tolangan',text:'✅ TO\'LANGAN',badge:'tolangan'};
+  var z = getTCAllTotals(t);
+  var hasDebt = z.UZS.qoldiq > 0.01 || z.USD.qoldiq > 0.01;
+  var hasCredit = z.UZS.qoldiq < -0.01 || z.USD.qoldiq < -0.01;
+  if (hasDebt) return { type: 'qarzli', text: '📉 QARZIMIZ: ' + tcCurrencyText(t,'qoldiq'), badge: 'qarzli' };
+  if (hasCredit) return { type: 'haqdor', text: '💎 SIZ HAQDORSIZ: ' + tcCurrencyText(t,'qoldiq'), badge: 'haqdor' };
+  return { type: 'tolangan', text: '✅ TO\'LANGAN', badge: 'tolangan' };
 }
 
 function getMoyHolat(m) {
@@ -1508,11 +1511,9 @@ function renderDashboard() {
   var jamiTashqi = taminotchilar.reduce(function(s, r) { return s + r.jami_summa; }, 0);
   var jamiRasxod = jamiIchki + jamiTashqi;
 
-  // ⭐ Taminotchilarga QARZIMIZ (faqat ijobiy qoldiq)
   var tQarzUZS=0,tQarzUSD=0;
   taminotchilar.forEach(function(t){var z=getTCAllTotals(t);tQarzUZS+=Math.max(0,z.UZS.qoldiq);tQarzUSD+=Math.max(0,z.USD.qoldiq);});
 
-  // ⭐ DO'KON HISOBIDAGI HAQDORLIK (faqat manfiy qoldiq)
   var tHaqdorUZS=0,tHaqdorUSD=0;
   taminotchilar.forEach(function(t){var z=getTCAllTotals(t);tHaqdorUZS+=Math.max(0,-z.UZS.qoldiq);tHaqdorUSD+=Math.max(0,-z.USD.qoldiq);});
 
@@ -1537,7 +1538,6 @@ function renderDashboard() {
     elTQ.textContent = parts.length > 0 ? parts.join(' + ') : '0';
   }
 
-  // ⭐ Do'kon hisobidagi haqdorlik
   var dokonBox = document.getElementById('dokonHisobBox');
   var dokonEl = document.getElementById('statDokonHaqdor');
   var dokonParts = [];
@@ -2122,15 +2122,32 @@ function switchTCTab(tab) {
   renderTaminotchilar();
 }
 
-/* ⭐ TA'MINOTCHILAR */
+/* ⭐⭐⭐ TA'MINOTCHILAR — TAB MANTIG'I ⭐⭐⭐ */
+/*
+ * QARZLI tab:
+ *   - Qarzdor (qoldiq > 0): "QARZIMIZ"
+ *   - Haqdor (qoldiq < 0):  "SIZ HAQDORSIZ"
+ *   Ya'ni qoldiq != 0 bo'lsa, QARZLI tabda turadi.
+ *
+ * YOPILGAN tab:
+ *   - Faqat qoldiq === 0 (tengma-teng to'langan) bo'lsa.
+ */
 function renderTaminotchilar() {
   var list = document.getElementById('taminotchiList');
   if (!list) return;
   var search = (document.getElementById('tashqiSearch').value || '').toLowerCase().trim();
 
-  // ⭐ Qarzli = qoldiq > 0.01, Yopilgan = qoldiq <= 0.01
-  var qarzliAll = taminotchilar.filter(function(t) { var z=getTCAllTotals(t); return z.UZS.qoldiq>0.01||z.USD.qoldiq>0.01; });
-  var tolanganAll = taminotchilar.filter(function(t) { var z=getTCAllTotals(t); return z.UZS.qoldiq<=0.01&&z.USD.qoldiq<=0.01; });
+  // ⭐ QARZLI tab: qarzdor YOKI haqdor (qoldiq != 0)
+  var qarzliAll = taminotchilar.filter(function(t) {
+    var z = getTCAllTotals(t);
+    return z.UZS.qoldiq > 0.01 || z.USD.qoldiq > 0.01 ||    // qarzdor
+           z.UZS.qoldiq < -0.01 || z.USD.qoldiq < -0.01;   // haqdor
+  });
+  // ⭐ YOPILGAN tab: FAQAT tengma-teng (qoldiq === 0)
+  var tolanganAll = taminotchilar.filter(function(t) {
+    var z = getTCAllTotals(t);
+    return Math.abs(z.UZS.qoldiq) <= 0.01 && Math.abs(z.USD.qoldiq) <= 0.01;
+  });
 
   var elCQ = document.getElementById('tcCountQarzli');
   var elCT = document.getElementById('tcCountTolangan');
@@ -2165,7 +2182,7 @@ function renderTaminotchilar() {
   if (elQ) elQ.textContent = qparts.length > 0 ? qparts.join(' + ') : '0';
 
   if (activeList.length === 0) {
-    var msg2 = currentTCTab === 'tolangan' ? 'Yopilgan ta\'minotchi yo\'q' : 'Qarzli ta\'minotchilar yo\'q';
+    var msg2 = currentTCTab === 'tolangan' ? 'Yopilgan ta\'minotchi yo\'q (tengma-teng to\'langanlar)' : 'Qarzli yoki haqdor ta\'minotchilar yo\'q';
     list.innerHTML = '<div class="empty-state"><div class="em-icon">📦</div><h3>' + msg2 + '</h3></div>';
     return;
   }
@@ -2268,7 +2285,6 @@ function openAddTaminotchiQarzModal(id) {
   document.getElementById('addTCQarzJamiHint').innerHTML = '';
   document.getElementById('addTCQarzBerildiHint').innerHTML = '';
 
-  // Valyuta tanlash
   document.querySelectorAll('#addTCQarzCurrToggle button').forEach(function(b) {
     b.classList.toggle('active', b.dataset.curr === t.valyuta);
   });
@@ -2399,7 +2415,6 @@ function openTaminotchiPulModal(id) {
   document.getElementById('taminotchiPulHint').innerHTML = '';
   document.getElementById('taminotchiJamiBox').style.display = 'none';
 
-  // To'lov valyutasini taminotchi valyutasiga moslash
   selectedTolovPayCurr = t.valyuta;
   document.querySelectorAll('#tolovPayCurrToggle button').forEach(function(b) {
     b.classList.toggle('active', b.dataset.curr === t.valyuta);
@@ -2420,11 +2435,7 @@ function recalcTaminotchiPul() {
     document.getElementById('taminotchiJamiBox').style.display = 'block';
     document.getElementById('taminotchiJamiSumma').textContent = formatSumma(summa, selectedTolovPayCurr);
 
-    // ⭐ TO'G'RI HISOBLASH:
-    // 1. Agar to'lov valyutasi taminotchi valyutasiga teng bo'lsa, to'g'ridan-to'g'ri ayirish
-    // 2. Turli valyutada bo'lsa, arifmetik operatsiya qilish mumkin emas — valyuta o'zgartirishga ruxsat bermaymiz
     var yangiQoldiq;
-    // Har bir valyutaning qoldig'i alohida hisoblanadi.
     yangiQoldiq = getTCBalance(t,selectedTolovPayCurr).qoldiq - summa;
 
     var qoldiqText, qoldiqColor;
@@ -2447,21 +2458,100 @@ function recalcTaminotchiPul() {
   }
 }
 
+/* ⭐⭐⭐ YANGI: ORTIQCHA TO'LOVNI QABUL QILISH (HAQDORLIK) ⭐⭐⭐ */
 async function confirmTaminotchiPul() {
-  var t=taminotchilar.find(function(x){return x.id===currentTaminotchiId;});if(!t)return;
-  var curr=selectedTolovPayCurr||t.valyuta||'UZS',bal=getTCBalance(t,curr),sum=0;
-  if(selectedTolovTur==='full'){if(bal.qoldiq<=0.01){showToast('Bu valyutada qarz yo\'q!','warning');return;}sum=bal.qoldiq;}
-  else{sum=Number(document.getElementById('taminotchiPulSumma').value)||0;if(sum<=0){showToast('Summa kiriting!','error');return;}if(sum>bal.qoldiq+0.01){showToast('To\'lov qoldiqdan katta!','error');return;}}
-  var ledger=ensureTCLedger(t);ledger.balances[curr].berildi+=sum;
-  var primary=t.valyuta||'UZS',pb=ledger.balances[primary],packed=writeTCMeta(readTCMeta(t.izoh).note,ledger);
-  var btn=document.getElementById('taminotchiPulBtn');btn.disabled=true;btn.textContent='Saqlanmoqda...';
-  var res=await supabaseClient.from('rasxodlar').update({berildi:pb.berildi,qoldiq:pb.jami-pb.berildi,izoh:packed}).eq('id',t.id);
-  btn.disabled=false;btn.textContent=selectedTolovTur==='full'?'✅ To\'liq to\'lash':'💸 Qisman to\'lash';
-  if(res.error){showToast('Xatolik!','error');return;}
-  var k={id:Date.now(),tur:'chiqim',summa:sum,valyuta:curr,izoh:'Ta\'minotchi: '+t.kim};await supabaseInsertKassa(k);kassaTarix.push(k);
-  t.ledger=ledger;t.jami_summa=pb.jami;t.berildi=pb.berildi;t.qoldiq=pb.jami-pb.berildi;
-  closeModal('taminotchiPulModal');showToast('✅ '+formatSumma(sum,curr)+' to\'landi. Qoldiq: '+tcCurrencyText(t,'qoldiq'));
-  renderTaminotchilar();renderKassa();renderDashboard();
+  var t = taminotchilar.find(function(x) { return x.id === currentTaminotchiId; });
+  if (!t) return;
+  
+  var curr = selectedTolovPayCurr || t.valyuta || 'UZS';
+  var bal = getTCBalance(t, curr);
+  var sum = 0;
+  
+  if (selectedTolovTur === 'full') {
+    if (bal.qoldiq <= 0.01) {
+      showToast('Bu valyutada qarz yo\'q!', 'warning');
+      return;
+    }
+    sum = bal.qoldiq;
+  } else {
+    sum = Number(document.getElementById('taminotchiPulSumma').value) || 0;
+    if (sum <= 0) {
+      showToast('Summa kiriting!', 'error');
+      return;
+    }
+    
+    if (sum > bal.qoldiq + 0.01) {
+      var ortiqcha = sum - bal.qoldiq;
+      var tasdiq = confirm(
+        '⚠️ DIQQAT: Ortiqcha to\'lov!\n\n' +
+        'Qarz: ' + formatSumma(bal.qoldiq, curr) + '\n' +
+        'To\'lov: ' + formatSumma(sum, curr) + '\n' +
+        'Ortiqcha: ' + formatSumma(ortiqcha, curr) + '\n\n' +
+        'Bu summa "Do\'kon hisobi (haqdorlik)" ga qo\'shiladi va\n' +
+        'ta\'minotchi QARZLI tabda HAQDOR sifatida qoladi.\n\n' +
+        'Davom etasizmi?'
+      );
+      if (!tasdiq) return;
+    }
+  }
+  
+  var ledger = ensureTCLedger(t);
+  ledger.balances[curr].berildi += sum;
+  
+  var primary = t.valyuta || 'UZS';
+  var pb = ledger.balances[primary];
+  var packed = writeTCMeta(readTCMeta(t.izoh).note, ledger);
+  
+  var btn = document.getElementById('taminotchiPulBtn');
+  btn.disabled = true;
+  btn.textContent = 'Saqlanmoqda...';
+  
+  var res = await supabaseClient.from('rasxodlar').update({
+    berildi: pb.berildi,
+    qoldiq: pb.jami - pb.berildi,
+    izoh: packed
+  }).eq('id', t.id);
+  
+  btn.disabled = false;
+  btn.textContent = selectedTolovTur === 'full' ? '✅ To\'liq to\'lash' : '💸 Qisman to\'lash';
+  
+  if (res.error) {
+    showToast('Xatolik!', 'error');
+    return;
+  }
+  
+  var k = {
+    id: Date.now(),
+    tur: 'chiqim',
+    summa: sum,
+    valyuta: curr,
+    izoh: 'Ta\'minotchi: ' + t.kim + (sum > bal.qoldiq + 0.01 ? ' (haqdorlik)' : '')
+  };
+  await supabaseInsertKassa(k);
+  kassaTarix.push(k);
+  
+  t.ledger = ledger;
+  t.jami_summa = pb.jami;
+  t.berildi = pb.berildi;
+  t.qoldiq = pb.jami - pb.berildi;
+  
+  closeModal('taminotchiPulModal');
+  
+  if (t.qoldiq < -0.01) {
+    showToast(
+      '💎 ' + formatSumma(sum, curr) + ' to\'landi. ' +
+      'Siz ' + formatSumma(Math.abs(t.qoldiq), primary) + ' HAQDORSIZ!',
+      'teal'
+    );
+  } else if (t.qoldiq > 0.01) {
+    showToast('✅ ' + formatSumma(sum, curr) + ' to\'landi. Qoldiq: ' + tcCurrencyText(t, 'qoldiq'));
+  } else {
+    showToast('🎉 Qarz to\'liq yopildi! (Yopilgan tabga o\'tdi)');
+  }
+  
+  renderTaminotchilar();
+  renderKassa();
+  renderDashboard();
 }
 
 function showTaminotchiTarix(id) {
