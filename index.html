@@ -819,7 +819,6 @@
 <div class="modal-overlay" id="tolovModal"><div class="modal-sheet"><div class="modal-handle"></div><div class="modal-title"><div class="mt-icon" style="background:#ecfdf5;color:#10b981;"><svg class="ico" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/></svg></div>To'lovni qabul qilish</div><div class="info-box" id="tolovInfoBox"></div><div class="form-group"><label>To'lanayotgan summa</label><input type="text" inputmode="numeric" class="form-control" id="tolovSumma"></div><div class="modal-actions"><button class="btn btn-danger" onclick="closeModal('tolovModal')">Bekor</button><button class="btn btn-success" id="tolovBtn" onclick="confirmTolov()">✅ Tasdiqlash</button></div></div></div>
 
 <div class="modal-overlay" id="taminotchiPulModal"><div class="modal-sheet"><div class="modal-handle"></div><div class="modal-title" style="color:var(--success);"><div class="mt-icon" style="background:#ecfdf5;color:#10b981;"><svg class="ico" viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>To'lov qilish</div><div class="info-box" id="taminotchiInfoBox"></div>
-
     <div class="form-group">
       <label>To'lov turi</label>
       <div class="curr-toggle" id="tolovTurToggle" style="border-color:#10b981;background:#ecfdf5;">
@@ -827,12 +826,10 @@
         <button type="button" data-tur="partial" onclick="setTolovTur('partial')">📝 Qisman to'lash</button>
       </div>
     </div>
-
     <div id="tolovFullBox" class="info-box green">
       <div class="info-row"><span class="lbl">To'lanadigan summa</span><span class="val" id="tolovFullSumma" style="color:var(--success);font-size:16px;"></span></div>
       <div class="info-row"><span class="lbl">To'lovdan keyin</span><span class="val" style="color:var(--text);">Qarz to'liq yopiladi ✅</span></div>
     </div>
-
     <div id="tolovPartialBox" style="display:none;">
       <div style="background:var(--blue-bg);padding:12px;border-radius:12px;border:1px solid #bfdbfe;margin-bottom:14px;font-size:11px;color:#1e40af;font-weight:600;line-height:1.6;">
         💡 <b>Eslatma:</b> To'lov qarz miqdoridan oshsa, ortiqcha summa "Do'kon hisobi (haqdorlik)" da saqlanadi.
@@ -850,7 +847,6 @@
         <div class="info-row"><span class="lbl">To'lovdan keyin holat</span><span class="val" id="taminotchiYangiQoldiq" style="color:var(--danger);"></span></div>
       </div>
     </div>
-
     <div class="modal-actions"><button class="btn btn-danger" onclick="closeModal('taminotchiPulModal')">Bekor</button><button class="btn btn-success" id="taminotchiPulBtn" onclick="confirmTaminotchiPul()">✅ To'liq to'lash</button></div></div></div>
 
 <div class="modal-overlay" id="taminotchiTarixModal"><div class="modal-sheet"><div class="modal-handle"></div><div class="modal-title"><div class="mt-icon"><svg class="ico" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/></svg></div>Ta'minotchi tarixi</div><div id="taminotchiTarixContent"></div><div class="modal-actions"><button class="btn btn-primary" onclick="closeModal('taminotchiTarixModal')" style="grid-column:1/-1;">Yopish</button></div></div></div>
@@ -2303,29 +2299,97 @@ function setAddTCQarzCurr(c) {
 }
 
 async function confirmAddTCQarz() {
-  var t=taminotchilar.find(function(x){return x.id===currentAddTCQarzId;});if(!t)return;
-  var product=document.getElementById('addTCQarzMaxsulot').value.trim();
-  var amount=Number(document.getElementById('addTCQarzJami').value);
-  var paid=Number(document.getElementById('addTCQarzBerildi').value)||0;
-  var note=document.getElementById('addTCQarzIzoh').value.trim();
-  var curr=selectedAddTCQarzCurr||'UZS';
-  if(!product){showToast('Maxsulot!','error');return;}
-  if(!amount||amount<=0){showToast('Summa!','error');return;}
-  if(paid<0||paid>amount){showToast('Berildi summasi noto\'g\'ri!','error');return;}
-  var ledger=ensureTCLedger(t);
-  ledger.balances[curr].jami+=amount;ledger.balances[curr].berildi+=paid;
-  ledger.history.push({product:product,amount:amount,paid:paid,currency:curr,date:new Date().toISOString(),note:note});
-  t.nima_uchun=(t.nima_uchun?t.nima_uchun+' + ':'')+product;
-  var packed=writeTCMeta(readTCMeta(t.izoh).note,ledger);
-  var primary=t.valyuta||'UZS',pb=ledger.balances[primary];
-  var btn=document.getElementById('addTCQarzBtn');btn.disabled=true;btn.textContent='Saqlanmoqda...';
-  var res=await supabaseClient.from('rasxodlar').update({jami_summa:pb.jami,berildi:pb.berildi,qoldiq:pb.jami-pb.berildi,nima_uchun:t.nima_uchun,izoh:packed}).eq('id',t.id);
-  btn.disabled=false;btn.textContent='➕ Qo\'shish';
-  if(res.error){showToast('Xatolik! Qarz saqlanmadi.','error');return;}
-  t.ledger=ledger;t.jami_summa=pb.jami;t.berildi=pb.berildi;t.qoldiq=pb.jami-pb.berildi;
-  if(paid>0){var k={id:Date.now()+6,tur:'chiqim',summa:paid,valyuta:curr,izoh:'Yangi tovar: '+t.kim};await supabaseInsertKassa(k);kassaTarix.push(k);}
-  closeModal('addTaminotchiQarzModal');showToast('Yangi qarz '+(curr==='USD'?'dollarda':'so\'mda')+' qo\'shildi!','orange');
-  renderTaminotchilar();renderKassa();renderDashboard();
+  var t = taminotchilar.find(function(x) { return x.id === currentAddTCQarzId; });
+  if (!t) return;
+  
+  var product = document.getElementById('addTCQarzMaxsulot').value.trim();
+  var amount = Number(document.getElementById('addTCQarzJami').value);
+  var paid = Number(document.getElementById('addTCQarzBerildi').value) || 0;
+  var note = document.getElementById('addTCQarzIzoh').value.trim();
+  var curr = selectedAddTCQarzCurr || 'UZS';
+  
+  if (!product) { showToast('Maxsulot!', 'error'); return; }
+  if (!amount || amount <= 0) { showToast('Summa!', 'error'); return; }
+  if (paid < 0) { showToast('Berildi summasi 0 dan kichik bo\'lishi mumkin emas!', 'error'); return; }
+  
+  // ⭐ CHEKLOV OLIB TASHLANDI! Endi 250$ berish mumkin.
+  
+  var ledger = ensureTCLedger(t);
+  
+  // Yangi tovar qarzini qo'shish
+  ledger.balances[curr].jami += amount;
+  
+  // To'langan summani qo'shish (eski to'lovlar ustiga qo'shiladi)
+  ledger.balances[curr].berildi += paid;
+  
+  // Tarixga yozish
+  ledger.history.push({
+    product: product,
+    amount: amount,
+    paid: paid,
+    currency: curr,
+    date: new Date().toISOString(),
+    note: note
+  });
+  
+  // Maxsulot nomini yangilash
+  t.nima_uchun = (t.nima_uchun ? t.nima_uchun + ' + ' : '') + product;
+  
+  var packed = writeTCMeta(readTCMeta(t.izoh).note, ledger);
+  var primary = t.valyuta || 'UZS';
+  var pb = ledger.balances[primary];
+  
+  var btn = document.getElementById('addTCQarzBtn');
+  btn.disabled = true;
+  btn.textContent = 'Saqlanmoqda...';
+  
+  var res = await supabaseClient.from('rasxodlar').update({
+    jami_summa: pb.jami,
+    berildi: pb.berildi,
+    qoldiq: pb.jami - pb.berildi,
+    nima_uchun: t.nima_uchun,
+    izoh: packed
+  }).eq('id', t.id);
+  
+  btn.disabled = false;
+  btn.textContent = '➕ Qo\'shish';
+  
+  if (res.error) { showToast('Xatolik! Qarz saqlanmadi.', 'error'); return; }
+  
+  // Mahalliy state yangilash
+  t.ledger = ledger;
+  t.jami_summa = pb.jami;
+  t.berildi = pb.berildi;
+  t.qoldiq = pb.jami - pb.berildi;
+  
+  // Kassa chiqimi (agar to'lov bo'lsa, kassadan pul chiqadi)
+  if (paid > 0) {
+    var k = {
+      id: Date.now() + 6,
+      tur: 'chiqim',
+      summa: paid,
+      valyuta: curr,
+      izoh: 'Yangi tovar: ' + t.kim + ' (' + product + ')'
+    };
+    await supabaseInsertKassa(k);
+    kassaTarix.push(k);
+  }
+  
+  closeModal('addTaminotchiQarzModal');
+  
+  // ⭐ AVTOMATIK XABAR — qarz yoki haqdorlik
+  var newBal = getTCBalance(t, curr);
+  if (newBal.qoldiq > 0.01) {
+    showToast('📉 QARZIMIZ: ' + formatSumma(newBal.qoldiq, curr), 'orange');
+  } else if (newBal.qoldiq < -0.01) {
+    showToast('💎 SIZ HAQDORSIZ: ' + formatSumma(Math.abs(newBal.qoldiq), curr), 'teal');
+  } else {
+    showToast('✅ Hisob tenglashdi!', 'success');
+  }
+  
+  renderTaminotchilar();
+  renderKassa();
+  renderDashboard();
 }
 
 /* ⭐ TA'MINOTCHI TAHRIRLASH */
