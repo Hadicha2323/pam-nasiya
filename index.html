@@ -203,7 +203,7 @@
   .q-money .m-value.red { color: var(--danger); }
   .q-money .m-value.teal { color: var(--teal); }
   .q-actions { display: grid; grid-template-columns: 1fr 1fr 1fr 44px; gap: 6px; margin-top: 10px; }
-  .q-actions.with-renewal { grid-template-columns: 1fr 1fr 1fr 1fr 44px; }
+  .q-actions.with-renewal { grid-template-columns: repeat(6, minmax(0, 1fr)) 44px; }
   .qa-btn { padding: 10px 4px; border-radius: 10px; border: none; font-size: 11px; font-weight: 800; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 4px; color: white; font-family: inherit; }
   .qa-btn:active { transform: scale(0.92); }
   .qa-btn.call { background: var(--blue-bg); color: var(--blue); border: 1px solid #bfdbfe; }
@@ -794,6 +794,8 @@
   </button>
 </nav>
 
+<div class="modal-overlay" id="editQarzdorPhoneModal"><div class="modal-sheet"><div class="modal-handle"></div><div class="modal-title" style="color:var(--purple);"><div class="mt-icon" style="background:#f3e8ff;color:#8b5cf6;"><svg class="ico" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 013 3L12 15l-4 1 1-4z"/></svg></div>Qarzdor telefon raqamini o'zgartirish</div><p class="modal-desc">+998 kodi avtomatik qo'yiladi. Qolgan 9 ta raqamni kiriting.</p><div class="form-group"><label>Telefon raqami</label><div style="display:flex;align-items:center;border:2px solid var(--border);border-radius:12px;overflow:hidden;background:#fff;"><span style="padding:13px 12px;background:var(--blue-bg);color:var(--blue);font-size:14px;font-weight:800;border-right:1px solid var(--border);">+998</span><input type="tel" inputmode="numeric" autocomplete="tel-national" class="form-control" id="editQarzdorPhoneDigits" maxlength="9" placeholder="90 123 45 67" style="border:0;border-radius:0;box-shadow:none;letter-spacing:1px;"></div><div class="input-hint">Masalan: 901234567</div></div><div class="modal-actions"><button class="btn btn-danger" onclick="closeModal('editQarzdorPhoneModal')">Bekor</button><button class="btn btn-purple" id="editQarzdorPhoneBtn" onclick="saveQarzdorPhone()">💾 Saqlash</button></div></div></div>
+
 <div class="modal-overlay" id="smsModal"><div class="modal-sheet"><div class="modal-handle"></div><div class="modal-title"><div class="mt-icon"><svg class="ico" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>SMS yuborish</div><textarea id="smsText" class="form-control" rows="10" style="font-size:13px;line-height:1.6;"></textarea><div class="modal-actions"><button class="btn btn-danger" onclick="closeModal('smsModal')">Bekor</button><button class="btn btn-success" onclick="sendSms()">📤 Yuborish</button></div></div></div>
 
 <div class="modal-overlay" id="moySmsModal"><div class="modal-sheet"><div class="modal-handle"></div><div class="modal-title"><div class="mt-icon" style="background:#f3e8ff;color:#8b5cf6;"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 10v6"/></svg></div>Moy SMS</div><textarea id="moySmsText" class="form-control" rows="8" style="font-size:13px;line-height:1.6;"></textarea><div class="modal-actions"><button class="btn btn-danger" onclick="closeModal('moySmsModal')">Bekor</button><button class="btn btn-success" onclick="sendMoySms()">📤 Yuborish</button></div></div></div>
@@ -886,6 +888,7 @@ var ichkiRasxodlar = [];
 var kassaTarix = [];
 var moyMijozlar = [];
 var currentSmsId = null;
+var currentEditQarzdorPhoneId = null;
 var currentTolovId = null;
 var currentDeleteId = null;
 var currentDeleteType = 'qarzdor';
@@ -1261,6 +1264,12 @@ async function supabaseInsert(q) {
 async function supabaseUpdateTolov(id, tolangan, qoldiq) {
   try {
     var res = await supabaseClient.from('qarzdorlar').update({ tolangan: tolangan, qoldiq: qoldiq }).eq('id', id);
+    return !res.error;
+  } catch (e) { return false; }
+}
+async function supabaseUpdateQarzdorPhone(id, telRaqami) {
+  try {
+    var res = await supabaseClient.from('qarzdorlar').update({ tel_raqami: telRaqami }).eq('id', id);
     return !res.error;
   } catch (e) { return false; }
 }
@@ -1695,6 +1704,7 @@ function renderQarzdorlar() {
               : '')
           : '<button class="qa-btn addmore" onclick="openAddDebtModal(' + q.id + ')">➕ Qarz</button>'
         ) +
+        '<button class="qa-btn edit" title="Telefonni o\'zgartirish" onclick="openEditQarzdorPhone(' + q.id + ')">✏️</button>' +
         '<button class="qa-btn del" onclick="openDeleteModal(' + q.id + ', \'qarzdor\')">🗑</button>' +
       '</div>' +
     '</div>';
@@ -2748,6 +2758,60 @@ function closeModal(id) { document.getElementById(id).classList.remove('active')
 document.querySelectorAll('.modal-overlay').forEach(function(m) {
   m.addEventListener('click', function(e) { if (e.target === m) m.classList.remove('active'); });
 });
+
+/* ============================================
+   QARZDOR TELEFON RAQAMINI TAHRIRLASH
+   ============================================ */
+function openEditQarzdorPhone(id) {
+  var q = qarzdorlar.find(function(x) { return x.id === id; });
+  if (!q) return;
+  currentEditQarzdorPhoneId = id;
+  var digits = String(q.telRaqami || '').replace(/\D/g, '');
+  if (digits.indexOf('998') === 0 && digits.length >= 12) digits = digits.slice(3);
+  else if (digits.length > 9) digits = digits.slice(-9);
+  var input = document.getElementById('editQarzdorPhoneDigits');
+  input.value = digits.slice(0, 9);
+  openModal('editQarzdorPhoneModal');
+  setTimeout(function() { input.focus(); }, 100);
+}
+
+document.addEventListener('input', function(e) {
+  if (e.target && e.target.id === 'editQarzdorPhoneDigits') {
+    e.target.value = e.target.value.replace(/\D/g, '').slice(0, 9);
+  }
+});
+
+async function saveQarzdorPhone() {
+  var q = qarzdorlar.find(function(x) { return x.id === currentEditQarzdorPhoneId; });
+  if (!q) return;
+  var digits = document.getElementById('editQarzdorPhoneDigits').value.replace(/\D/g, '');
+  if (digits.length !== 9) {
+    showToast('Telefon raqamining qolgan 9 ta raqamini to\'liq kiriting!', 'error');
+    document.getElementById('editQarzdorPhoneDigits').focus();
+    return;
+  }
+  var newPhone = '+998' + digits;
+  if (newPhone === q.telRaqami) {
+    closeModal('editQarzdorPhoneModal');
+    showToast('Raqam o\'zgarmadi', 'info');
+    return;
+  }
+  var btn = document.getElementById('editQarzdorPhoneBtn');
+  btn.disabled = true;
+  btn.textContent = 'Saqlanmoqda...';
+  var ok = await supabaseUpdateQarzdorPhone(q.id, newPhone);
+  btn.disabled = false;
+  btn.textContent = '💾 Saqlash';
+  if (!ok) {
+    showToast('Xatolik! Telefon raqami saqlanmadi.', 'error');
+    return;
+  }
+  q.telRaqami = newPhone;
+  closeModal('editQarzdorPhoneModal');
+  renderQarzdorlar();
+  renderDashboard();
+  showToast('Telefon raqami muvaffaqiyatli o\'zgartirildi');
+}
 
 /* ============================================
    SMS
